@@ -281,6 +281,8 @@ private fun MainNavHostContent(
     val referralCode by referralCodeViewModel.referralCode.collectAsState()
     // the account the purchase overlay names (support inbox 6546)
     val planAccountName by subscriptionBalanceViewModel.planAccountName.collectAsState()
+    // the overlay's plan-confirmed gate reads the server's balance state
+    val hasActiveSubscription by subscriptionBalanceViewModel.hasActiveSubscription.collectAsState()
 
     val navItemColors = NavigationSuiteDefaults.itemColors(
         navigationBarItemColors = NavigationBarItemDefaults.colors(

@@ -391,7 +391,6 @@ fun GuestPopupPreview() {
     URNetworkTheme {
         GuestPopup(
             onDismiss = {},
-            openReferrals = {},
             createAccount = {},
             focusRequester = focusRequester
         )
