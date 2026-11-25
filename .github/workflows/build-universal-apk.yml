@@ -1,0 +1,132 @@
+name: Build universal APK (github flavor)
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+
+    env:
+      BRINGYOUR_HOME: ${{ github.workspace }}/build-home
+      WARP_HOME: ${{ runner.temp }}/warp-home
+
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL || true
+          sudo docker image prune -af || true
+          df -h /
+
+      - name: Checkout the app
+        uses: actions/checkout@v4
+        with:
+          path: build-home/android
+
+      - name: Clone the Go SDK and its pinned siblings
+        run: |
+          set -e
+          cd "$BRINGYOUR_HOME"
+          # the sdk commit the android app's main was tested against
+          git clone --filter=blob:none --no-checkout https://github.com/urnetwork/sdk.git sdk
+          git -C sdk fetch --depth 1 origin 0715f58bfb79ac2a6b063a489f70c7c5b3b39363
+          git -C sdk checkout FETCH_HEAD
+          git clone --depth 1 https://github.com/urnetwork/connect.git connect
+          git clone --depth 1 https://github.com/urnetwork/glog.git glog
+          git clone --depth 1 https://github.com/urnetwork/quic-go.git quic-go
+          git clone --depth 1 https://github.com/urnetwork/goidenticons.git goidenticons
+          # the gvisor fork at the pinned version the sdk's build module references
+          git clone --filter=blob:none --no-checkout https://github.com/urnetwork/gvisor.git gvisor
+          if git -C gvisor fetch --depth 1 origin 551b6e3f1252d776f947863e9a3f5b802833e588; then
+            git -C gvisor checkout FETCH_HEAD
+          else
+            echo "pinned gvisor commit not found, using the go branch head"
+            git -C gvisor fetch --depth 1 origin go
+            git -C gvisor checkout FETCH_HEAD
+          fi
+          du -sh ./* | sort -h
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Go 1.27.4
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.27.4"
+          cache: false
+
+      - name: Install the Android NDK
+        run: |
+          yes | sdkmanager --install "ndk;29.0.14206865" "platforms;android-36" > /dev/null || true
+          sdkmanager --list_installed | head -20
+          echo "ANDROID_HOME=$ANDROID_HOME"
+
+      - name: Write the release signing config
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: |
+          set -e
+          mkdir -p "$WARP_HOME/release/android/signing"
+          printf '%s' "$RELEASE_KEYSTORE_BASE64" | base64 -d > "$WARP_HOME/release/android/signing/app.jks"
+          printf 'password=%s\ngithub.password=%s\n' "$RELEASE_KEYSTORE_PASSWORD" "$RELEASE_KEY_PASSWORD" \
+            > "$WARP_HOME/release/android/signing/app.properties"
+          echo "signing config written"
+
+      - name: Write the build version
+        run: |
+          set -e
+          # the version this custom build ships
+          printf 'warp.version=2026.11.26\nwarp.version_code=2026112600\n' \
+            > "$BRINGYOUR_HOME/android/app/local.properties"
+          cat "$BRINGYOUR_HOME/android/app/local.properties"
+
+      - name: Apply the ungoogle dependency strip (like the upstream release branch)
+        run: |
+          set -e
+          cd "$BRINGYOUR_HOME/android/app/app"
+          # the same edit the v<version>-ungoogle branch carries: play/dapp
+          # store dependencies become empty ungoogled markers
+          sed -i -E 's|^/\*build:google\*/.*$|/*ungoogled*/|' build.gradle
+          grep -n "ungoogled" build.gradle | head -20
+
+      - name: Build the SDK AAR and the universal APK
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+        run: |
+          set -e
+          export PATH="$PATH:$(go env GOPATH)/bin"
+          cd "$BRINGYOUR_HOME/android/app"
+          ./gradlew --stacktrace --no-watch-fs clean buildSdk assembleGithubRelease
+
+      - name: Collect the APKs
+        run: |
+          set -e
+          mkdir -p "$RUNNER_TEMP/apks"
+          find "$BRINGYOUR_HOME/android/app/app/build/outputs/apk/github/release" -name '*.apk' -exec cp {} "$RUNNER_TEMP/apks/" \;
+          ls -la "$RUNNER_TEMP/apks"
+
+      - name: Upload the APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: urnetwork-apks
+          path: ${{ runner.temp }}/apks/*.apk
+          if-no-files-found: error
+
+      - name: Publish the GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          TAG="${GITHUB_REF#refs/tags/}"
+          UNIVERSAL=$(ls "$RUNNER_TEMP/apks"/*universal*.apk | head -1)
+          gh release create "$TAG" --title "$TAG" --notes "Custom community build of URnetwork for Android (github flavor, universal APK). See CUSTOMIZATIONS.md for what changed." "$UNIVERSAL"
