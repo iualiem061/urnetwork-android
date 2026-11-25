@@ -239,7 +239,6 @@ fun ProfileScreen(
                     loginMode = loginMode,
                     // todo - this should be the current network name, not the one being edited
                     networkName = networkName,
-                    openReferrals = { navController.navigate(Route.Referrals) },
                     createAccount = { navController.navigate(Route.GuestConversion) }
                 )
             }

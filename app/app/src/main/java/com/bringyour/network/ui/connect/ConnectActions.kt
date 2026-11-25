@@ -58,7 +58,6 @@ import com.bringyour.network.ui.components.UsageBar
 import com.bringyour.network.ui.components.dataInfoShowsFreeRefresh
 import com.bringyour.network.ui.components.focusRing
 import com.bringyour.network.ui.components.rememberFreeRefreshCountdown
-import com.bringyour.network.ui.navigateToUpgradeForBalanceBlock
 import com.bringyour.network.ui.shared.models.ConnectStatus
 import com.bringyour.network.ui.shared.viewmodels.Plan
 import com.bringyour.network.ui.stats.BlockActionsViewModel
@@ -128,7 +127,8 @@ internal fun ConnectActions(
     availableBytes: Long,
     pendingBytes: Long,
     meanReliabilityWeight: Double,
-    totalReferrals: Long,
+    // the referral row was removed with the referrals screen; kept defaulted
+    totalReferrals: Long = 0,
     dailyByteCount: Long,
     fixedIpSize: Boolean,
     toggleFixedIpSize: () -> Unit,
@@ -145,8 +145,8 @@ internal fun ConnectActions(
     // the window's providers with their state and IP version, for the
     // family status row under the transport bar
     ipFamilyPoints: List<IpFamilyPoint>,
-    // opens the referral flow from the usage bar referral row
-    onReferralClick: () -> Unit,
+    // the referral row was removed with the referrals screen; kept defaulted
+    onReferralClick: () -> Unit = {},
     // the selected location's name while the sdk says it has no post-quantum
     // exits right now, and its Turn off post-quantum
     // (PostQuantumUnavailableNotice)
@@ -271,9 +271,6 @@ internal fun ConnectActions(
                 // the network's client limit holds the device off: what to
                 // do, above the fold with the other alerts
                 ClientLimitNotice(navController = navController)
-                // the network's proxies use Pro features it does not have,
-                // under the client limit's when both show
-                ProFeaturesNotice(navController = navController)
                 // the account's sign-in ended while this device stays signed
                 // in: no sign-out, no disconnect, only this until it is closed
                 AccountSignInNotice()
@@ -348,19 +345,11 @@ internal fun ConnectActions(
         Spacer(modifier = Modifier.height(16.dp))
 
         ConnectPlanCard(
-            navController = navController,
-            currentPlan = currentPlan,
-            shownPlan = shownPlan,
-            retryPlan = retryPlan,
-            planAccountName = planAccountName,
-            isPollingSubscriptionBalance = isPollingSubscriptionBalance,
             usedBytes = usedBytes,
             availableBytes = availableBytes,
             pendingBytes = pendingBytes,
             meanReliabilityWeight = meanReliabilityWeight,
-            totalReferrals = totalReferrals,
             dailyByteCount = dailyByteCount,
-            onReferralClick = onReferralClick,
         )
     }
 }
@@ -409,16 +398,16 @@ internal fun ConnectActionButtonRow(
         }
 
         if (actionButtons.upgrade) {
-            // out of balance: upgrade replaces connect, but a requested
-            // connection always keeps its way out
+            // out of balance: this build sells no data plans, so there is no
+            // upgrade to open; the balance refreshes with the daily free
+            // grant, and a requested connection always keeps its way out
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 URButton(
-                    onClick = {
-                        navController.navigateToUpgradeForBalanceBlock()
-                    },
+                    onClick = {},
+                    enabled = false,
                     style = ButtonStyle.OUTLINE,
                     modifier = Modifier
                         .weight(1f)
@@ -877,25 +866,15 @@ internal fun ConnectOptions(
     }
 }
 
-/** The plan card at the end of the drawer: the plan, Get Pro, and the usage bar. */
+/** The card at the end of the drawer: the usage bar. The plan row and its
+ * Get Pro entry were removed with the subscription UI. */
 @Composable
 internal fun ConnectPlanCard(
-    navController: NavController,
-    currentPlan: Plan,
-    // the sdk's plan (support inbox 4074): Loading or Unreachable until the
-    // server answers, never Free; retryPlan reads the balance again
-    shownPlan: ShownPlan = if (currentPlan == Plan.Supporter) ShownPlan.Pro else ShownPlan.Free,
-    retryPlan: () -> Unit = {},
-    // the account the plan is on, under it (PlanAccountNameLine); empty shows none
-    planAccountName: String = "",
-    isPollingSubscriptionBalance: Boolean,
     usedBytes: Long,
     availableBytes: Long,
     pendingBytes: Long,
     meanReliabilityWeight: Double,
-    totalReferrals: Long,
     dailyByteCount: Long,
-    onReferralClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -907,91 +886,13 @@ internal fun ConnectPlanCard(
             .padding(16.dp)
     ) {
 
-
-        // member area
-        Column {
-            Text(
-                stringResource(id = R.string.plan),
-                style = TextStyle(
-                    color = TextMuted
-                )
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-
-                if (isPollingSubscriptionBalance) {
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .width(24.dp)
-                                .height(24.dp),
-                            color = TextMuted,
-                            trackColor = TextFaint,
-                            strokeWidth = 2.dp
-                        )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Text(stringResource(id = R.string.checking_payment),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = TextMuted
-                        )
-
-                    }
-
-                } else {
-
-                    // before the server answers, a spinner or the read's retry,
-                    // never Free
-                    ShownPlanName(shownPlan = shownPlan, retryPlan = retryPlan)
-                }
-
-                if (shownPlan.sellsPro) {
-
-                    TextButton(onClick = {
-                        // the same upgrade flow Account's "Change" opens; this used to
-                        // launch the onboarding funnel instead of the plan picker
-                        navController.navigate(Route.Upgrade)
-                    }) {
-                        Text(
-                            stringResource(id = R.string.get_pro),
-                            style = TextStyle(
-                                color = Pink
-                            )
-                        )
-                    }
-
-                }
-            }
-
-            // which account the plan is on (support inbox 6546)
-            PlanAccountNameLine(name = planAccountName)
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
         UsageBar(
             usedBytes = usedBytes,
             pendingBytes = pendingBytes,
             availableBytes = availableBytes,
             meanReliabilityWeight = meanReliabilityWeight,
-            totalReferrals = totalReferrals,
             dailyByteCount = dailyByteCount,
-            onReferralClick = onReferralClick,
-            // the free plan's refresh, once the server said Free
-            showFreeRefresh = shownPlan == ShownPlan.Free && dataInfoShowsFreeRefresh(currentPlan),
         )
-
     }
 }
 

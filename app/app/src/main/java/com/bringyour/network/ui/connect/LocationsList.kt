@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.ContextMenuItem
+import com.bringyour.network.ui.components.rememberCountryFlag
 import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.stats.NetworkPeerUi
 import com.bringyour.network.ui.stats.networkPeersSection
@@ -65,6 +66,9 @@ fun LocationsList(
     // connect screen's Disconnect: the menu of the row it is on offers it
     connectRequested: Boolean = false,
     onDisconnect: () -> Unit = {},
+    // the ping test's results by country code, shared by every row of that
+    // country; empty until a test runs
+    locationPings: Map<String, LocationPing> = emptyMap(),
 ) {
 
     // a row's context menu (Context_Menus): Connect, as its click, or
@@ -154,6 +158,7 @@ fun LocationsList(
                         ProviderRow(
                             location = location.name,
                             providerCount = location.providerCount,
+                            imageResourceId = rememberCountryFlag(location.countryCode),
                             onClick = {
                                 onLocationSelect(location)
                             },
@@ -162,7 +167,8 @@ fun LocationsList(
                             color = getLocationColor(location.connectLocationId.toString()),
                             onFocusChanged = onFocusChanged,
                             isStable = location.stable,
-                            isStrongPrivacy = location.strongPrivacy
+                            isStrongPrivacy = location.strongPrivacy,
+                            ping = location.countryCode?.takeIf { it.isNotEmpty() }?.let { locationPings[it] },
                         )
                     }
                 }
@@ -184,6 +190,7 @@ fun LocationsList(
                         val selected = selectedLocation?.connectLocationId?.bestAvailable == true
                         ProviderRow(
                             location = stringResource(id = R.string.best_available_provider),
+                            imageResourceId = R.drawable.main_nav_globe,
                             onClick = {
                                 // passing null for connect location will connect to best available
                                 onLocationSelect(null)
@@ -194,7 +201,8 @@ fun LocationsList(
                             onFocusChanged = onFocusChanged,
                             isStable = true,
                             isStrongPrivacy = false,
-                            displayIcons = false
+                            displayIcons = false,
+                            pingAuto = true,
                         )
                     }
 
@@ -223,6 +231,7 @@ fun LocationsList(
                         ProviderRow(
                             location = location.name,
                             providerCount = location.providerCount,
+                            imageResourceId = rememberCountryFlag(location.countryCode),
                             onClick = {
                                 onLocationSelect(location)
                             },
@@ -231,7 +240,8 @@ fun LocationsList(
                             color = getLocationColor(location.countryCode),
                             onFocusChanged = onFocusChanged,
                             isStable = location.stable,
-                            isStrongPrivacy = location.strongPrivacy
+                            isStrongPrivacy = location.strongPrivacy,
+                            ping = location.countryCode?.takeIf { it.isNotEmpty() }?.let { locationPings[it] },
                         )
                     }
                 }
@@ -293,6 +303,7 @@ fun LocationsList(
                         ProviderRow(
                             location = location.name,
                             providerCount = location.providerCount,
+                            imageResourceId = rememberCountryFlag(location.countryCode),
                             onClick = {
                                 onLocationSelect(location)
                             },
@@ -301,7 +312,8 @@ fun LocationsList(
                             color = getLocationColor(location.connectLocationId.toString()),
                             onFocusChanged = onFocusChanged,
                             isStable = location.stable,
-                            isStrongPrivacy = location.strongPrivacy
+                            isStrongPrivacy = location.strongPrivacy,
+                            ping = location.countryCode?.takeIf { it.isNotEmpty() }?.let { locationPings[it] },
                         )
                     }
                 }

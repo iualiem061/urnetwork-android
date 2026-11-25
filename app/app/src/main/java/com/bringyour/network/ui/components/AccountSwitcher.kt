@@ -82,7 +82,7 @@ fun AccountSwitcher(
     loginMode: LoginMode,
     networkName: String?,
     isPro: Boolean = false,
-    openReferrals: () -> Unit,
+    openReferrals: () -> Unit = {},
     // a legacy guest adds a sign-in method to this network; never a logout
     createAccount: () -> Unit = {},
 ) {
@@ -164,7 +164,6 @@ fun AccountSwitcher(
             when(loginMode) {
                 LoginMode.Guest -> GuestPopup(
                     onDismiss = { isOverlayVisible = false },
-                    openReferrals = openReferrals,
                     createAccount = createAccount,
                     focusRequester = focusRequester
                 )
@@ -172,35 +171,15 @@ fun AccountSwitcher(
                     onDismiss = { isOverlayVisible = false },
                     application = application,
                     context = context,
-                    openReferrals = openReferrals,
                     networkName = networkName,
                     focusRequester = focusRequester,
                     onSignOut = {
                         isOverlayVisible = false
-                        // warned first while the network's payout key isn't saved
-                        if (BittensorKeySignOut.needsBackup(context)) {
-                            keySignOutPending = true
-                        } else {
-                            signOut()
-                        }
+                        signOut()
                     }
                 )
             }
         }
-    }
-
-    if (keySignOutPending) {
-        BittensorKeySignOutDialog(
-            onBackUpFirst = {
-                keySignOutPending = false
-                BittensorKeyScreenRequests.request()
-            },
-            onSignOut = {
-                keySignOutPending = false
-                signOut()
-            },
-            onDismiss = { keySignOutPending = false },
-        )
     }
 }
 
@@ -248,7 +227,6 @@ fun AccountSwitcherPopup(
 @Composable
 fun GuestPopup(
     onDismiss: () -> Unit,
-    openReferrals: () -> Unit,
     createAccount: () -> Unit,
     focusRequester: FocusRequester
 ) {
@@ -272,17 +250,6 @@ fun GuestPopup(
             },
             focusRequester = focusRequester
         )
-
-        HorizontalDivider()
-
-        PopupActionRow(
-            iconResourceId = R.drawable.nav_list_item_refer,
-            text = stringResource(id = R.string.referrals),
-            onClick = {
-                openReferrals()
-                onDismiss()
-            },
-        )
     }
 }
 
@@ -291,10 +258,9 @@ fun AuthenticatedPopup(
     onDismiss: () -> Unit,
     context: Context?,
     application: MainApplication?,
-    openReferrals: () -> Unit,
     networkName: String?,
     focusRequester: FocusRequester,
-    // the sign out, through the payout key's warning
+    // the sign out
     onSignOut: () -> Unit = {
         application?.logout()
 
@@ -321,16 +287,6 @@ fun AuthenticatedPopup(
                 onSignOut()
             },
             focusRequester = focusRequester
-        )
-
-        HorizontalDivider()
-        PopupActionRow(
-            iconResourceId = R.drawable.nav_list_item_refer,
-            text = stringResource(id = R.string.referrals),
-            onClick = {
-                openReferrals()
-                onDismiss()
-            },
         )
     }
 }

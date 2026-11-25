@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Circle flag from the circle-flags collection (MIT, HatScripts) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <path
+        android:fillColor="#d80027"
+        android:fillType="nonZero"
+        android:pathData="M0 0h512v144.8l-45.8 113L512 367.4V512H0V367.4l46.3-111.1L0 144.8z"/>
+    <path
+        android:fillColor="#0052b4"
+        android:fillType="nonZero"
+        android:pathData="M0 144.8h512v222.6H0z"/>
+    <path
+        android:fillColor="#eee"
+        android:fillType="nonZero"
+        android:pathData="M167,256.1 a89,89 0 1 0 178,0 a89,89 0 1 0 -178,0 z"/>
+</vector>

@@ -162,8 +162,7 @@ fun LoginNavHost(
                         composable("login-initial") {
                             LoginInitial(
                                 navController,
-                                loginViewModel,
-                                activityResultSender
+                                loginViewModel
                             )
                         }
 

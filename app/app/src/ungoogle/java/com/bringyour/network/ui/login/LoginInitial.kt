@@ -1,723 +1,77 @@
 package com.bringyour.network.ui.login
 
-import com.bringyour.network.ui.connection_region.ConnectionRegionLoginControl
-import com.bringyour.network.ui.components.tabletForm
-import com.bringyour.network.ui.wallet.BittensorProofFlow
-import com.bringyour.network.ui.wallet.BittensorProofSheets
-import android.content.Context
-import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.Key
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.bringyour.network.ui.components.ButtonStyle
-import com.bringyour.network.ui.components.URButton
-import com.bringyour.network.ui.components.URTextInput
-import com.bringyour.network.ui.login.NetworkServerSelector
-import com.bringyour.network.ui.theme.URNetworkTheme
-import androidx.compose.ui.res.painterResource
-import com.bringyour.network.ui.theme.TextMuted
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.compose.LifecycleResumeEffect
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.bringyour.sdk.AuthLoginResult
-import com.bringyour.sdk.Api
-import com.bringyour.sdk.Sdk
-import com.bringyour.sdk.SolanaWalletFailure
-import com.bringyour.network.BuildConfig
-import com.bringyour.network.LoginActivity
-import com.bringyour.network.LoginRequest
-import com.bringyour.network.MainApplication
-import com.bringyour.network.R
-import com.bringyour.network.TAG
 import com.bringyour.network.ui.components.URInlineErrorText
-import com.bringyour.network.ui.components.overlays.WelcomeAnimatedOverlayLogin
-import com.solana.mobilewalletadapter.clientlib.ActivityResultSender
-import kotlinx.coroutines.launch
+import com.bringyour.network.ui.components.tabletForm
 
-@Composable()
+/**
+ * The initial sign-in screen: this build offers the instant account only.
+ * The carousel and the single Create Instant Account action stay centered;
+ * every other sign-in method (sso, wallets, auth code, seed phrase, email)
+ * was removed with the custom build.
+ */
+@Composable
 fun LoginInitial(
     navController: NavController,
     loginViewModel: LoginViewModel,
-    activityResultSender: ActivityResultSender?,
 ) {
-
-    val context = LocalContext.current
-    val application = context.applicationContext as? MainApplication
-    val scope = rememberCoroutineScope()
-    val loginActivity = context as? LoginActivity
-    var contentVisible by remember { mutableStateOf(true) }
-    var welcomeOverlayVisible by remember { mutableStateOf(false) }
-    var noSolanaWalletsFound by remember { mutableStateOf(false) }
-
-    // clear the bittensor auth spinner when returning from the sign message browser flow
-    LifecycleResumeEffect(Unit) {
-        if (loginViewModel.bittensorAuthInProgress) {
-            loginViewModel.setBittensorAuthInProgress(false)
-        }
-        // back from the browser sign-in: its return arrives in a new LoginActivity
-        if (loginViewModel.googleAuthInProgress) {
-            loginViewModel.setGoogleAuthInProgress(false)
-        }
-        if (loginViewModel.appleAuthInProgress) {
-            loginViewModel.setAppleAuthInProgress(false)
-        }
-        onPauseOrDispose {}
-    }
-
-    val onLogin: (LoginRequest, String) -> Unit = { request, networkJwt ->
-        handleLoginFlow(
-            request = request,
-            networkJwt = networkJwt,
-            scope = scope,
-            application = application,
-            onContentVisibilityChange = {
-                contentVisible = it
-            },
-            // the session limit says what to do on the error line; any other failure is the toast
-            onErr = { message ->
-                if (message != null) {
-                    loginViewModel.setLoginError(message)
-                } else {
-                    Toast.makeText(context, context.getString(R.string.error_logging_in_please_try_again), Toast.LENGTH_LONG).show()
-                }
-            },
-            onWelcomeOverlayVisibilityChange = {
-                welcomeOverlayVisible = it
-            },
-            finishAuthenticatedLoginAfterWelcome = {
-                loginActivity?.finishAuthenticatedLoginAfterWelcome(request)
-            }
-        )
-    }
-
-    // a wallet that did not sign: the sdk's message for why, every app's; no
-    // wallet app is the no-wallets alert, whose text is that message
-    val showSolanaWalletFailed: (SolanaWalletFailure) -> Unit = { failure ->
-        if (failure.failure == Sdk.SolanaWalletFailureNoWallet) {
-            noSolanaWalletsFound = true
-        } else {
-            loginViewModel.setLoginError(solanaWalletFailureText(context, failure))
-        }
-    }
-
-    val onCreateNetworkSolana: (
-        blockchain: String,
-        publicKey: String,
-        signedMessage: String,
-        signature: String
-            ) -> Unit = { blockchain, publicKey, _, _ ->
-
-        scope.launch {
-            activityResultSender?.let { sender ->
-                // the sign-in's spinner can still run here, and with it every
-                // sign-in button is off: each failure ends it, so the user can
-                // start again
-                val api = application?.api
-                if (api == null) {
-                    loginViewModel.setSolanaAuthInProgress(false)
-                    loginViewModel.setLoginError(context.getString(R.string.login_error))
-                    return@launch
-                }
-
-                // the message/signature this callback was invoked with were
-                // already consumed by the just-completed /auth/login call —
-                // fetch and sign a brand-new challenge before creating the network
-                when (val result = requestAndSignSolanaChallenge(sender, api)) {
-                    is SolanaChallengeSignResult.Success -> {
-                        Log.d("LoginInitial", "onCreateNetworkSolana signed pk=${result.signed.publicKey.isNotEmpty()}, message=${result.signed.message.isNotEmpty()}, signature=${result.signed.signature.isNotEmpty()}")
-
-                        if (result.signed.publicKey != publicKey) {
-                            loginViewModel.setSolanaAuthInProgress(false)
-                            loginViewModel.setLoginError("Wallet account changed. Please use the same account for create network.")
-                            return@launch
-                        }
-
-                        val bundle = WalletCreateBundle(
-                            blockchain = blockchain,
-                            publicKey = result.signed.publicKey,
-                            signedMessage = result.signed.message,
-                            signature = result.signed.signature
-                        )
-
-                        navController.navigate("create-network-wallet/${bundle.toBase64Json()}")
-                    }
-                    is SolanaChallengeSignResult.WalletFailed -> {
-                        loginViewModel.setSolanaAuthInProgress(false)
-                        showSolanaWalletFailed(result.failure)
-                    }
-                    // the server's challenge failed, not the wallet
-                    is SolanaChallengeSignResult.ChallengeUnavailable -> {
-                        loginViewModel.setSolanaAuthInProgress(false)
-                        loginViewModel.setLoginError(context.getString(R.string.login_error))
-                    }
-                }
-            }
-        }
-    }
-
-    val connectSolanaWallet = {
-        scope.launch {
-            activityResultSender?.let { sender ->
-                val api = application?.api
-                if (api == null) {
-                    loginViewModel.setLoginError(context.getString(R.string.login_error))
-                    return@launch
-                }
-
-                when (val result = requestAndSignSolanaChallenge(sender, api)) {
-                    is SolanaChallengeSignResult.Success -> {
-                        loginViewModel.walletLogin(
-                            context,
-                            api,
-                            result.signed.publicKey,
-                            result.signed.message,
-                            result.signed.signature,
-                            { request, loginResult -> onLogin(request, loginResult.network.byJwt) },
-                            onCreateNetworkSolana
-                        )
-                    }
-                    is SolanaChallengeSignResult.WalletFailed -> {
-                        showSolanaWalletFailed(result.failure)
-                    }
-                    // the server's challenge failed, not the wallet
-                    is SolanaChallengeSignResult.ChallengeUnavailable -> {
-                        loginViewModel.setLoginError(context.getString(R.string.login_error))
-                    }
-                }
-            }
-        }
-    }
-
-    // Talisman or TAO.com: neither documents a mobile connect interface, so
-    // the user signs the shown challenge in the wallet and pastes the proof
-    val bittensorLogin = remember {
-        BittensorLoginController(
-            flow = BittensorProofFlow(nowMillis = System::currentTimeMillis),
-            scope = scope,
-            api = { application?.api },
-            application = application,
-            setLoginError = loginViewModel.setLoginError,
-            setInProgress = loginViewModel.setBittensorAuthInProgress,
-            defaultError = { context.getString(R.string.login_error) },
-            onNetworkJwt = onLogin,
-            onCreateNetwork = { bundle ->
-                navController.navigate("create-network-wallet/${bundle.toBase64Json()}")
-            },
-            openUrl = { url -> launchBittensorBridge(context, url) },
-        )
-    }
-
-    // back from the WalletConnect page: a bridge that already returned is done
-    LifecycleResumeEffect(bittensorLogin) {
-        bittensorLogin.onResumed()
-        onPauseOrDispose {}
-    }
-
-    val connectBittensorWallet = {
-        bittensorLogin.start()
-    }
-
-    // this build has no Play services, so Google signs in like Apple: the
-    // provider's web flow in a Custom Tab, returned by the api's callback through
-    // ur://oauth/<provider> (handled by the LoginActivity)
-    val connectSso: (SsoProvider) -> Unit = { provider ->
-        loginViewModel.setLoginError(null)
-        val apiUrl = application?.networkSpaceManagerProvider?.getNetworkSpace()?.apiUrl
-        if (launchSsoOAuth(context, provider, apiUrl)) {
-            when (provider) {
-                SsoProvider.GOOGLE -> loginViewModel.setGoogleAuthInProgress(true)
-                SsoProvider.APPLE -> loginViewModel.setAppleAuthInProgress(true)
-            }
-        } else {
-            loginViewModel.setLoginError(context.getString(R.string.login_error))
-        }
-    }
-
-    // the seed sign-in is a slide-up sheet, like the auth code sign-in
-    var seedphraseLoginSheetVisible by rememberSaveable { mutableStateOf(false) }
-    val onSeedphraseLogin: () -> Unit = {
-        seedphraseLoginSheetVisible = true
-    }
 
     val onInstantAccountCreate: () -> Unit = {
         navController.navigate("create-network-instant")
     }
 
-    LoginInitial(
-        navController,
-        userAuth = loginViewModel.userAuth,
-        setUserAuth = loginViewModel.setUserAuth,
-        userAuthInProgress = loginViewModel.userAuthInProgress,
-        isValidUserAuth = loginViewModel.isValidUserAuth,
-        login = loginViewModel.login,
-        loginError = loginViewModel.loginError,
-        setLoginError = loginViewModel.setLoginError,
-        solanaLogin = {
-            connectSolanaWallet()
-        },
-        solanaAuthInProgress = loginViewModel.solanaAuthInProgress,
-        bittensorLogin = {
-            connectBittensorWallet()
-        },
-        bittensorAuthInProgress = loginViewModel.bittensorAuthInProgress,
-        googleLogin = { connectSso(SsoProvider.GOOGLE) },
-        googleAuthInProgress = loginViewModel.googleAuthInProgress,
-        appleLogin = { connectSso(SsoProvider.APPLE) },
-        appleAuthInProgress = loginViewModel.appleAuthInProgress,
-        onLogin = onLogin,
-        contentVisible = contentVisible,
-        setContentVisible = {
-            contentVisible = it
-        },
-        welcomeOverlayVisible = welcomeOverlayVisible,
-        setWelcomeOverlayVisible = {
-            welcomeOverlayVisible = it
-        },
-        onSeedphraseLogin = onSeedphraseLogin,
-        onInstantAccountCreate = onInstantAccountCreate
-    )
+    Scaffold { innerPadding ->
 
-    BittensorProofSheets(
-        flow = bittensorLogin.flow,
-        onChoose = bittensorLogin::choose,
-        onSubmit = bittensorLogin::submit,
-    )
-
-    SeedphraseLoginSheet(
-        isPresenting = seedphraseLoginSheetVisible,
-        setIsPresenting = { seedphraseLoginSheetVisible = it },
-        // deliberately not the welcome-overlay login flow: its delays only exist
-        // to time the overlay, which this sheet doesn't show, and they leave a
-        // window where the session is already persisted but the login hasn't
-        // finished
-        onLogin = { request, jwt ->
-            val application = context.applicationContext as? com.bringyour.network.MainApplication
-            val loginActivity = context as? com.bringyour.network.LoginActivity
-            application?.authenticateNetworkSession(request, jwt, newNetwork = false) { completion ->
-                when (completion) {
-                    is com.bringyour.network.LoginClientCompletion.Ready ->
-                        loginActivity?.finishAuthenticatedLoginNow(request)
-                    is com.bringyour.network.LoginClientCompletion.Failed -> {
-                        android.util.Log.e("LoginInitial", "auth client finish err: ${completion.message}")
-                        // the session limit says what to do on the error line; any other failure is the toast
-                        val sessionLimitMessage = signInClientFailureMessage(context, completion)
-                        if (sessionLimitMessage != null) {
-                            loginViewModel.setLoginError(sessionLimitMessage)
-                        } else {
-                            android.widget.Toast.makeText(context, context.getString(R.string.error_logging_in_please_try_again), android.widget.Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
-            }
-        }
-    )
-
-    if (noSolanaWalletsFound) {
-
-        NoSolanaWalletsAlert(
-            onDismiss = {
-                noSolanaWalletsFound = false
-            }
-        )
-
-    }
-
-}
-
-@Composable()
-fun LoginInitial(
-    navController: NavController,
-    userAuth: TextFieldValue,
-    setUserAuth: (TextFieldValue) -> Unit,
-    userAuthInProgress: Boolean,
-    isValidUserAuth: Boolean,
-    login: (
-        ctx: Context,
-        api: Api?,
-        onLogin: (LoginRequest, AuthLoginResult) -> Unit,
-        onNewNetwork: (AuthLoginResult) -> Unit,
-    ) -> Unit,
-    loginError: String?,
-    setLoginError: (String?) -> Unit,
-    solanaLogin: () -> Unit,
-    solanaAuthInProgress: Boolean,
-    bittensorLogin: () -> Unit,
-    bittensorAuthInProgress: Boolean,
-    googleLogin: () -> Unit = {},
-    googleAuthInProgress: Boolean = false,
-    appleLogin: () -> Unit = {},
-    appleAuthInProgress: Boolean = false,
-    onLogin: (LoginRequest, String) -> Unit,
-    contentVisible: Boolean,
-    setContentVisible: (Boolean) -> Unit,
-    welcomeOverlayVisible: Boolean,
-    setWelcomeOverlayVisible: (Boolean) -> Unit,
-    onSeedphraseLogin: () -> Unit,
-    onInstantAccountCreate: () -> Unit,
-) {
-
-    val context = LocalContext.current
-    val application = context.applicationContext as? MainApplication
-    val scope = rememberCoroutineScope()
-
-    var authCodeLoginSheetVisible by rememberSaveable { mutableStateOf(false) }
-
-    val setAuthCodeLoginSheetVisible: (Boolean) -> Unit = { isVisible ->
-        authCodeLoginSheetVisible = isVisible
-    }
-
-    val loginActivity = context as? LoginActivity
-
-    val navigateToLoginPassword: (LoginRequest, AuthLoginResult) -> Unit = { _, result ->
-        navController.navigate("login-password/${Uri.encode(result.userAuth)}")
-    }
-
-    val onNewNetwork: (AuthLoginResult) -> Unit = { result ->
-        navController.navigate("create-network/${Uri.encode(result.userAuth)}")
-    }
-
-    val createNetworkErrorMsg = stringResource(id = R.string.create_network_error)
-
-    AnimatedVisibility(
-        visible = contentVisible,
-        enter = EnterTransition.None,
-        exit = fadeOut()
-    ) {
-
-        Scaffold { innerPadding ->
-
-            // mobile + tablet
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(innerPadding)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Column(
-                    modifier = Modifier
-                        .tabletForm()
-                        .imePadding()
-                ) {
-                    OnboardingCarousel()
-
-                    Spacer(modifier = Modifier.height(64.dp))
-
-                    LoginInitialActions(
-                        userAuth = userAuth,
-                        setUserAuth = setUserAuth,
-                        userAuthInProgress = userAuthInProgress,
-                        isValidUserAuth = isValidUserAuth,
-                        loginError = loginError,
-                        onLogin = {
-                            login(
-                                context,
-                                application?.api,
-                                navigateToLoginPassword,
-                                onNewNetwork,
-                            )
-                        },
-                        onSolanaLogin = solanaLogin,
-                        solanaAuthInProgress = solanaAuthInProgress,
-                        onBittensorLogin = bittensorLogin,
-                        bittensorAuthInProgress = bittensorAuthInProgress,
-                        onGoogleLogin = googleLogin,
-                        googleAuthInProgress = googleAuthInProgress,
-                        onAppleLogin = appleLogin,
-                        appleAuthInProgress = appleAuthInProgress,
-                        launchAuthCodeLoginSheet = {
-                            setAuthCodeLoginSheetVisible(true)
-                        },
-                        onSeedphraseLogin = onSeedphraseLogin,
-                        onInstantAccountCreate = onInstantAccountCreate
-                    )
-
-                    // optional: how the app reaches URnetwork (ingress dns)
-                    ConnectionRegionLoginControl(
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
-
-            }
-        }
-    }
-
-    AuthCodeLoginSheet(
-        isPresenting = authCodeLoginSheetVisible,
-        setIsPresenting = {
-            setAuthCodeLoginSheetVisible(it)
-        },
-        onLogin = { request, jwt ->
-            onLogin(request, jwt)
-        }
-    )
-
-
-    if (welcomeOverlayVisible) {
-
-        WelcomeAnimatedOverlayLogin()
-
-    }
-}
-
-@Composable
-fun LoginInitialActions(
-    userAuth: TextFieldValue,
-    setUserAuth: (TextFieldValue) -> Unit,
-    userAuthInProgress: Boolean,
-    isValidUserAuth: Boolean,
-    loginError: String?,
-    onLogin: () -> Unit,
-    onSolanaLogin: () -> Unit,
-    solanaAuthInProgress: Boolean,
-    onBittensorLogin: () -> Unit,
-    bittensorAuthInProgress: Boolean,
-    onGoogleLogin: () -> Unit = {},
-    googleAuthInProgress: Boolean = false,
-    onAppleLogin: () -> Unit = {},
-    appleAuthInProgress: Boolean = false,
-    launchAuthCodeLoginSheet: () -> Unit,
-    onSeedphraseLogin: () -> Unit,
-    onInstantAccountCreate: () -> Unit,
-) {
-    val isLoginInProgress = userAuthInProgress || googleAuthInProgress || appleAuthInProgress || solanaAuthInProgress || bittensorAuthInProgress
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
+        // mobile + tablet
         Column(
             modifier = Modifier
-                .tabletForm(),
-            horizontalAlignment = Alignment.Start
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // the login stack rule (LoginStack.kt): up to three full-width buttons,
-            // then icon tiles four per row with each row filled; this flavor's lists,
-            // the play flavor's order (Google and Apple through the browser here)
-            LoginStack(
-                full = loginSsoProviders(BuildConfig.BRINGYOUR_BUNDLE_SSO_GOOGLE).map { provider ->
-                    when (provider) {
-                        SsoProvider.GOOGLE -> googleLoginMethod(onClick = onGoogleLogin, processing = googleAuthInProgress)
-                        SsoProvider.APPLE -> appleLoginMethod(onClick = onAppleLogin, processing = appleAuthInProgress)
-                    }
-                } + instantAccountLoginMethod(onClick = onInstantAccountCreate),
-                tiles = listOf(
-                    secretKeyLoginMethod(onClick = onSeedphraseLogin),
-                    authCodeLoginMethod(onClick = launchAuthCodeLoginSheet, tile = true),
-                    bittensorLoginMethod(onClick = onBittensorLogin, processing = bittensorAuthInProgress, tile = true),
-                    solanaLoginMethod(onClick = onSolanaLogin, processing = solanaAuthInProgress, tile = true)
-                ),
-                enabled = !isLoginInProgress
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                    .tabletForm()
+                    .imePadding()
             ) {
-                Text(
-                    stringResource(id = R.string.or),
-                    color = TextMuted
+                OnboardingCarousel()
+
+                Spacer(modifier = Modifier.height(64.dp))
+
+                // the login stack rule (LoginStack.kt): the instant account is
+                // the only sign-in this build offers
+                LoginStack(
+                    full = listOf(
+                        instantAccountLoginMethod(onClick = onInstantAccountCreate)
+                    ),
+                    tiles = emptyList(),
+                    enabled = true
                 )
+
+                loginViewModel.loginError?.let { loginError ->
+                    Spacer(modifier = Modifier.height(16.dp))
+                    URInlineErrorText(loginError)
+                }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            /**
-             * Email / phone
-             */
-            URTextInput(
-                value = userAuth,
-                onValueChange = {
-                    setUserAuth(it)
-                },
-                placeholder = stringResource(id = R.string.user_auth_placeholder),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Go
-                ),
-                onGo = {
-                    if (!isLoginInProgress && isValidUserAuth) {
-                        onLogin()
-                    }
-                },
-                label = stringResource(id = R.string.user_auth_label),
-                enabled = !isLoginInProgress,
-                modifier = Modifier.testTag("acceptance.password.user")
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            URButton(
-                onClick = {
-                    onLogin()
-                },
-                enabled = !isLoginInProgress && isValidUserAuth,
-                isProcessing = userAuthInProgress,
-                modifier = Modifier.testTag("acceptance.password.next")
-            ) { buttonTextStyle ->
-                Text(stringResource(id = R.string.get_started), style = buttonTextStyle)
-            }
-
-            if (!loginError.isNullOrEmpty()) {
-                Spacer(modifier = Modifier.height(16.dp))
-                URInlineErrorText(loginError, Modifier.testTag("acceptance.password.discovery-error"))
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            NetworkServerSelector(enabled = !isLoginInProgress)
-        }
-    }
-
-}
-
-@Preview()
-@Composable
-private fun LoginInitialPreview() {
-
-    val navController = rememberNavController()
-
-    val login: (
-        Context,
-        Api?,
-        (LoginRequest, AuthLoginResult) -> Unit,
-        (AuthLoginResult) -> Unit,
-    ) -> Unit = { context, api, onLogin, onNewNetwork ->
-
-    }
-
-    URNetworkTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize()
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                LoginInitial(
-                    navController = navController,
-                    userAuth = TextFieldValue("hello@ur.io"),
-                    setUserAuth = {},
-                    userAuthInProgress = false,
-                    isValidUserAuth = true,
-                    login = login,
-                    loginError = null,
-                    setLoginError = {},
-                    solanaAuthInProgress = false,
-                    solanaLogin = {},
-                    bittensorAuthInProgress = false,
-                    bittensorLogin = {},
-                    onLogin = { _, _ -> },
-                    contentVisible = true,
-                    setContentVisible = {},
-                    welcomeOverlayVisible = false,
-                    setWelcomeOverlayVisible = {},
-                    onSeedphraseLogin = {},
-                    onInstantAccountCreate = {},
-                )
-            }
-        }
-    }
-}
-
-@Preview(
-    name = "Landscape Preview",
-    device = "spec:width=1920dp,height=1080dp,dpi=480"
-)
-@Composable
-private fun LoginInitialLandscapePreview() {
-    val navController = rememberNavController()
-
-    val login: (
-        Context,
-        Api?,
-        (LoginRequest, AuthLoginResult) -> Unit,
-        (AuthLoginResult) -> Unit,
-    ) -> Unit = { context, api, onLogin, onNewNetwork ->
-
-    }
-
-    URNetworkTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize()
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                LoginInitial(
-                    navController = navController,
-                    userAuth = TextFieldValue("hello@ur.io"),
-                    setUserAuth = {},
-                    userAuthInProgress = false,
-                    isValidUserAuth = true,
-                    login = login,
-                    loginError = null,
-                    setLoginError = {},
-                    solanaAuthInProgress = false,
-                    solanaLogin = {},
-                    bittensorAuthInProgress = false,
-                    bittensorLogin = {},
-                    contentVisible = true,
-                    setContentVisible = {},
-                    welcomeOverlayVisible = false,
-                    setWelcomeOverlayVisible = {},
-                    onLogin = { _, _ -> },
-                    onSeedphraseLogin = {},
-                    onInstantAccountCreate = {},
-                )
-            }
         }
     }
 }

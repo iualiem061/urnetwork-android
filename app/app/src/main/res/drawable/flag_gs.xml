@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Circle flag from the circle-flags collection (MIT, HatScripts) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <path
+        android:fillColor="#0052b4"
+        android:fillType="nonZero"
+        android:pathData="M256 0h256v512H0V256Z"/>
+    <path
+        android:fillColor="#eee"
+        android:fillType="nonZero"
+        android:pathData="M0 0v32l32 32L0 96v160h32l32-32 32 32h32v-83l83 83h45l-8-16 8-15v-14l-83-83h83V96l-32-32 32-32V0H96L64 32 32 0Z"/>
+    <path
+        android:fillColor="#d80027"
+        android:fillType="nonZero"
+        android:pathData="M32 0v32H0v64h32v160h64V96h160V32H96V0Zm96 128 128 128v-31l-97-97z"/>
+    <path
+        android:fillColor="#6da544"
+        android:fillType="nonZero"
+        android:pathData="M352,256 h32 a16,16 0 0 1 16,16 v0 a16,16 0 0 1 -16,16 h-32 a16,16 0 0 1 -16,-16 v-0 a16,16 0 0 1 16,-16 z"/>
+    <path
+        android:fillColor="#ff9811"
+        android:fillType="nonZero"
+        android:pathData="M336,96 a32,32 0 1 0 64,0 a32,32 0 1 0 -64,0 z"/>
+    <path
+        android:fillColor="#acabb1"
+        android:fillType="nonZero"
+        android:pathData="M320,144 a48,48 0 1 0 96,0 a48,48 0 1 0 -96,0 z"/>
+    <path
+        android:fillColor="#338af3"
+        android:fillType="nonZero"
+        android:pathData="M320 144v77c0 36 48 48 48 48s48-12 48-48v-77z"/>
+    <path
+        android:fillColor="#333"
+        android:fillType="nonZero"
+        android:pathData="M304,128 h0 a16,16 0 0 1 16,16 v96 a16,16 0 0 1 -16,16 h-0 a16,16 0 0 1 -16,-16 v-96 a16,16 0 0 1 16,-16 z"/>
+    <path
+        android:fillColor="#333"
+        android:fillType="nonZero"
+        android:pathData="M432,128 h0 a16,16 0 0 1 16,16 v96 a16,16 0 0 1 -16,16 h-0 a16,16 0 0 1 -16,-16 v-96 a16,16 0 0 1 16,-16 z"/>
+    <path
+        android:fillColor="#6da544"
+        android:fillType="nonZero"
+        android:pathData="m320 144 48 112 48-112z"/>
+    <path
+        android:fillColor="#ffda44"
+        android:fillType="nonZero"
+        android:pathData="M288 288v32h32v8h96v-8h32v-32h-32v8h-96v-8z"/>
+</vector>

@@ -127,7 +127,6 @@ import com.bringyour.network.ui.shared.models.BundleStore
 import com.bringyour.network.ui.shared.models.ConnectStatus
 import com.bringyour.network.ui.shared.viewmodels.OverlayViewModel
 import com.bringyour.network.ui.shared.viewmodels.Plan
-import com.bringyour.network.ui.shared.viewmodels.PlanViewModel
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
 import com.bringyour.network.ui.theme.Black
 import com.bringyour.network.ui.theme.SheetBlack
@@ -148,15 +147,10 @@ fun ConnectScreen(
     locationsViewModel: LocationsListViewModel,
     navController: NavController,
     subscriptionBalanceViewModel: SubscriptionBalanceViewModel,
-    planViewModel: PlanViewModel,
     bundleStore: BundleStore?,
     meanReliabilityWeight: Double,
-    totalReferrals: Long,
     isPro: Boolean,
     connectActionsSheetState: ConnectDrawerState,
-    // the referral toast draws over the top of the screen (MainNavHost): the
-    // slow internet pill makes way for it
-    referralToastVisible: Boolean = false,
     // the location picker open as a dialog in the pane arrangements, and the
     // list's scroll position; kept above the screen (MainNavHost), so a fold
     // turns the dialog into the picker's screen and back without losing them
@@ -313,10 +307,6 @@ fun ConnectScreen(
     val arrangement = connectArrangementFor(windowLayout.widthDp, windowLayout.heightDp, windowLayout.fold)
     val currentPlan = if (isPro) Plan.Supporter else Plan.Basic
     // the plan card's plan: never Free before the server answered (support inbox 4074)
-    val shownPlan by subscriptionBalanceViewModel.shownPlan.collectAsState()
-    // and which account it is on (support inbox 6546)
-    val planAccountName by subscriptionBalanceViewModel.planAccountName.collectAsState()
-
     // Above the arrangements, so a fold, an unfold or a resize keeps them: the
     // "About your data" sheet (Why? under the out-of-balance notice), the
     // panes' scroll, and the taps of the connected easter egg.
@@ -437,8 +427,6 @@ fun ConnectScreen(
             )
             // the network's client limit holds the device off: what to do
             ClientLimitNotice(navController = navController)
-            // the network's proxies use Pro features it does not have
-            ProFeaturesNotice(navController = navController)
             // the account's sign-in ended while this device stays signed in
             AccountSignInNotice()
             Spacer(modifier = Modifier.height(12.dp))
@@ -478,9 +466,6 @@ fun ConnectScreen(
                 getLocationColor = locationsViewModel.getLocationColor,
                 minHeight = minHeight,
                 currentPlan = currentPlan,
-                shownPlan = shownPlan,
-                retryPlan = subscriptionBalanceViewModel.refreshSubscriptionBalance,
-                planAccountName = planAccountName,
                 connect = connect,
                 disconnect = connectViewModel.disconnect,
                 reconnectTunnel = reconnectTunnel,
@@ -500,7 +485,6 @@ fun ConnectScreen(
                 pendingBytes = subscriptionBalanceViewModel.pendingBalanceByteCount,
                 availableBytes = availableBytes,
                 meanReliabilityWeight = meanReliabilityWeight,
-                totalReferrals = totalReferrals,
                 dailyByteCount = dailyByteCount,
                 fixedIpSize = connectViewModel.fixedIpSize,
                 toggleFixedIpSize = connectViewModel.toggleFixedIp,
@@ -515,9 +499,6 @@ fun ConnectScreen(
                 dnsSettingsViewModel = dnsSettingsViewModel,
                 blockerViewModel = blockerViewModel,
                 ipFamilyPoints = connectViewModel.ipFamilyPoints,
-                onReferralClick = {
-                    navController.navigate(Route.Referrals)
-                },
                 postQuantumUnavailableLocationName = connectViewModel.postQuantumUnavailableLocationName,
                 turnOffPostQuantum = { connectViewModel.setPostQuantumEncryption(false) },
             )
@@ -705,19 +686,11 @@ fun ConnectScreen(
                             )
 
                             ConnectPlanCard(
-                                navController = navController,
-                                currentPlan = currentPlan,
-                                shownPlan = shownPlan,
-                                retryPlan = subscriptionBalanceViewModel.refreshSubscriptionBalance,
-                                planAccountName = planAccountName,
-                                isPollingSubscriptionBalance = subscriptionBalanceViewModel.isPollingSubscriptionBalance,
                                 usedBytes = subscriptionBalanceViewModel.usedBalanceByteCount,
                                 availableBytes = availableBytes,
                                 pendingBytes = subscriptionBalanceViewModel.pendingBalanceByteCount,
                                 meanReliabilityWeight = meanReliabilityWeight,
-                                totalReferrals = totalReferrals,
                                 dailyByteCount = dailyByteCount,
-                                onReferralClick = { navController.navigate(Route.Referrals) },
                             )
 
                             Spacer(modifier = Modifier.height(8.dp))
@@ -786,7 +759,7 @@ fun ConnectScreen(
         SlowInternetPill(
             transportDelay = transportDelay,
             available = displayConnectStatus != ConnectStatus.DISCONNECTED,
-            hidden = referralToastVisible,
+            hidden = false,
             setPillVisible = connectViewModel.setSlowInternetPillVisible,
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -858,6 +831,9 @@ fun ConnectScreen(
                         connectViewModel.disconnect()
                         setLocationPickerOpen(false)
                     },
+                    locationPings = locationsViewModel.locationPings.toMap(),
+                    onTestPings = { locationsViewModel.testLocationPings() },
+                    pingTestRunning = locationsViewModel.pingTestRunning,
                 )
             }
         }

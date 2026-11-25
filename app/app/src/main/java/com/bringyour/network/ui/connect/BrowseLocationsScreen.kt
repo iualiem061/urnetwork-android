@@ -114,6 +114,9 @@ fun BrowseLocationsScreen(
                     connectViewModel.disconnect()
                     navController.popBackStack()
                 },
+                locationPings = locationsListViewModel.locationPings.toMap(),
+                onTestPings = { locationsListViewModel.testLocationPings() },
+                pingTestRunning = locationsListViewModel.pingTestRunning,
             )
         }
     }

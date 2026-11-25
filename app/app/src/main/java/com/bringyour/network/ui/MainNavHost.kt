@@ -2,9 +2,6 @@ package com.bringyour.network.ui
 
 import com.bringyour.network.ui.components.FoldSafeAlertDialog
 import com.bringyour.network.ui.connection_region.CantReachRegionPrompt
-import com.bringyour.network.ui.introduction.LocalIntroConnector
-import com.bringyour.network.ui.introduction.IntroConnectorState
-import com.bringyour.network.ui.introduction.FloatingIntroConnector
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,9 +25,6 @@ import com.bringyour.network.ui.components.sideBySideSplit
 import com.bringyour.network.ui.components.sidePaneWidth
 import com.bringyour.network.ui.connect.rememberLocationListPosition
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.bringyour.network.ui.introduction.IntroductionQuickConnect
-import com.bringyour.network.ui.introduction.IntroductionOffer
-import com.bringyour.network.ui.introduction.IntroStepTimer
 import com.bringyour.network.ui.shared.enums.PlanType
 import com.bringyour.network.ui.upgrade.rememberPlanPresentation
 import com.bringyour.network.ui.upgrade.CheckoutRefusal
@@ -165,7 +159,6 @@ import com.bringyour.network.ui.settings.VlessSettingsScreen
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
 import com.bringyour.network.ui.wallet.BittensorKeyScreenRequests
 import com.bringyour.network.ui.wallet.EarningsViewModel
-import com.bringyour.network.ui.wallet.EarningsScreen
 import com.bringyour.network.ui.wallet.Top200SignLinks
 import com.bringyour.network.ui.wallet.Top200SignScreen
 import com.solana.mobilewalletadapter.clientlib.ActivityResultSender
@@ -175,10 +168,6 @@ import com.bringyour.network.ui.api_error.ApiErrorScreen
 import com.bringyour.network.ui.balance_codes.BalanceCodesScreen
 import com.bringyour.network.ui.blocked_regions.BlockedRegionsScreen
 import com.bringyour.network.ui.components.overlays.OverlayMode
-import com.bringyour.network.ui.introduction.IntroductionInitial
-import com.bringyour.network.ui.introduction.IntroductionReferral
-import com.bringyour.network.ui.introduction.IntroductionSettings
-import com.bringyour.network.ui.introduction.IntroductionUsageBar
 import com.bringyour.network.ui.shared.models.BundleStore
 import com.bringyour.network.ui.shared.models.ProvideControlMode
 import com.bringyour.network.ui.shared.viewmodels.AccountPointsViewModel
@@ -205,9 +194,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavHost(
-    earningsViewModel: EarningsViewModel,
     settingsViewModel: SettingsViewModel,
-    planViewModel: PlanViewModel,
     subscriptionBalanceViewModel: SubscriptionBalanceViewModel,
     overlayViewModel: OverlayViewModel,
     animateIn: Boolean,
@@ -221,7 +208,6 @@ fun MainNavHost(
     connectViewModel: ConnectViewModel = hiltViewModel<ConnectViewModel>(),
     locationsListViewModel: LocationsListViewModel = hiltViewModel<LocationsListViewModel>(),
     networkReliabilityViewModel: NetworkReliabilityViewModel = hiltViewModel<NetworkReliabilityViewModel>(),
-    solanaPaymentViewModel: SolanaPaymentViewModel = hiltViewModel<SolanaPaymentViewModel>(),
 ) {
 
     // the referral cap and bonus come from the server with the referral code;
@@ -250,11 +236,8 @@ fun MainNavHost(
         ) {
         // the flavors that sell outside a store share one crypto invoice in the
         // activity (src/cryptoPay); on Play this is the content as it is
-        PaymentMethodsScope {
         MainNavHostContent(
-        earningsViewModel = earningsViewModel,
         settingsViewModel = settingsViewModel,
-        planViewModel = planViewModel,
         subscriptionBalanceViewModel = subscriptionBalanceViewModel,
         overlayViewModel = overlayViewModel,
         animateIn = animateIn,
@@ -268,9 +251,7 @@ fun MainNavHost(
         connectViewModel = connectViewModel,
         locationsListViewModel = locationsListViewModel,
         networkReliabilityViewModel = networkReliabilityViewModel,
-        solanaPaymentViewModel = solanaPaymentViewModel
         )
-        }
         }
     }
 }
@@ -278,9 +259,7 @@ fun MainNavHost(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainNavHostContent(
-    earningsViewModel: EarningsViewModel,
     settingsViewModel: SettingsViewModel,
-    planViewModel: PlanViewModel,
     subscriptionBalanceViewModel: SubscriptionBalanceViewModel,
     overlayViewModel: OverlayViewModel,
     animateIn: Boolean,
@@ -294,20 +273,12 @@ private fun MainNavHostContent(
     connectViewModel: ConnectViewModel = hiltViewModel<ConnectViewModel>(),
     locationsListViewModel: LocationsListViewModel = hiltViewModel<LocationsListViewModel>(),
     networkReliabilityViewModel: NetworkReliabilityViewModel = hiltViewModel<NetworkReliabilityViewModel>(),
-    solanaPaymentViewModel: SolanaPaymentViewModel = hiltViewModel<SolanaPaymentViewModel>(),
 ) {
 
     val currentTopLevelRoute by mainNavViewModel.currentTopLevelRoute.collectAsState()
     val currentRoute by mainNavViewModel.currentRoute.collectAsState()
     val reliabilityWindow by networkReliabilityViewModel.reliabilityWindow.collectAsState()
-    val totalReferralCount by referralCodeViewModel.totalReferralCount.collectAsState()
     val referralCode by referralCodeViewModel.referralCode.collectAsState()
-    val referralCodeLoad by referralCodeViewModel.codeLoad.collectAsState()
-    val pendingReferralCelebration by referralCodeViewModel.pendingCelebration.collectAsState()
-    val pendingSolanaSubReference by solanaPaymentViewModel.pendingSolanaSubscriptionReference.collectAsState()
-    val displayIntroFunnel by mainNavViewModel.displayIntroFunnel.collectAsState()
-    val allowPromptIntroFunnel by mainNavViewModel.allowDisplayIntroFunnel.collectAsState()
-    val hasActiveSubscription by subscriptionBalanceViewModel.hasActiveSubscription.collectAsState()
     // the account the purchase overlay names (support inbox 6546)
     val planAccountName by subscriptionBalanceViewModel.planAccountName.collectAsState()
 
@@ -363,10 +334,6 @@ private fun MainNavHostContent(
             val route = Route.fromString(destination.route ?: "")
             if (route == Route.Connect && currentTopLevelRoute.route != Route.Connect) {
                 mainNavViewModel.setCurrentTopLevelRoute(TopLevelScaffoldRoutes.CONNECT_CONTAINER)
-            }
-
-            if (route == Route.Support && currentTopLevelRoute.route != Route.Support) {
-                mainNavViewModel.setCurrentTopLevelRoute(TopLevelScaffoldRoutes.SUPPORT)
             }
 
             if (route == Route.AccountContainer && currentTopLevelRoute.route != Route.AccountContainer) {
@@ -449,27 +416,15 @@ private fun MainNavHostContent(
             selectTopLevelRoute(TopLevelScaffoldRoutes.CONNECT_CONTAINER)
             return@LaunchedEffect
         }
-        if (route == com.bringyour.network.QuickConnectActivity.ROUTE_UPGRADE) {
-            // a connect blocked by insufficient balance: the upgrade the connect
-            // screen offers in place of Connect
+        if (route == com.bringyour.network.QuickConnectActivity.ROUTE_PROVIDER_LOCATIONS ||
+            route == com.bringyour.network.QuickConnectActivity.ROUTE_CONTRACT_STATS
+        ) {
             selectTopLevelRoute(TopLevelScaffoldRoutes.CONNECT_CONTAINER)
-            navController.navigateToUpgradeForBalanceBlock()
-            return@LaunchedEffect
         }
-        if (route == com.bringyour.network.QuickConnectActivity.ROUTE_EARNINGS_KEY) {
-            // the payout key's reminder, tapped: Earnings with its Key screen
-            BittensorKeyScreenRequests.request()
-            return@LaunchedEffect
-        }
-        // the campaign email links land on Account screens: the widgets page, the
-        // Get Pro screen (which shows the welcome offer while it is active), or
-        // the feedback screen with the email's rating or reason pre-filled
         com.bringyour.network.analytics.OnboardingLink.stepForRoute(route)?.let { step ->
             selectTopLevelRoute(TopLevelScaffoldRoutes.ACCOUNT_CONTAINER)
             when (step) {
                 com.bringyour.network.analytics.OnboardingLink.STEP_WIDGETS -> navController.navigate(Route.Widgets)
-                com.bringyour.network.analytics.OnboardingLink.STEP_OFFER -> navController.navigate(Route.Upgrade)
-                com.bringyour.network.analytics.OnboardingLink.STEP_FEEDBACK -> navController.navigate(Route.Support)
             }
             return@LaunchedEffect
         }
@@ -487,425 +442,6 @@ private fun MainNavHostContent(
         }
     }
 
-    // the ur.io bridge returned a signed wallet-connect challenge: show the earnings
-    // screen, where the view model validates and attaches the coldkey
-    val pendingEarningsNavigation by earningsViewModel.pendingEarningsNavigation.collectAsState()
-    LaunchedEffect(pendingEarningsNavigation) {
-        if (!pendingEarningsNavigation) {
-            return@LaunchedEffect
-        }
-        earningsViewModel.consumeEarningsNavigation()
-        selectTopLevelRoute(TopLevelScaffoldRoutes.ACCOUNT_CONTAINER)
-        navController.navigate(Route.Earnings)
-    }
-
-    // Back up first (sign out, account deletion) and the payout key's reminder:
-    // Earnings, which opens its Key screen once the key's flow is ready
-    val pendingKeyScreenNavigation by BittensorKeyScreenRequests.navigation.collectAsState()
-    LaunchedEffect(pendingKeyScreenNavigation) {
-        if (!pendingKeyScreenNavigation) {
-            return@LaunchedEffect
-        }
-        BittensorKeyScreenRequests.consumeNavigation()
-        selectTopLevelRoute(TopLevelScaffoldRoutes.ACCOUNT_CONTAINER)
-        // the account stack it restores may already end on Earnings: that one
-        // opens the Key screen, rather than a second Earnings on top of it
-        navController.navigate(Route.Earnings) {
-            launchSingleTop = true
-        }
-    }
-
-    // a ur://top200/sign app link: open the sign screen whatever the Top 200 state;
-    // the screen takes the link, which only fills its field
-    val pendingTop200SignNavigation by Top200SignLinks.navigation.collectAsState()
-    LaunchedEffect(pendingTop200SignNavigation) {
-        if (!pendingTop200SignNavigation) {
-            return@LaunchedEffect
-        }
-        Top200SignLinks.consumeNavigation()
-        if (navController.currentDestination?.hasRoute<Route.Top200Sign>() == true) {
-            return@LaunchedEffect
-        }
-        selectTopLevelRoute(TopLevelScaffoldRoutes.ACCOUNT_CONTAINER)
-        navController.navigate(Route.Top200Sign)
-    }
-
-    InsufficientBalanceNoticeEffect(
-        connectViewModel = connectViewModel,
-        isPro = isPro,
-        isPollingSubscriptionBalance = subscriptionBalanceViewModel.isPollingSubscriptionBalance,
-    )
-
-    /**
-     * For initial intro funnel prompting
-     */
-    val isGuestNetworkForIntro by subscriptionBalanceViewModel.isGuestNetwork.collectAsState()
-    // a refreshed guest is a guest only once the balance has loaded
-    val guestStatusKnownForIntro by subscriptionBalanceViewModel.guestStatusKnown.collectAsState()
-    LaunchedEffect(isPro, allowPromptIntroFunnel, isGuestNetworkForIntro, guestStatusKnownForIntro) {
-
-        // the intro sells a plan; a guest network is not sold one (GuestAccount),
-        // and it waits until the guest status is known
-        when (GuestAccount.introFunnel(
-            isPro = isPro,
-            isGuest = isGuestNetworkForIntro,
-            guestStatusKnown = guestStatusKnownForIntro,
-            allowPrompt = allowPromptIntroFunnel,
-        )) {
-            IntroFunnel.Hide -> mainNavViewModel.setDisplayIntroFunnel(false)
-            IntroFunnel.Show -> {
-                // display intro funnel
-                mainNavViewModel.setDisplayIntroFunnel(true)
-                // set time last prompted in localstorage
-                mainNavViewModel.setIntroFunnelLastPrompted()
-            }
-            IntroFunnel.Unchanged -> {}
-        }
-
-    }
-
-    /**
-     * On upgrade success, if in the intro funnel, close flow
-     */
-    LaunchedEffect(Unit) {
-        planViewModel.upgradeSuccessSequence.collect { sequence ->
-            if (!planViewModel.consumeUpgradeSuccessSequence(sequence)) {
-                return@collect
-            }
-
-            // the celebration flight plays over the "Nicely done" overlay
-            overlayViewModel.launchSunglassesFlight()
-            overlayViewModel.launch(OverlayMode.Upgrade)
-            subscriptionBalanceViewModel.pollSubscriptionBalance()
-
-            if (mainNavViewModel.displayIntroFunnel.value) {
-                mainNavViewModel.setDisplayIntroFunnel(false)
-            } else {
-                navController.popBackStack()
-            }
-        }
-    }
-
-    /**
-     * A Stripe sheet / pay page / checkout-return purchase the server has confirmed
-     * (SubscriptionBalanceViewModel.confirmPurchase). The overlay launches only now,
-     * never when the payment UI merely reported success.
-     */
-    LaunchedEffect(Unit) {
-        subscriptionBalanceViewModel.purchaseConfirmedSequence.collect { sequence ->
-            if (!subscriptionBalanceViewModel.consumePurchaseConfirmedSequence(sequence)) {
-                return@collect
-            }
-
-            overlayViewModel.launchSunglassesFlight()
-            overlayViewModel.launch(OverlayMode.Upgrade)
-        }
-    }
-
-    /**
-     * The server refused a purchase for a guest network the app did not know
-     * about (SubscriptionBalanceViewModel.guestSignInRequired), which now reads
-     * as a guest: the upgrade route shows the add-sign-in sheet in place of
-     * checkout, and the intro funnel hides itself, so a refusal from the intro
-     * opens the upgrade route on that sheet.
-     */
-    LaunchedEffect(Unit) {
-        subscriptionBalanceViewModel.guestSignInRequiredSequence.collect { sequence ->
-            if (!subscriptionBalanceViewModel.consumeGuestSignInRequiredSequence(sequence)) {
-                return@collect
-            }
-
-            if (navController.currentDestination?.hasRoute<Route.Upgrade>() != true) {
-                navController.navigate(Route.Upgrade)
-            }
-        }
-    }
-
-    /**
-     * Every billing error reaches the user, with a way out.
-     *
-     * `changePlanError` was set in half a dozen places -- a declined card, a billing
-     * client failure, "Network not found" -- and rendered nowhere. A failed purchase
-     * therefore looked exactly like nothing happening: the spinner stopped and the user
-     * was left staring at the plan screen with no idea what went wrong or what to do.
-     *
-     * A payment error the user cannot see is a payment error they will hit again, so
-     * this always offers the remedy (try again) rather than just reporting the failure.
-     */
-    // a network-level failure reaching URnetwork offers the connection
-    // region picker; it never changes the region by itself
-    CantReachRegionPrompt()
-
-    planViewModel.changePlanError?.let { changePlanError ->
-        FoldSafeAlertDialog(
-            onDismissRequest = { planViewModel.setChangePlanError(null) },
-            title = { Text(stringResource(id = R.string.payment_problem)) },
-            text = { Text(changePlanError) },
-            confirmButton = {
-                val retryUpgrade = planViewModel.retryUpgrade
-                TextButton(
-                    onClick = {
-                        planViewModel.setChangePlanError(null)
-                        retryUpgrade?.invoke()
-                    }
-                ) {
-                    Text(
-                        stringResource(
-                            id = if (retryUpgrade != null) R.string.try_again else R.string.close
-                        )
-                    )
-                }
-            },
-            dismissButton = {
-                // only a second button when there is actually something to retry
-                if (planViewModel.retryUpgrade != null) {
-                    TextButton(onClick = { planViewModel.setChangePlanError(null) }) {
-                        Text(stringResource(id = R.string.close))
-                    }
-                }
-            }
-        )
-    }
-
-    /**
-     * The post-payment confirmation poll exhausted its 2-minute budget without the
-     * server confirming the subscription. This used to end in a log line
-     * ("polling timed out") -- the honest terminal state is: payment received,
-     * confirmation still in flight, the plan updates by itself, do not buy again.
-     */
-    var showConfirmationDelayedDialog by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        subscriptionBalanceViewModel.confirmationTimedOutSequence.collect { sequence ->
-            if (!subscriptionBalanceViewModel.consumeConfirmationTimedOutSequence(sequence)) {
-                return@collect
-            }
-
-            showConfirmationDelayedDialog = true
-        }
-    }
-
-    /**
-     * The purchase is persisted client-side but the server never gave a terminal
-     * answer to the report within the bounded in-session retries (Play flavor). Same
-     * honest terminal state as the poll timeout: payment received, confirmation in
-     * flight, do not buy again -- the daily reconcile worker carries the report.
-     */
-    LaunchedEffect(Unit) {
-        planViewModel.purchaseReportDeferredSequence.collect { sequence ->
-            if (!planViewModel.consumePurchaseReportDeferredSequence(sequence)) {
-                return@collect
-            }
-
-            showConfirmationDelayedDialog = true
-        }
-    }
-
-    /**
-     * The Solana return-path check passed the old 20 s cap: say it is still checking
-     * rather than going quiet. If it runs out its two minutes, the confirmation-delayed
-     * notice follows -- without the "Payment received" title, since the app cannot
-     * know the wallet sent anything.
-     */
-    val solanaStillCheckingMessage = stringResource(id = R.string.solana_payment_still_checking)
-    val navHostContext = LocalContext.current
-    LaunchedEffect(Unit) {
-        subscriptionBalanceViewModel.solanaStillCheckingSequence.collect { sequence ->
-            if (!subscriptionBalanceViewModel.consumeSolanaStillCheckingSequence(sequence)) {
-                return@collect
-            }
-
-            Toast.makeText(navHostContext, solanaStillCheckingMessage, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    var showSolanaCheckDelayedDialog by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        subscriptionBalanceViewModel.solanaCheckTimedOutSequence.collect { sequence ->
-            if (!subscriptionBalanceViewModel.consumeSolanaCheckTimedOutSequence(sequence)) {
-                return@collect
-            }
-
-            showSolanaCheckDelayedDialog = true
-        }
-    }
-
-    if (showSolanaCheckDelayedDialog) {
-        FoldSafeAlertDialog(
-            onDismissRequest = { showSolanaCheckDelayedDialog = false },
-            text = { Text(stringResource(id = R.string.payment_confirmation_delayed)) },
-            confirmButton = {
-                TextButton(onClick = { showSolanaCheckDelayedDialog = false }) {
-                    Text(stringResource(id = R.string.close))
-                }
-            }
-        )
-    }
-
-    // a refused card purchase was not received: its refusal replaces the notice
-    val purchaseRefusal = subscriptionBalanceViewModel.purchaseRefusal
-
-    if (showConfirmationDelayedDialog && purchaseRefusal == null) {
-        FoldSafeAlertDialog(
-            onDismissRequest = { showConfirmationDelayedDialog = false },
-            title = { Text(stringResource(id = R.string.payment_received_title)) },
-            text = { Text(stringResource(id = R.string.payment_confirmation_delayed)) },
-            confirmButton = {
-                TextButton(onClick = { showConfirmationDelayedDialog = false }) {
-                    Text(stringResource(id = R.string.close))
-                }
-            }
-        )
-    }
-
-    /**
-     * A card purchase the server refused when the app reported it
-     * (SubscriptionBalanceViewModel.purchaseRefusal): a yearly trial whose card
-     * failed its CVC check. There is no Pro, and the card was detached, so it is
-     * never charged. The purchase confirmation has ended, so the "Payment received"
-     * notice never follows, and one already up (the refusal came after the
-     * confirmation gave up) is closed. Try again opens Get Pro, where the plan
-     * button asks the server for a new payment sheet or pay page.
-     */
-    LaunchedEffect(purchaseRefusal) {
-        if (purchaseRefusal != null) {
-            showConfirmationDelayedDialog = false
-        }
-    }
-
-    purchaseRefusal?.let { refusal ->
-        val notCompleted = stringResource(id = R.string.payment_not_completed)
-        val refusalContext = LocalContext.current
-        FoldSafeAlertDialog(
-            onDismissRequest = { subscriptionBalanceViewModel.dismissPurchaseRefusal() },
-            title = { Text(stringResource(id = R.string.payment_problem)) },
-            text = {
-                // the reader's line for the code, else the server's words
-                Text(CheckoutRefusal.refusedMessage(refusal.code, refusal.words, notCompleted) { id -> refusalContext.getString(id) })
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        subscriptionBalanceViewModel.dismissPurchaseRefusal()
-                        if (navController.currentDestination?.hasRoute<Route.Upgrade>() != true) {
-                            navController.navigate(Route.Upgrade)
-                        }
-                    }
-                ) {
-                    Text(stringResource(id = R.string.try_again))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { subscriptionBalanceViewModel.dismissPurchaseRefusal() }) {
-                    Text(stringResource(id = R.string.close))
-                }
-            }
-        )
-    }
-
-    /**
-     * The server verified the Play purchase but it belongs to a different network
-     * than the one logged in. The purchase is real (it stays acknowledged so Play
-     * does not auto-refund it) and the linked network is the one credited -- so no
-     * success overlay here, just the honest way out: use the account it was
-     * purchased under.
-     */
-    var showPurchaseWrongNetworkDialog by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        planViewModel.purchaseWrongNetworkSequence.collect { sequence ->
-            if (!planViewModel.consumePurchaseWrongNetworkSequence(sequence)) {
-                return@collect
-            }
-
-            showPurchaseWrongNetworkDialog = true
-        }
-    }
-
-    if (showPurchaseWrongNetworkDialog) {
-        FoldSafeAlertDialog(
-            onDismissRequest = { showPurchaseWrongNetworkDialog = false },
-            text = { Text(stringResource(id = R.string.subscription_purchased_under_different_account)) },
-            confirmButton = {
-                TextButton(onClick = { showPurchaseWrongNetworkDialog = false }) {
-                    Text(stringResource(id = R.string.close))
-                }
-            }
-        )
-    }
-
-    /**
-     * A purchase Play accepted but has not completed (awaiting approval, or an
-     * out-of-band payment). There is nothing to poll for -- the PURCHASED state does
-     * not arrive now -- so just tell the user, and do not close the screen or claim an
-     * upgrade.
-     *
-     * Without this the pending case was silent: the spinner stopped, nothing else
-     * happened, and the user concluded the purchase had failed and bought again.
-     */
-    LaunchedEffect(Unit) {
-        planViewModel.purchasePendingSequence.collect { sequence ->
-            if (!planViewModel.consumePurchasePendingSequence(sequence)) {
-                return@collect
-            }
-
-            overlayViewModel.launch(OverlayMode.PurchasePending)
-        }
-    }
-
-    /**
-     * Recovered Play purchases should refresh entitlement state without closing the current screen.
-     */
-    LaunchedEffect(Unit) {
-        planViewModel.restoredSubscriptionSequence.collect { sequence ->
-            if (!planViewModel.consumeRestoredSubscriptionSequence(sequence)) {
-                return@collect
-            }
-
-            overlayViewModel.launch(OverlayMode.Upgrade)
-            subscriptionBalanceViewModel.pollSubscriptionBalance()
-        }
-    }
-
-    /**
-     * This is for listening to Solana Wallet subscriptions
-     * If there is a pending sub reference + the app regains focus, we start polling the subscription balance.
-     * The reference is persisted (it survives the app being killed while the wallet is
-     * in front) and is only dropped once the check is confirmed or timed out. Only an
-     * earlier version of the app records one now: USDC is sold through the crypto
-     * invoice (CryptoInvoiceHost), which follows its own payment.
-     */
-    DisposableEffect(lifecycleOwner, pendingSolanaSubReference) {
-
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                if (!pendingSolanaSubReference.isNullOrEmpty()) {
-                    scope.launch {
-                        // a restart after process death lost the in-memory expectation
-                        solanaPaymentViewModel.pendingSolanaPayment?.let { payment ->
-                            if (payment.plan.isNotEmpty()) {
-                                subscriptionBalanceViewModel.expectSolanaPurchase(payment.plan, payment.amountUsd)
-                            }
-                        }
-                        // poll subscription balance until it's updated
-                        subscriptionBalanceViewModel.pollSolanaTransaction(
-                            onFinished = {
-                                solanaPaymentViewModel.clearPendingSolanaPayment()
-                            }
-                        )
-                    }
-                }
-            }
-        }
-
-        if (pendingSolanaSubReference != null) {
-            lifecycleOwner.lifecycle.addObserver(observer)
-        }
-
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
-    }
-
     DisposableEffect(lifecycleOwner) {
 
         val observer = LifecycleEventObserver { _, event ->
@@ -921,64 +457,12 @@ private fun MainNavHostContent(
         }
     }
 
-    // The Pro celebration flight clock. Everything under the flight (the nav
-    // content and the overlays) sits in one layer that pixelates while a
-    // flight is in the air; the flight itself draws above it, sharp.
-    val sunglassesFlightSequence by overlayViewModel.sunglassesFlightSequence.collectAsState()
-    val proFlightClock = rememberProFlightClock(
-        sequence = sunglassesFlightSequence,
-        onFinished = { overlayViewModel.finishSunglassesFlight(it) },
-    )
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .proFlightPixelation(proFlightClock)
+    NestedLinkBottomSheet(
+        scaffoldState = nestedLinkScaffoldState,
+        targetLink = targetLink,
+        defaultLocation = defaultLocation,
+        connectViewModel = connectViewModel
     ) {
-
-    AnimatedContent(
-        targetState = displayIntroFunnel,
-        label = "intro-main-switch",
-        transitionSpec = {
-            if (targetState) {
-                // Main -> Intro: Intro slides up from bottom and fades in
-                (slideInVertically(initialOffsetY = { it }) + fadeIn()) togetherWith
-                        // Main fades out (keep it simple to avoid conflicting motion)
-                        fadeOut()
-            } else {
-                // Intro -> Main (closing): Intro slides down and fades out
-                fadeIn() togetherWith
-                        (slideOutVertically(targetOffsetY = { it }) + fadeOut())
-            }
-        }
-    ) { introIsVisible ->
-        if (introIsVisible) {
-            IntroNavHost(
-                dismiss = {
-                    mainNavViewModel.setDisplayIntroFunnel(false)
-                },
-                subscriptionBalanceViewModel = subscriptionBalanceViewModel,
-                meanReliabilityWeight = reliabilityWindow?.meanReliabilityWeight ?: 0.0,
-                totalReferralCount = totalReferralCount,
-                referralCode = referralCode,
-                referralCodeFailed = referralCodeLoad == SectionLoad.Failed,
-                retryReferralCode = referralCodeViewModel.retryReferralCode,
-                provideControlMode = settingsViewModel.provideControlMode,
-                setProvideControlMode = settingsViewModel.setProvideControlMode,
-                provideIndicatorColor = settingsViewModel.provideIndicatorColor,
-                allowProvideCell = settingsViewModel.allowProvideOnCell.collectAsState().value,
-                toggleProvideCell = settingsViewModel.toggleAllowProvideOnCell,
-                planViewModel = planViewModel,
-                overlayViewModel = overlayViewModel
-            )
-        } else {
-
-            NestedLinkBottomSheet(
-                scaffoldState = nestedLinkScaffoldState,
-                targetLink = targetLink,
-                defaultLocation = defaultLocation,
-                connectViewModel = connectViewModel
-            ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -989,17 +473,6 @@ private fun MainNavHostContent(
                 ) {
 
                     NavigationSuiteScaffold(
-                        // The collected flags can lag the effect that shows intro
-                        // and then clears its prompt gate. Read that pair's current
-                        // values together on the UI thread; collectors above still
-                        // schedule recomposition. This tag never changes the UI.
-                        modifier = if (postLoginMainNavigationReady(
-                            isPro = isPro,
-                            isGuest = isGuestNetworkForIntro,
-                            guestStatusKnown = guestStatusKnownForIntro,
-                            allowPrompt = mainNavViewModel.allowDisplayIntroFunnel.value,
-                            introDisplayed = mainNavViewModel.displayIntroFunnel.value,
-                        )) Modifier.testTag(POST_LOGIN_MAIN_READY_TAG) else Modifier,
                         containerColor = Black,
                         // the content's color on the black container, as a
                         // Scaffold gives every other screen: the connect
@@ -1019,15 +492,11 @@ private fun MainNavHostContent(
                                             screen.unselectedIcon
                                         }
 
-                                        if (screen.route == Route.Leaderboard) {
-                                            Icon(imageVector = Icons.Filled.StackedLineChart, contentDescription = stringResource(id = R.string.leaderboard))
-                                        } else {
-                                            Icon(
-                                                painter = painterResource(id = iconRes),
-                                                contentDescription = stringResource(id = screen.descriptionId),
-                                                modifier = Modifier.testTag(screen.testTag)
-                                            )
-                                        }
+                                        Icon(
+                                            painter = painterResource(id = iconRes),
+                                            contentDescription = stringResource(id = screen.descriptionId),
+                                            modifier = Modifier.testTag(screen.testTag)
+                                        )
 
                                     },
                                     selected = screen == currentTopLevelRoute,
@@ -1057,10 +526,8 @@ private fun MainNavHostContent(
 
                             MainNavContent(
                                 settingsViewModel = settingsViewModel,
-                                planViewModel = planViewModel,
                                 overlayViewModel = overlayViewModel,
                                 navController = navController,
-                                earningsViewModel = earningsViewModel,
                                 connectViewModel = connectViewModel,
                                 locationsListViewModel = locationsListViewModel,
                                 activityResultSender = activityResultSender,
@@ -1068,33 +535,13 @@ private fun MainNavHostContent(
                                 referralCodeViewModel = referralCodeViewModel,
                                 bundleStore = bundleStore,
                                 reliabilityWindow = reliabilityWindow,
-                                totalReferralCount = totalReferralCount,
                                 isPro = isPro,
                                 connectActionsSheetState = connectActionsSheetState,
-                                // the Protocol card's "Claim on Earnings": Earnings at its Top 200 tile
-                                openEarningsTop200 = {
-                                    earningsViewModel.requestTop200Focus()
-                                    selectTopLevelRoute(TopLevelScaffoldRoutes.ACCOUNT_CONTAINER)
-                                    // the account stack it restores may already end on Earnings:
-                                    // that one shows the tile, rather than a second on top of it
-                                    navController.navigate(Route.Earnings) {
-                                        launchSingleTop = true
-                                    }
-                                },
-                                // the Top 200 tile's "See the Protocol leaderboard"
-                                openProtocolLeaderboard = {
-                                    mainNavViewModel.requestProtocolTab()
-                                    selectTopLevelRoute(TopLevelScaffoldRoutes.LEADERBOARD)
-                                },
-                                protocolTabRequested = mainNavViewModel.protocolTabRequested.collectAsState().value,
-                                consumeProtocolTabRequest = mainNavViewModel.consumeProtocolTabRequest,
                             )
                         }
                     }
                 }
             }
-        }
-    }
 
     WelcomeAnimatedMainOverlay(
         animateIn = animateIn,
@@ -1105,265 +552,14 @@ private fun MainNavHostContent(
         referralCode = referralCode,
         planUpgradeConfirmed = hasActiveSubscription,
         planAccountName = planAccountName,
-        referralCelebrationJoined = pendingReferralCelebration?.joined ?: 1L,
-        onReferralCelebrationDismissed = {
-            referralCodeViewModel.clearCelebration()
-        },
     )
-
-    } // pixelation layer
-
-    // the Pro celebration flight, above every overlay, sharp
-    ProSunglassesFlight(clock = proFlightClock)
-
-    /**
-     * The crypto invoice of the flavors that sell outside a store, above the
-     * screen that opened it, so leaving that screen doesn't end a payment
-     * (src/cryptoPay; nothing on Play). A paid invoice does what a card
-     * purchase does once it is done: the server confirms and the overlay
-     * celebrates (purchaseConfirmedSequence), and the surface that sold it
-     * closes -- the intro funnel, or Get Pro if it is still the screen shown.
-     */
-    CryptoInvoiceHost(
-        subscriptionBalanceViewModel = subscriptionBalanceViewModel,
-        planViewModel = planViewModel,
-        onPaid = {
-            subscriptionBalanceViewModel.confirmPurchase()
-            if (mainNavViewModel.displayIntroFunnel.value) {
-                mainNavViewModel.setDisplayIntroFunnel(false)
-            } else if (navController.currentDestination?.hasRoute<Route.Upgrade>() == true) {
-                navController.popBackStack()
-            }
-        },
-    )
-
-    /**
-     * Referral celebrations: the first referral gets the full-screen crowning
-     * overlay; later ones get a passing gold toast. Detected by the referral
-     * poll against the per-network celebrated baseline.
-     */
-    LaunchedEffect(pendingReferralCelebration) {
-        val celebration = pendingReferralCelebration ?: return@LaunchedEffect
-        if (celebration.isFirst) {
-            overlayViewModel.launch(OverlayMode.ReferralCelebration)
-        } else {
-            // let the toast play, then clear it
-            delay(5000)
-            referralCodeViewModel.clearCelebration()
-        }
-    }
-
-    // keep the last toast content mounted so the exit animation has text
-    var lastToastCelebration by remember {
-        mutableStateOf<ReferralCelebration?>(null)
-    }
-    pendingReferralCelebration?.let { celebration ->
-        if (!celebration.isFirst) {
-            lastToastCelebration = celebration
-        }
-    }
-
-    lastToastCelebration?.let { celebration ->
-        ReferralRoyalToast(
-            visible = pendingReferralCelebration != null && pendingReferralCelebration?.isFirst == false,
-            text = pluralStringResource(
-                id = R.plurals.referral_toast_joined,
-                count = celebration.joined.toInt(),
-                celebration.joined.toInt(),
-                LocalReferralTerms.current.bonusGibPerDay
-            ),
-            onClick = {
-                referralCodeViewModel.clearCelebration()
-                navController.navigate(Route.Referrals)
-            },
-        )
-    }
-
-}
-
-@Composable
-fun IntroNavHost(
-    dismiss: () -> Unit,
-    meanReliabilityWeight: Double,
-    totalReferralCount: Long,
-    referralCode: String,
-    referralCodeFailed: Boolean = false,
-    retryReferralCode: () -> Unit = {},
-    provideControlMode: ProvideControlMode,
-    setProvideControlMode: (ProvideControlMode) -> Unit,
-    provideIndicatorColor: Color,
-    allowProvideCell: Boolean,
-    toggleProvideCell: () -> Unit,
-    subscriptionBalanceViewModel: SubscriptionBalanceViewModel,
-    planViewModel: PlanViewModel,
-    overlayViewModel: OverlayViewModel
-) {
-
-    val introNavController = rememberNavController()
-
-    // the connector mark that flies from page 1's route line into the header
-    val introConnector = remember { IntroConnectorState() }
-    val introEntry by introNavController.currentBackStackEntryAsState()
-    LaunchedEffect(introEntry) {
-        val route = introEntry?.destination?.route ?: return@LaunchedEffect
-        introConnector.inHeader = !route.contains(IntroRoute.IntroductionInitial::class.qualifiedName.toString())
-    }
-
-    // The onboarding plan data: the tier, the welcome offer and the experiment
-    // variant. The final offer page is reached by everyone who is not in the
-    // in-app holdout -- Skip from any earlier page lands there once, and its
-    // free-plan link is the only way out (mmm/onboarding/PLAN.md).
-    val priceTier by subscriptionBalanceViewModel.priceTier.collectAsState()
-    val onboardingOffer by subscriptionBalanceViewModel.onboardingOffer.collectAsState()
-    val experiments by subscriptionBalanceViewModel.experiments.collectAsState()
-    val offerHoldout = experiments?.isHoldout(com.bringyour.sdk.Sdk.ExperimentSurfaceOfferInApp) == true
-    val introSteps = remember { IntroStepTimer() }
-    val skipToOffer: () -> Unit = {
-        val current = introEntry?.destination?.route ?: ""
-        when (com.bringyour.network.ui.introduction.IntroSkip.decide(current, offerHoldout)) {
-            com.bringyour.network.ui.introduction.IntroSkip.Action.DISMISS -> {
-                introSteps.skipped(current)
-                dismiss()
-            }
-            com.bringyour.network.ui.introduction.IntroSkip.Action.GO_TO_OFFER -> {
-                introSteps.skipped(current)
-                introNavController.navigate(IntroRoute.IntroductionOffer)
-            }
-        }
-    }
-    // one shown / completed event per page, timed from when it appeared
-    LaunchedEffect(introEntry) {
-        val route = introEntry?.destination?.route ?: return@LaunchedEffect
-        introSteps.shown(route)
-    }
-
-    CompositionLocalProvider(LocalIntroConnector provides introConnector) {
-    Box(modifier = Modifier.fillMaxSize()) {
-
-    NavHost(
-        navController = introNavController,
-        startDestination = IntroRoute.IntroductionInitial,
-    ) {
-
-        composable<IntroRoute.IntroductionInitial> {
-            IntroductionInitial(
-                navController = introNavController,
-                dismiss = skipToOffer,
-                planViewModel = planViewModel,
-                subscriptionBalanceViewModel = subscriptionBalanceViewModel,
-                onStripePaymentSuccess = {
-                    subscriptionBalanceViewModel.confirmPurchase()
-                    dismiss()
-                },
-                onRedeemTransferBalanceCodeSuccess = {
-                    // the sheet confirmed what the code added: data, or a gift
-                    // code's year of Pro. The redeem is committed when the server
-                    // answers, so one balance read shows either, Pro included (it
-                    // refreshes the token when Pro changes); then finish the intro.
-                    // The purchase overlay and its confirmation poll are for payments.
-                    subscriptionBalanceViewModel.fetchSubscriptionBalance()
-                    dismiss()
-                },
-            )
-        }
-
-        composable<IntroRoute.IntroductionUsageBar> {
-            IntroductionUsageBar(
-                navController = introNavController,
-                dismiss = skipToOffer,
-                usedBytes = subscriptionBalanceViewModel.usedBalanceByteCount,
-                pendingBytes = subscriptionBalanceViewModel.pendingBalanceByteCount,
-                availableBytes = subscriptionBalanceViewModel.availableBalanceByteCount.collectAsState().value,
-                meanReliabilityWeight = meanReliabilityWeight,
-                totalReferrals = totalReferralCount,
-                dailyByteCount = subscriptionBalanceViewModel.startBalanceByteCount.collectAsState().value
-            )
-        }
-
-        composable<IntroRoute.IntroductionSettings> {
-            IntroductionSettings(
-                navController = introNavController,
-                dismiss = skipToOffer,
-                provideControlMode = provideControlMode,
-                setProvideControlMode = setProvideControlMode,
-                provideIndicatorColor = provideIndicatorColor,
-                allowProvideCell = allowProvideCell,
-                toggleProvideCell = toggleProvideCell
-            )
-        }
-
-        composable<IntroRoute.IntroductionReferral> {
-            IntroductionReferral(
-                navController = introNavController,
-                dismiss = skipToOffer,
-                totalReferrals = totalReferralCount,
-                referralCode = referralCode,
-                referralCodeFailed = referralCodeFailed,
-                retryReferralCode = retryReferralCode,
-            )
-        }
-
-        composable<IntroRoute.IntroductionQuickConnect> {
-            IntroductionQuickConnect(
-                navController = introNavController,
-                dismiss = skipToOffer,
-                // the closing button continues to the offer page; the holdout leaves here
-                next = {
-                    introSteps.completed(IntroRoute.IntroductionQuickConnect::class.qualifiedName.toString())
-                    if (offerHoldout) dismiss() else introNavController.navigate(IntroRoute.IntroductionOffer)
-                }
-            )
-        }
-
-        composable<IntroRoute.IntroductionOffer> {
-            val presentation = rememberPlanPresentation(planViewModel, priceTier, onboardingOffer)
-            val purchaser = rememberPlanPurchaser(
-                planViewModel = planViewModel,
-                subscriptionBalanceViewModel = subscriptionBalanceViewModel,
-                onPurchaseSuccess = {
-                    // the overlay follows the server's confirmation (purchaseConfirmedSequence)
-                    subscriptionBalanceViewModel.confirmPurchase()
-                    dismiss()
-                },
-            )
-            IntroductionOffer(
-                presentation = presentation,
-                experiment = subscriptionBalanceViewModel.offerExperiment,
-                store = purchaser.store,
-                upgradeInProgress = planViewModel.inProgress,
-                startTrial = {
-                    purchaser.purchase(PlanType.YEARLY, presentation)
-                },
-                dismiss = dismiss,
-                onBack = { introNavController.popBackStack() },
-                // the yearly (offer) card alone: a coin buys it too
-                methodSlot = rememberPlanMethodSlot(
-                    presentation = presentation,
-                    subscriptionBalanceViewModel = subscriptionBalanceViewModel,
-                    selectedPlan = PlanType.YEARLY,
-                    setSelectedPlan = {},
-                ),
-                // the trial the yearly purchase starts with: on Play none for an
-                // account that already had one
-                freeTrialDays = planViewModel.yearlyTrialDays(presentation.offer?.playOfferTag),
-            )
-        }
-
-    }
-
-    FloatingIntroConnector(introConnector)
-
-    }
-    }
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavContent(
-    earningsViewModel: EarningsViewModel,
     settingsViewModel: SettingsViewModel,
-    planViewModel: PlanViewModel,
     overlayViewModel: OverlayViewModel,
     navController: NavHostController,
     connectViewModel: ConnectViewModel,
@@ -1373,16 +569,10 @@ fun MainNavContent(
     referralCodeViewModel: ReferralCodeViewModel,
     bundleStore: BundleStore?,
     reliabilityWindow: ReliabilityWindow?,
-    totalReferralCount: Long,
     isPro: Boolean,
     connectActionsSheetState: ConnectDrawerState,
-    openEarningsTop200: () -> Unit = {},
-    openProtocolLeaderboard: () -> Unit = {},
-    protocolTabRequested: Boolean = false,
-    consumeProtocolTabRequest: () -> Unit = {},
     accountViewModel: AccountViewModel = hiltViewModel<AccountViewModel>(),
     profileViewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>(),
-    accountPointsViewModel: AccountPointsViewModel = hiltViewModel<AccountPointsViewModel>(),
 ) {
     val isGuestNetwork by subscriptionBalanceViewModel.isGuestNetwork.collectAsState()
     LaunchedEffect(isGuestNetwork) {
@@ -1426,28 +616,18 @@ fun MainNavContent(
         backStack.getOrNull(accountRootIndex + 1)?.destination?.route?.let { Route.fromString(it) }
     }
     // above the list's two homes (the start pane, the account destination), so
-    // a resize keeps its scroll and an open redeem sheet
+    // a resize keeps its scroll
     val accountScrollState = rememberScrollState()
-    var accountRedeemSheetOpen by rememberSaveable { mutableStateOf(false) }
     val accountScreen: @Composable (navigate: (Route) -> Unit) -> Unit = { navigate ->
         AccountScreen(
             navController,
             accountViewModel,
-            totalAccountPoints = accountPointsViewModel.totalAccountPoints.collectAsState().value,
-            accountPointsLoaded = accountPointsViewModel.pointsLoaded.collectAsState().value,
-            accountPointsFailed = accountPointsViewModel.pointsLoad.collectAsState().value == SectionLoad.Failed,
-            retryAccountPoints = { accountPointsViewModel.fetchAccountPoints() },
-            planViewModel = planViewModel,
-            subscriptionBalanceViewModel = subscriptionBalanceViewModel,
             overlayViewModel = overlayViewModel,
-            totalReferrals = totalReferralCount,
+            subscriptionBalanceViewModel = subscriptionBalanceViewModel,
             meanReliabilityWeight = reliabilityWindow?.meanReliabilityWeight ?: 0.0,
-            isPro = isPro,
             navigate = navigate,
             chosenRoute = if (accountListDetail) chosenAccountRoute else null,
             scrollState = accountScrollState,
-            isPresentingRedeemTransferBalanceSheet = accountRedeemSheetOpen,
-            setPresentingRedeemTransferBalanceSheet = { accountRedeemSheetOpen = it },
         )
     }
 
@@ -1504,22 +684,16 @@ fun MainNavContent(
                 exitTransition = { ExitTransition.None }
             ) {
                 composable<Route.Connect> {
-                    // the referral toast (MainNavHostContent) shows for every
-                    // celebration but the first
-                    val pendingReferralCelebration by referralCodeViewModel.pendingCelebration.collectAsState()
                     ConnectScreen(
                         connectViewModel,
                         overlayViewModel,
                         locationsListViewModel,
                         navController,
                         subscriptionBalanceViewModel,
-                        planViewModel,
                         bundleStore,
                         meanReliabilityWeight = reliabilityWindow?.meanReliabilityWeight ?: 0.0,
-                        totalReferrals = totalReferralCount,
                         isPro = isPro,
                         connectActionsSheetState = connectActionsSheetState,
-                        referralToastVisible = pendingReferralCelebration?.isFirst == false,
                         locationPickerOpen = locationPickerOpen,
                         setLocationPickerOpen = { locationPickerOpen = it },
                         locationListPosition = locationListPosition,
@@ -1642,27 +816,6 @@ fun MainNavContent(
                 }
             }
 
-            composable<Route.Support>(
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None }
-            ) {
-                FeedbackScreen(
-                    overlayViewModel = overlayViewModel,
-                    bundleStore = bundleStore
-                )
-            }
-
-            composable<Route.Leaderboard>(
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None }
-            ) {
-                LeaderboardScreen(
-                    onOpenEarnings = openEarningsTop200,
-                    protocolTabRequested = protocolTabRequested,
-                    onProtocolTabShown = consumeProtocolTabRequest,
-                )
-            }
-
             composable<Route.GuestConversion> {
                 GuestConversionSheet(
                     settingsViewModel = settingsViewModel,
@@ -1675,61 +828,6 @@ fun MainNavContent(
                     },
                     onDismiss = { navController.popBackStack() }
                 )
-            }
-
-            composable<Route.Upgrade>(
-                enterTransition = NavigationAnimations.enterTransition(),
-                exitTransition = NavigationAnimations.exitTransition(),
-                popEnterTransition = NavigationAnimations.popEnterTransition(),
-                popExitTransition = NavigationAnimations.popExitTransition()
-            ) { backStackEntry ->
-                // every upgrade entry lands here; a guest network has no login to
-                // come back to, so it adds a sign-in method first and is not sold a
-                // plan, and nothing is sold until the server says whether it is one
-                when (GuestAccount.upgradeEntry(isGuest = isGuestNetwork, guestStatusKnown = guestStatusKnown)) {
-                    UpgradeEntry.AddSignInMethod -> {
-                        GuestConversionSheet(
-                            settingsViewModel = settingsViewModel,
-                            activityResultSender = activityResultSender,
-                            refreshJwt = subscriptionBalanceViewModel.refreshJwt,
-                            onAdded = { subscriptionBalanceViewModel.fetchSubscriptionBalance() },
-                            onDismiss = { navController.popBackStack() }
-                        )
-                        return@composable
-                    }
-                    UpgradeEntry.WaitForGuestStatus -> {
-                        val balanceReadFailed by subscriptionBalanceViewModel.errorFetchingSubscriptionBalance.collectAsState()
-                        UpgradeGuestStatusPending(
-                            readFailed = balanceReadFailed && !subscriptionBalanceViewModel.isRefreshingSubscriptionBalance,
-                            readBalance = subscriptionBalanceViewModel.refreshSubscriptionBalance,
-                            onBack = { navController.popBackStack() },
-                        )
-                        return@composable
-                    }
-                    UpgradeEntry.Checkout -> Unit
-                }
-                // opened by a blocked start connect: the header leads with when the
-                // free data refreshes and offers Wait for refresh, which closes it
-                val openedByBalanceBlock =
-                    backStackEntry.savedStateHandle.get<Boolean>(UPGRADE_OPENED_BY_BALANCE_BLOCK) == true
-                val waitForRefresh: (() -> Unit)? =
-                    if (upgradeShowsFreeRefresh(openedByBalanceBlock, if (isPro) Plan.Supporter else Plan.Basic)) {
-                        { navController.popBackStack() }
-                    } else {
-                        null
-                    }
-                CompositionLocalProvider(LocalUpgradeWaitForRefresh provides waitForRefresh) {
-                    UpgradeScreen(
-                        navController = navController,
-                        planViewModel = planViewModel,
-                        subscriptionBalanceViewModel = subscriptionBalanceViewModel,
-                        onStripePaymentSuccess = {
-                            // the overlay follows the server's confirmation (purchaseConfirmedSequence)
-                            subscriptionBalanceViewModel.confirmPurchase()
-                            navController.popBackStack()
-                        },
-                    )
-                }
             }
 
             // the device list, top level like the upgrade: the client limit
@@ -1791,18 +889,9 @@ fun MainNavContent(
                 ) { SettingsScreen(
                     navController,
                     accountViewModel,
-                    planViewModel,
                     settingsViewModel,
                     overlayViewModel,
                     activityResultSender,
-                    earningsViewModel,
-                    isPro = isPro,
-                    currentStore = subscriptionBalanceViewModel.currentStore.collectAsState().value,
-                    planNotices = {
-                        PaymentPastDueNotice(subscriptionBalanceViewModel = subscriptionBalanceViewModel)
-                    },
-                    shownPlan = subscriptionBalanceViewModel.shownPlan.collectAsState().value,
-                    retryPlan = subscriptionBalanceViewModel.refreshSubscriptionBalance,
                 ) }
 
                 composable<Route.Vless>(
@@ -1896,72 +985,6 @@ fun MainNavContent(
                         navController = navController,
                         countries = locationsListViewModel.connectCountries,
                         getLocationColor = locationsListViewModel.getLocationColor
-                    )
-                }
-
-                composable<Route.BalanceCodes>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
-                ) {
-                    BalanceCodesScreen(
-                        navController = navController,
-                        subscriptionBalanceViewModel = subscriptionBalanceViewModel,
-                    )
-                }
-
-                composable<Route.Earnings>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
-                ) {
-                    EarningsScreen(
-                        navController = navController,
-                        earningsViewModel = earningsViewModel,
-                        overlayViewModel = overlayViewModel,
-                        totalAccountPoints = accountPointsViewModel.totalAccountPoints.collectAsState().value,
-                        payoutPoints = accountPointsViewModel.payoutPoints.collectAsState().value,
-                        referralPoints = accountPointsViewModel.referralPoints.collectAsState().value,
-                        multiplierPoints = accountPointsViewModel.multiplierPoints.collectAsState().value,
-                        reliabilityPoints = accountPointsViewModel.reliabilityPoints.collectAsState().value,
-                        fetchAccountPoints = { accountPointsViewModel.fetchAccountPoints() },
-                        reliabilityWindow = reliabilityWindow,
-                        accountPointsFailed = accountPointsViewModel.pointsLoad.collectAsState().value == SectionLoad.Failed,
-                        onSeeProtocolBoard = openProtocolLeaderboard,
-                        // a guest gets no payout key, only the wallet card
-                        isGuest = isGuestNetwork,
-                    )
-                }
-
-                composable<Route.Top200Sign>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
-                ) {
-                    Top200SignScreen(
-                        navController = navController,
-                    )
-                }
-
-                composable<Route.Referrals>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
-                ) {
-                    ReferralsScreen(
-                        navController = navController,
-                        settingsViewModel = settingsViewModel,
-                        referralCode = referralCodeViewModel.referralCode.collectAsState().value,
-                        referralCodeLoad = referralCodeViewModel.codeLoad.collectAsState().value,
-                        retryReferralCode = referralCodeViewModel.retryReferralCode,
-                        totalReferrals = totalReferralCount,
-                        referralPoints = accountPointsViewModel.referralPoints.collectAsState().value,
-                        pointsLoad = accountPointsViewModel.pointsLoad.collectAsState().value,
-                        fetchAccountPoints = { accountPointsViewModel.fetchAccountPoints() },
                     )
                 }
 

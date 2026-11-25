@@ -49,6 +49,7 @@ import androidx.navigation.NavController
 import com.bringyour.network.R
 import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.components.CircleImage
+import com.bringyour.network.ui.components.rememberCountryFlag
 import com.bringyour.network.ui.components.RowRemoveControl
 import com.bringyour.network.ui.components.blockedLocationRemoveControls
 import com.bringyour.network.ui.components.SwipeToRevealRow
@@ -252,7 +253,7 @@ fun BlockedRegionListItem(
             ) {
                 CircleImage(
                     size = 40.dp,
-                    imageResourceId = null,
+                    imageResourceId = rememberCountryFlag(blockedLocation.countryCode),
                     backgroundColor = getLocationColor(blockedLocation.countryCode),
                 )
                 Spacer(modifier = Modifier.width(16.dp))

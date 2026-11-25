@@ -37,6 +37,7 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.FoldSafeModalBottomSheet
 import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.components.CircleImage
+import com.bringyour.network.ui.components.rememberCountryFlag
 import com.bringyour.network.ui.components.URSearchInput
 import com.bringyour.network.ui.theme.Black
 import com.bringyour.sdk.ConnectLocation
@@ -149,7 +150,7 @@ fun AddBlockedLocationSheet(
 
                         CircleImage(
                             size = 40.dp,
-                            imageResourceId = null,
+                            imageResourceId = rememberCountryFlag(location.countryCode),
                             backgroundColor = getLocationColor(location.countryCode),
                         )
                         Spacer(modifier = Modifier.width(16.dp))

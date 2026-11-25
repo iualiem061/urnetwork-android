@@ -23,11 +23,8 @@ import com.bringyour.network.ui.MainNavHost
 import com.bringyour.network.ui.settings.SettingsViewModel
 import com.bringyour.network.ui.shared.models.BundleStore
 import com.bringyour.network.ui.shared.viewmodels.OverlayViewModel
-import com.bringyour.network.ui.shared.viewmodels.PlanViewModel
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
 import com.bringyour.network.ui.theme.URNetworkTheme
-import com.bringyour.network.ui.wallet.EarningsViewModel
-import com.bringyour.network.ui.wallet.SnWalletConnectExtras
 import com.solana.mobilewalletadapter.clientlib.ActivityResultSender
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -46,9 +43,7 @@ class MainActivity: AppCompatActivity() {
 
     var subscriptionUpgradeSuccess: Boolean = false
 
-    private val earningsViewModel: EarningsViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
-    private val planViewModel: PlanViewModel by viewModels()
     private val subscriptionBalanceViewModel: SubscriptionBalanceViewModel by viewModels()
     private val overlayViewModel: OverlayViewModel by viewModels()
 
@@ -102,18 +97,6 @@ class MainActivity: AppCompatActivity() {
         val targetUrl = intent.getStringExtra("TARGET_URL")
         val defaultLocation = intent.getStringExtra("DEFAULT_LOCATION")
 
-        // the ur.io bridge signed a wallet-connect challenge for the earnings screen
-        // (forwarded by the login activity, which receives the ur:// redirect)
-        intent.getStringExtra(SnWalletConnectExtras.ADDRESS)?.let { address ->
-            val signature = intent.getStringExtra(SnWalletConnectExtras.SIGNATURE) ?: ""
-            val message = intent.getStringExtra(SnWalletConnectExtras.MESSAGE) ?: ""
-            intent.removeExtra(SnWalletConnectExtras.ADDRESS)
-            earningsViewModel.onWalletSigned(address, signature, message)
-        }
-        intent.getStringExtra(SnWalletConnectExtras.ERROR)?.let { error ->
-            intent.removeExtra(SnWalletConnectExtras.ERROR)
-            earningsViewModel.onWalletSignFailed(error)
-        }
         subscriptionUpgradeSuccess = intent.getBooleanExtra("UPGRADE_SUBSCRIPTION_SUCCESS", false)
 
 
@@ -130,9 +113,7 @@ class MainActivity: AppCompatActivity() {
 
             URNetworkTheme {
                 MainNavHost(
-                    earningsViewModel = earningsViewModel,
                     settingsViewModel = settingsViewModel,
-                    planViewModel = planViewModel,
                     subscriptionBalanceViewModel = subscriptionBalanceViewModel,
                     overlayViewModel = overlayViewModel,
                     animateIn = animateIn,

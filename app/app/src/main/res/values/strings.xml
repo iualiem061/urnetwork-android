@@ -1787,4 +1787,14 @@
         <item quantity="one">%1$d provider · providing</item>
         <item quantity="other">%1$d providers · providing</item>
     </plurals>
+    <!-- Language picker (custom build) -->
+    <string name="language">Language</string>
+    <string name="language_note">Persian and every language the app ships</string>
+    <string name="system_default_language">System default</string>
+    <!-- Location ping test (custom build) -->
+    <string name="test_ping">Test ping</string>
+    <string name="ping_ms">%1$d ms</string>
+    <string name="ping_testing">…</string>
+    <string name="ping_unavailable">–</string>
+    <string name="ping_auto">auto</string>
 </resources>

@@ -57,16 +57,13 @@ fun UsageBar(
     pendingBytes: Long,
     availableBytes: Long,
     meanReliabilityWeight: Double,
-    totalReferrals: Long,
+    totalReferrals: Long = 0,
     dailyByteCount: Long,
-    // when set, the referral row is tappable and opens the referral flow
+    // the referral row was removed with the referrals screen; the parameter
+    // stays defaulted for any preview that still names it
     onReferralClick: (() -> Unit)? = null,
-    // the referral row; off where referrals have their own screen
-    showReferrals: Boolean = true,
-    // the referral read behind the referral row's figures
+    showReferrals: Boolean = false,
     referralCountLoad: SectionLoad = LocalReferralCountLoad.current,
-    // the data sheet says when the free data refreshes; off for Pro, which
-    // gets no free daily grant (see dataInfoShowsFreeRefresh)
     showFreeRefresh: Boolean = true,
 ) {
     
@@ -260,84 +257,6 @@ fun UsageBar(
             pendingByteCount = pendingBytes,
             showFreeRefresh = showFreeRefresh,
         )
-
-        if (!showReferrals) {
-            return@Column
-        }
-
-        HorizontalDivider()
-
-        if (onReferralClick == null) {
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-
-        /**
-         * referrals. tapping opens the referral flow, to make it easy to
-         * refer people from anywhere the bar is shown. A tappable row is 48 dp
-         * tall, like the balance line, and needs no spacer
-         */
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .then(
-                    if (onReferralClick != null) {
-                        Modifier
-                            .clickable { onReferralClick() }
-                            .heightIn(min = 48.dp)
-                    } else {
-                        Modifier
-                    }
-                ),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val line = referralBonusLine(
-                load = referralCountLoad,
-                totalReferrals = totalReferrals,
-                terms = LocalReferralTerms.current,
-            )
-            Text(
-                if (line is ReferralBonusLine.Earned) {
-                    pluralStringResource(
-                        id = R.plurals.total_referral_count,
-                        count = line.totalReferrals.toInt(),
-                        line.totalReferrals,
-                    )
-                } else {
-                    stringResource(id = R.string.total_referrals)
-                },
-                style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                when (line) {
-                    is ReferralBonusLine.Earned -> Text(
-                        stringResource(R.string.referral_bonus, line.gibPerDay),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TextMuted
-                    )
-                    // the count is not known yet: not "+0"
-                    ReferralBonusLine.Loading -> CircularProgressIndicator(
-                        modifier = Modifier.size(12.dp),
-                        color = TextMuted,
-                        strokeWidth = 1.5.dp,
-                    )
-                    // a failed read is not "+0"; the referral screen offers Try again
-                    ReferralBonusLine.Unavailable -> {}
-                }
-                if (onReferralClick != null) {
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = null,
-                        tint = TextMuted,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-            }
-        }
     }
 }
 

@@ -1,0 +1,33 @@
+package com.bringyour.network.ui.components
+
+import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+
+/**
+ * The drawable id of a country's circular flag (res/drawable/flag_<cc>.xml,
+ * from the circle-flags collection), or null when the app ships no flag for
+ * the code -- the caller then falls back to the colored circle.
+ */
+fun countryFlagResourceId(context: Context, countryCode: String?): Int? {
+    val code = countryCode?.trim()?.lowercase() ?: return null
+    if (code.length != 2 || !code.all { it in 'a'..'z' }) {
+        return null
+    }
+    return try {
+        val id = context.resources.getIdentifier("flag_$code", "drawable", context.packageName)
+        if (id != 0) id else null
+    } catch (_: Exception) {
+        null
+    }
+}
+
+/** The country flag of [countryCode], remembered per code; null keeps the colored circle. */
+@Composable
+fun rememberCountryFlag(countryCode: String?): Int? {
+    val context = LocalContext.current
+    return remember(countryCode) {
+        countryFlagResourceId(context, countryCode)
+    }
+}

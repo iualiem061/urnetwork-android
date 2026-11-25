@@ -27,43 +27,6 @@ class MainNavViewModel @Inject constructor(
     private val _currentRoute = MutableStateFlow<Route?>(null)
     val currentRoute: StateFlow<Route?> = _currentRoute.asStateFlow()
 
-    // Earnings' "See the Protocol leaderboard": the leaderboard shows its
-    // Protocol tab once, then the request is consumed, so a later visit keeps
-    // the tab the user chose
-    private val _protocolTabRequested = MutableStateFlow(false)
-    val protocolTabRequested: StateFlow<Boolean> = _protocolTabRequested.asStateFlow()
-
-    val requestProtocolTab: () -> Unit = {
-        _protocolTabRequested.value = true
-    }
-
-    val consumeProtocolTabRequest: () -> Unit = {
-        _protocolTabRequested.value = false
-    }
-
-    private val _displayIntroFunnel = MutableStateFlow<Boolean>(false)
-    val displayIntroFunnel: StateFlow<Boolean> = _displayIntroFunnel.asStateFlow()
-
-    val setDisplayIntroFunnel: (Boolean) -> Unit = {
-        _displayIntroFunnel.value = it
-    }
-
-    /**
-     * Whether the intro funnel may still be presented. The SDK local-state
-     * flag is armed only when a network is created and cleared as soon as the
-     * funnel is shown; the gate keeps the in-memory mirror in step with it so
-     * a recreated activity (rotation) never re-presents a completed funnel.
-     */
-    private val introFunnelGate = IntroFunnelGate(
-        readCanPrompt = { deviceManager.canPromptIntroFunnel },
-        clearCanPrompt = { deviceManager.canPromptIntroFunnel = false },
-    )
-    val allowDisplayIntroFunnel: StateFlow<Boolean> = introFunnelGate.allow
-
-    val setIntroFunnelLastPrompted: () -> Unit = {
-        introFunnelGate.markPrompted()
-    }
-
     val refreshTokenOnForeground: () -> Unit = {
         deviceManager.device?.refreshToken(0)
     }
@@ -71,25 +34,6 @@ class MainNavViewModel @Inject constructor(
     val setCurrentRoute: (Route?) -> Unit = { route ->
         _currentRoute.value = route
     }
-
-}
-
-@Serializable
-sealed class IntroRoute {
-    companion object {
-        fun fromString(route: String): Route? {
-            return Route::class.sealedSubclasses.firstOrNull {
-                route.contains(it.qualifiedName.toString())
-            }?.objectInstance
-        }
-    }
-
-    @Serializable object IntroductionInitial: Route()
-    @Serializable object IntroductionUsageBar: Route()
-    @Serializable object IntroductionSettings: Route()
-    @Serializable object IntroductionReferral: Route()
-    @Serializable object IntroductionQuickConnect: Route()
-    @Serializable object IntroductionOffer: Route()
 
 }
 
@@ -110,13 +54,10 @@ sealed class Route {
     @Serializable object Connect : Route()
     @Serializable object BrowseLocations : Route()
     @Serializable object AccountContainer : Route()
-    @Serializable object Leaderboard: Route()
 
-    @Serializable object Upgrade: Route()
     // a legacy guest adds a sign-in method to its network (GuestConversionSheet)
     @Serializable object GuestConversion: Route()
     @Serializable object Account : Route()
-    @Serializable object Support : Route()
     @Serializable object Profile : Route()
     // Account -> Sessions: the account's sign-ins, with sign out
     @Serializable object Sessions : Route()
@@ -126,17 +67,12 @@ sealed class Route {
     // Settings -> Manage devices, and the client limit notice's Manage devices:
     // the network's devices, each removable to free a slot (ManageDevicesScreen)
     @Serializable object ManageDevices : Route()
-    @Serializable object Earnings : Route()
-    // Earnings › Top 200 › Sign fleet binding (also opened by ur://top200/sign)
-    @Serializable object Top200Sign : Route()
-    @Serializable object Referrals : Route()
     @Serializable object Widgets : Route()
     @Serializable object BlockedRegions: Route()
     @Serializable object Vless: Route()
     @Serializable object Developer: Route()
     @Serializable object Licenses: Route()
     @Serializable data class LicenseDetail(val index: Int): Route()
-    @Serializable object BalanceCodes: Route()
     @Serializable data class ContractStats(val provider: Boolean) : Route()
     @Serializable object SplitRules : Route()
     @Serializable object AppSplitRules : Route()
@@ -152,22 +88,6 @@ sealed class Route {
     @Serializable object ShareExtenders : Route()
     @Serializable object ImportExtenders : Route()
 }
-
-// Set on the upgrade destination's saved state when a start connect blocked by
-// insufficient balance opened it (see upgradeShowsFreeRefresh). Route.Upgrade
-// stays an object, so Route.fromString keeps resolving it.
-const val UPGRADE_OPENED_BY_BALANCE_BLOCK = "upgrade_opened_by_balance_block"
-
-/**
- * Opens the upgrade screen for a start connect blocked by insufficient
- * balance: the screen then leads with when the free data refreshes and offers
- * Wait for refresh. Other upgrade entries navigate to Route.Upgrade directly.
- */
-fun NavController.navigateToUpgradeForBalanceBlock() {
-    navigate(Route.Upgrade)
-    currentBackStackEntry?.savedStateHandle?.set(UPGRADE_OPENED_BY_BALANCE_BLOCK, true)
-}
-
 
 enum class TopLevelScaffoldRoutes(
     val selectedIcon: Int,
@@ -191,19 +111,5 @@ enum class TopLevelScaffoldRoutes(
         R.string.account,
         "acceptance.nav.account",
         route = Route.AccountContainer
-    ),
-    LEADERBOARD(
-        R.drawable.main_nav_user_filled,
-        R.drawable.main_nav_user,
-        R.string.leaderboard,
-        "acceptance.nav.leaderboard",
-        route = Route.Leaderboard
-    ),
-    SUPPORT(
-        R.drawable.main_nav_chat_filled,
-        R.drawable.main_nav_chat,
-        R.string.support,
-        "acceptance.nav.support",
-        route = Route.Support
     )
 }

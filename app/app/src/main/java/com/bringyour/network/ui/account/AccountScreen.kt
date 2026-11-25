@@ -25,67 +25,44 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowOutward
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bringyour.network.R
-import com.bringyour.network.ShownPlan
-import com.bringyour.network.ui.components.SectionLoadError
 import com.bringyour.network.ui.Route
 import com.bringyour.network.ui.components.URNavListItem
 import com.bringyour.network.ui.components.AccountSwitcher
 import com.bringyour.network.ui.components.LoginMode
-import com.bringyour.network.ui.components.PlanAccountNameLine
 import com.bringyour.network.ui.components.UsageBar
-import com.bringyour.network.ui.components.dataInfoShowsFreeRefresh
-import com.bringyour.network.ui.components.overlays.OverlayMode
-import com.bringyour.network.ui.components.redeemTransferBalanceCode.RedeemTransferBalanceCodeSheet
 import com.bringyour.network.ui.shared.viewmodels.OverlayViewModel
-import com.bringyour.network.ui.shared.viewmodels.Plan
-import com.bringyour.network.ui.shared.viewmodels.PlanViewModel
 import com.bringyour.network.ui.shared.viewmodels.PostQuantumIdentityViewModel
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
 import com.bringyour.network.ui.theme.Black
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.OffBlack
-import com.bringyour.network.ui.theme.TextFaint
 import com.bringyour.network.ui.theme.TextMuted
-import com.bringyour.network.ui.wallet.EarningsFormat
 import com.bringyour.network.ui.theme.URNetworkTheme
-import com.bringyour.network.ui.upgrade.AccountPaymentNotices
-import com.bringyour.network.ui.upgrade.GiftPlanNotice
-import com.bringyour.network.ui.upgrade.PaymentPastDueNotice
-import com.bringyour.network.utils.formatDecimalString
-import com.bringyour.sdk.Sdk
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,55 +71,26 @@ fun AccountScreen(
     navController: NavHostController,
     accountViewModel: AccountViewModel,
     overlayViewModel: OverlayViewModel,
-    planViewModel: PlanViewModel,
     subscriptionBalanceViewModel: SubscriptionBalanceViewModel,
-    totalAccountPoints: Double,
-    accountPointsLoaded: Boolean,
-    totalReferrals: Long,
-    accountPointsFailed: Boolean = false,
-    retryAccountPoints: () -> Unit = {},
     meanReliabilityWeight: Double,
-    isPro: Boolean,
     // where a row of the account list goes; beside a detail pane (medium width
     // and up) it replaces the chosen screen instead of stacking on it
     navigate: (Route) -> Unit = { navController.navigate(it) },
     // the screen open beside the list, highlighted in it; null with no detail pane
     chosenRoute: Route? = null,
     // kept by the caller, so moving between the list pane and the full screen
-    // on a resize keeps the scroll and an open redeem sheet
+    // on a resize keeps the scroll
     scrollState: ScrollState = rememberScrollState(),
-    isPresentingRedeemTransferBalanceSheet: Boolean,
-    setPresentingRedeemTransferBalanceSheet: (Boolean) -> Unit,
     postQuantumIdentityViewModel: PostQuantumIdentityViewModel = hiltViewModel(),
 ) {
 
     val scope = rememberCoroutineScope()
 
     val networkUser by accountViewModel.networkUser.collectAsState()
-    val currentStore by subscriptionBalanceViewModel.currentStore.collectAsState()
-    val priceTier by subscriptionBalanceViewModel.priceTier.collectAsState()
-    val onboardingOffer by subscriptionBalanceViewModel.onboardingOffer.collectAsState()
-    val accountOffer = androidx.compose.runtime.remember(priceTier, onboardingOffer) {
-        com.bringyour.network.ui.upgrade.PlanPresentations.build(priceTier, onboardingOffer).offer
-    }
-    // the win-back offer as the Get Pro screen sells it (on Play, only once
-    // Play lists the tagged offer)
-    val winbackOffer by subscriptionBalanceViewModel.winbackOffer.collectAsState()
-    val accountWinback = com.bringyour.network.ui.upgrade.rememberPlanPresentation(planViewModel, priceTier, null, winbackOffer).winback
     val availableBalanceByteCount by subscriptionBalanceViewModel.availableBalanceByteCount.collectAsState()
     val dailyBalanceBytes by subscriptionBalanceViewModel.startBalanceByteCount.collectAsState()
-    // the sdk's plan: never Free before the server answered (support inbox 4074)
-    val shownPlan by subscriptionBalanceViewModel.shownPlan.collectAsState()
-    // the account the plan is on, by the name the account switcher shows; none for a guest
-    val planAccountNetworkName = networkUser?.networkName ?: ""
-    val planAccountGuest = accountViewModel.loginMode == LoginMode.Guest
-    val planAccountName = remember(planAccountNetworkName, planAccountGuest) {
-        Sdk.planAccountName(planAccountNetworkName, planAccountGuest)
-    }
 
     val refreshState = rememberPullToRefreshState()
-
-    val redeemTransferBalanceSheetState = rememberFoldSafeSheetState()
 
     LaunchedEffect(Unit) {
         subscriptionBalanceViewModel.fetchSubscriptionBalance()
@@ -167,7 +115,6 @@ fun AccountScreen(
                         .fillMaxSize()
                         .verticalScroll(scrollState)
                         .background(Black)
-                        // .padding(16.dp),
                 ) {
 
                     AccountScreenContent(
@@ -177,61 +124,15 @@ fun AccountScreen(
                         chosenRoute = chosenRoute,
                         scope = scope,
                         networkName = networkUser?.networkName,
-                        planAccountName = planAccountName,
-                        totalAccountPoints = totalAccountPoints,
-                        accountPointsLoaded = accountPointsLoaded,
-                        accountPointsFailed = accountPointsFailed,
-                        retryAccountPoints = retryAccountPoints,
-                        currentPlan = if (isPro) Plan.Supporter else Plan.Basic,
-                        currentStore = currentStore,
-                        accountOffer = accountOffer,
-                        accountWinback = accountWinback,
-                        launchOverlay = overlayViewModel.launch,
-                        onPlanLabelTap = { overlayViewModel.launchSunglassesFlight() },
-                        shownPlan = shownPlan,
-                        retryPlan = subscriptionBalanceViewModel.refreshSubscriptionBalance,
-                        isProcessingUpgrade = subscriptionBalanceViewModel.isPollingSubscriptionBalance,
-                        isCheckingSolanaTransaction = subscriptionBalanceViewModel.isCheckingSolanaTransaction.collectAsState().value,
-                        isPollingSubscriptionBalance = subscriptionBalanceViewModel.isPolling,
                         usedBytes = subscriptionBalanceViewModel.usedBalanceByteCount,
                         pendingBytes = subscriptionBalanceViewModel.pendingBalanceByteCount,
                         availableBytes = availableBalanceByteCount,
-                        totalReferrals = totalReferrals,
                         meanReliabilityWeight = meanReliabilityWeight,
                         dailyBalanceBytes = dailyBalanceBytes,
-                        launchRedeemTransferBalanceCodeSheet = {
-                            setPresentingRedeemTransferBalanceSheet(true)
-                        },
                         postQuantumIdentityViewModel = postQuantumIdentityViewModel,
-                        // a renewal whose payment did not go through (every flavor), then
-                        // a crypto payment in progress, a one-time term (src/cryptoPay; nothing on Play),
-                        // then a gift's year of Pro, which does not renew (every flavor)
-                        planNotices = {
-                            PaymentPastDueNotice(subscriptionBalanceViewModel = subscriptionBalanceViewModel)
-                            AccountPaymentNotices(
-                                subscriptionBalanceViewModel = subscriptionBalanceViewModel,
-                                openUpgrade = { navController.navigate(Route.Upgrade) },
-                            )
-                            GiftPlanNotice(subscriptionBalanceViewModel = subscriptionBalanceViewModel)
-                        },
                     )
                 }
             }
-        }
-
-        if (isPresentingRedeemTransferBalanceSheet) {
-            RedeemTransferBalanceCodeSheet(
-                sheetState = redeemTransferBalanceSheetState,
-                setIsPresenting = setPresentingRedeemTransferBalanceSheet,
-                onSuccess = {
-                    // the sheet confirmed what the code added: data, or a gift
-                    // code's year of Pro. The redeem is committed when the server
-                    // answers, so one balance read shows either, Pro included (it
-                    // refreshes the token when Pro changes). The purchase overlay
-                    // and its confirmation poll are for payments.
-                    subscriptionBalanceViewModel.fetchSubscriptionBalance()
-                }
-            )
         }
 
     }
@@ -248,42 +149,15 @@ fun AccountScreenContent(
     // the screen open beside the list, highlighted in it
     chosenRoute: Route? = null,
     networkName: String?,
-    // the account the plan is on (Sdk.planAccountName), under the plan; empty shows none
-    planAccountName: String = "",
-    totalAccountPoints: Double,
-    accountPointsLoaded: Boolean,
-    currentPlan: Plan,
-    accountPointsFailed: Boolean = false,
-    retryAccountPoints: () -> Unit = {},
-    currentStore: String?,
-    // the welcome offer while it can be redeemed (read-only on this screen)
-    accountOffer: com.bringyour.network.ui.upgrade.OfferPresentation? = null,
-    // a returning subscriber's win-back offer while this app can sell it (read-only here)
-    accountWinback: com.bringyour.network.ui.upgrade.WinbackPresentation? = null,
-    launchOverlay: (OverlayMode) -> Unit,
-    // a Pro network's plan label replays the Pro celebration
-    onPlanLabelTap: () -> Unit = {},
-    // the sdk's plan (support inbox 4074): Loading or Unreachable until the
-    // server answers, never Free; retryPlan reads the balance again
-    shownPlan: ShownPlan = if (currentPlan == Plan.Supporter) ShownPlan.Pro else ShownPlan.Free,
-    retryPlan: () -> Unit = {},
-    isProcessingUpgrade: Boolean, // checking for Stripe, Apple, Play
-    isCheckingSolanaTransaction: Boolean, // checking for potential Solana transaction
-    isPollingSubscriptionBalance: Boolean,
     usedBytes: Long,
     availableBytes: Long,
     pendingBytes: Long,
-    totalReferrals: Long,
     meanReliabilityWeight: Double,
     dailyBalanceBytes: Long,
-    launchRedeemTransferBalanceCodeSheet: () -> Unit,
     // null in previews, rendering the panel's empty (no key) state
     postQuantumIdentityViewModel: PostQuantumIdentityViewModel? = null,
-    // the flavor's lines under the plan (AccountPaymentNotices)
-    planNotices: @Composable () -> Unit = {},
 ) {
 
-    val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
     Column(
@@ -305,9 +179,6 @@ fun AccountScreenContent(
             AccountSwitcher(
                 loginMode = loginMode,
                 networkName = networkName,
-                // Pro members get a glowing gold ring around their avatar
-                isPro = currentPlan == Plan.Supporter,
-                openReferrals = { navController.navigate(Route.Referrals) },
                 createAccount = { navController.navigate(Route.GuestConversion) }
             )
         }
@@ -326,169 +197,19 @@ fun AccountScreenContent(
         ) {
             Column() {
 
-                AccountRootSubscription(
-                    loginMode = loginMode,
-                    currentPlan = currentPlan,
-                    onPlanLabelTap = onPlanLabelTap,
-                    shownPlan = shownPlan,
-                    retryPlan = retryPlan,
-                    currentStore = currentStore,
-//                    scope = scope,
-                    // never logs out: that stranded a guest's plan and balance on
-                    // a network with no login to come back to (GuestAccount)
-                    createAccount = { navController.navigate(Route.GuestConversion) },
-                    isProcessingUpgrade = isProcessingUpgrade,
-                    isPollingSubscriptionBalance = isPollingSubscriptionBalance,
-                    isCheckingSolanaTransaction = isCheckingSolanaTransaction,
-                    navController = navController
-                )
-
-                // which account the plan is on, under every flavor's plan row
-                PlanAccountNameLine(name = planAccountName)
-
-                planNotices()
-
-                if (shownPlan.sellsPro && accountOffer != null) {
-                    AccountOfferLine(
-                        offer = accountOffer,
-                        openGetPro = { navController.navigate(Route.Upgrade) }
-                    )
-                } else if (shownPlan.sellsPro && accountWinback != null) {
-                    AccountWinbackLine(
-                        winback = accountWinback,
-                        openGetPro = { navController.navigate(Route.Upgrade) }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
                 UsageBar(
                     usedBytes = usedBytes,
                     pendingBytes = pendingBytes,
                     availableBytes = availableBytes,
-                    totalReferrals = totalReferrals,
                     meanReliabilityWeight = meanReliabilityWeight,
                     dailyByteCount = dailyBalanceBytes,
-                    onReferralClick = {
-                        if (loginMode == LoginMode.Authenticated) {
-                            navController.navigate(Route.Referrals)
-                        } else {
-                            navController.navigate(Route.GuestConversion)
-                        }
-                    },
-                    // the free plan's refresh, once the server said Free
-                    showFreeRefresh = shownPlan == ShownPlan.Free && dataInfoShowsFreeRefresh(currentPlan),
                 )
-
-                /**
-                 * "Redeem balance code" gets its own row, as a full-width touch target.
-                 *
-                 * It used to be a small right-aligned text link tucked under the usage
-                 * bar, sharing space with the referral affordance -- a fiddly thing to
-                 * hit on a phone, and easy to miss entirely. The whole row is now
-                 * tappable, with a chevron so it reads as somewhere to go.
-                 */
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable { launchRedeemTransferBalanceCodeSheet() }
-                        .padding(vertical = 14.dp, horizontal = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        stringResource(id = R.string.redeem_balance_code),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = BlueMedium
-                    )
-
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = null,
-                        tint = BlueMedium
-                    )
-                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 HorizontalDivider()
 
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // earnings area: points first; the Earnings screen has the protocol layer
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            if (loginMode == LoginMode.Guest) {
-                                navigate(Route.GuestConversion)
-                            } else {
-                                navigate(Route.Earnings)
-                            }
-                        }
-                ) {
-                    Column {
-                        Text(
-                            stringResource(id = R.string.earnings),
-                            style = TextStyle(
-                                color = TextMuted
-                            )
-                        )
-                        if (accountPointsFailed) {
-                            // a failed fetch is an error, not "0 points"
-                            SectionLoadError(
-                                onRetry = retryAccountPoints,
-                                modifier = Modifier.height(42.dp),
-                            )
-                        } else if (accountPointsLoaded) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(42.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.Bottom
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.Bottom,
-                                ) {
-                                    Text(
-                                        EarningsFormat.points(totalAccountPoints),
-                                        style = MaterialTheme.typography.headlineMedium
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        stringResource(id = R.string.points_earned),
-                                        modifier = Modifier.offset(y = -8.dp),
-                                        style = TextStyle(
-                                            color = TextMuted
-                                        )
-                                    )
-                                }
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                    contentDescription = null,
-                                    tint = BlueMedium,
-                                    modifier = Modifier.offset(y = (-8).dp)
-                                )
-                            }
-                        } else {
-                            Row(
-                                modifier = Modifier.height(42.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .width(16.dp)
-                                        .height(16.dp),
-                                    color = TextMuted,
-                                    trackColor = TextFaint,
-                                    strokeWidth = 2.dp
-                                )
-                            }
-                        }
-                    }
-                }
             }
         }
 
@@ -551,32 +272,6 @@ fun AccountScreenContent(
                 }
             },
             selected = chosenRoute == Route.Settings
-        )
-        HorizontalDivider()
-        URNavListItem(
-            iconResourceId = R.drawable.nav_list_item_wallet,
-            text = stringResource(id = R.string.earnings),
-            onClick = {
-                if (loginMode == LoginMode.Authenticated) {
-                    navigate(Route.Earnings)
-                } else {
-                    navigate(Route.GuestConversion)
-                }
-            },
-            selected = chosenRoute == Route.Earnings
-        )
-        HorizontalDivider()
-        URNavListItem(
-            iconResourceId = R.drawable.nav_list_item_refer,
-            text = stringResource(id = R.string.referrals),
-            onClick = {
-                if (loginMode == LoginMode.Authenticated) {
-                    navigate(Route.Referrals)
-                } else {
-                    navigate(Route.GuestConversion)
-                }
-            },
-            selected = chosenRoute == Route.Referrals
         )
         HorizontalDivider()
         // the quick connect tile and the home screen widgets need no account,
@@ -661,7 +356,7 @@ fun AccountScreenContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-private fun AccountSupporterAuthenticatedPreview() {
+private fun AccountAuthenticatedPreview() {
 
     val navController = rememberNavController()
 
@@ -681,65 +376,10 @@ private fun AccountSupporterAuthenticatedPreview() {
                     navController = navController,
                     scope = scope,
                     networkName = "ur_network",
-                    totalAccountPoints = 120.12387,
-                    accountPointsLoaded = true,
-                    currentPlan = Plan.Supporter,
-                    launchOverlay = {},
-                    isProcessingUpgrade = false,
                     usedBytes = 30_000,
                     pendingBytes = 10_000,
                     availableBytes = 60_000,
-                    isCheckingSolanaTransaction = false,
-                    isPollingSubscriptionBalance = false,
-                    currentStore = null,
-                    totalReferrals = 1,
                     meanReliabilityWeight = 0.1,
-                    launchRedeemTransferBalanceCodeSheet = {},
-                    dailyBalanceBytes = 10_000
-                )
-            }
-        }
-
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-private fun AccountBasicAuthenticatedPreview() {
-
-    val navController = rememberNavController()
-
-    val scope = rememberCoroutineScope()
-
-    URNetworkTheme {
-
-        Scaffold() { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(16.dp)
-            ) {
-
-                AccountScreenContent(
-                    loginMode = LoginMode.Authenticated,
-                    navController = navController,
-                    scope = scope,
-                    networkName = "ur_network",
-                    totalAccountPoints = 120.12387,
-                    accountPointsLoaded = true,
-                    currentPlan = Plan.Basic,
-                    launchOverlay = {},
-                    isProcessingUpgrade = false,
-                    usedBytes = 30_000,
-                    pendingBytes = 10_000,
-                    availableBytes = 60_000,
-                    isCheckingSolanaTransaction = false,
-                    isPollingSubscriptionBalance = false,
-                    currentStore = null,
-                    totalReferrals = 1,
-                    meanReliabilityWeight = 0.1,
-                    launchRedeemTransferBalanceCodeSheet = {},
                     dailyBalanceBytes = 10_000
                 )
             }
@@ -770,63 +410,10 @@ private fun AccountGuestPreview() {
                     navController = navController,
                     scope = scope,
                     networkName = "ur_network",
-                    totalAccountPoints = 0.0,
-                    accountPointsLoaded = true,
-                    currentPlan = Plan.Basic,
-                    launchOverlay = {},
-                    isProcessingUpgrade = false,
                     usedBytes = 30_000,
                     pendingBytes = 10_000,
                     availableBytes = 60_000,
-                    isCheckingSolanaTransaction = false,
-                    isPollingSubscriptionBalance = false,
-                    currentStore = null,
-                    totalReferrals = 1,
                     meanReliabilityWeight = 0.1,
-                    launchRedeemTransferBalanceCodeSheet = {},
-                    dailyBalanceBytes = 10_000
-                )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-private fun AccountGuestNoWalletPreview() {
-
-    val navController = rememberNavController()
-
-    val scope = rememberCoroutineScope()
-
-    URNetworkTheme {
-
-        Scaffold() { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(16.dp)
-            ) {
-                AccountScreenContent(
-                    loginMode = LoginMode.Guest,
-                    navController = navController,
-                    scope = scope,
-                    networkName = "ur_network",
-                    totalAccountPoints = 0.0,
-                    accountPointsLoaded = false,
-                    currentPlan = Plan.Basic,
-                    launchOverlay = {},
-                    isProcessingUpgrade = false,
-                    usedBytes = 30_000,
-                    pendingBytes = 10_000,
-                    availableBytes = 60_000,
-                    isCheckingSolanaTransaction = false,
-                    isPollingSubscriptionBalance = false,
-                    currentStore = null,
-                    totalReferrals = 1,
-                    meanReliabilityWeight = 0.1,
-                    launchRedeemTransferBalanceCodeSheet = {},
                     dailyBalanceBytes = 10_000
                 )
             }

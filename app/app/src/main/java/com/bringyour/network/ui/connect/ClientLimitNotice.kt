@@ -85,7 +85,7 @@ fun ClientLimitNotice(navController: NavController) {
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            stringResource(id = clientLimitMessageId(current.offersUpgrade)),
+            stringResource(id = R.string.client_limit_remove_client_message),
             style = MaterialTheme.typography.bodyMedium,
             color = TextMuted,
             modifier = Modifier
@@ -98,23 +98,8 @@ fun ClientLimitNotice(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (current.offersUpgrade) {
-                URButton(
-                    onClick = { navController.navigate(Route.Upgrade) },
-                    style = ButtonStyle.OUTLINE,
-                    modifier = Modifier
-                        .weight(1f)
-                        .testTag("acceptance.client_limit_upgrade")
-                ) { buttonTextStyle ->
-                    Text(
-                        stringResource(id = R.string.get_pro),
-                        style = buttonTextStyle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(horizontal = 4.dp)
-                    )
-                }
-            }
+            // this build sells no plan, so removing a device is the only way
+            // to free a slot (the message says it either way)
             URButton(
                 onClick = { navController.navigate(Route.ManageDevices) },
                 style = ButtonStyle.OUTLINE,

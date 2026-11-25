@@ -175,18 +175,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 fun SettingsScreen(
     navController: NavController,
     accountViewModel: AccountViewModel,
-    planViewModel: PlanViewModel,
     settingsViewModel: SettingsViewModel,
     overlayViewModel: OverlayViewModel,
     activityResultSender: ActivityResultSender?,
-    earningsViewModel: EarningsViewModel,
-    isPro: Boolean,
-    currentStore: String? = null,
-    planNotices: @Composable () -> Unit = {},
-    // the sdk's plan (support inbox 4074): Loading or Unreachable until the
-    // server answers, never Free; retryPlan reads the balance again
-    shownPlan: ShownPlan = if (isPro) ShownPlan.Pro else ShownPlan.Free,
-    retryPlan: () -> Unit = {},
     mockLocationViewModel: MockLocationViewModel = hiltViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -212,12 +203,6 @@ fun SettingsScreen(
     val authCode = settingsViewModel.authCode.collectAsState().value
 
     val networkUser = accountViewModel.networkUser.collectAsState().value
-    // the account the plan is on, as the Account screen names it; none for a guest
-    val planAccountNetworkName = networkUser?.networkName ?: ""
-    val planAccountGuest = accountViewModel.loginMode == LoginMode.Guest
-    val planAccountName = remember(planAccountNetworkName, planAccountGuest) {
-        Sdk.planAccountName(planAccountNetworkName, planAccountGuest)
-    }
     val authMethods = remember(networkUser) { networkUser?.let { parseAuthMethods(it) } ?: emptyList() }
     val isAddingAuth = settingsViewModel.isAddingAuth.collectAsState().value
     val isRemovingAuth = settingsViewModel.isRemovingAuth.collectAsState().value
@@ -254,7 +239,6 @@ fun SettingsScreen(
 
     val clipboardManager = LocalClipboardManager.current
 
-
     var isPresentingRenameDevice by rememberSaveable { mutableStateOf(false) }
     var editingDeviceName by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
 
@@ -271,85 +255,9 @@ fun SettingsScreen(
         settingsViewModel.fetchDeviceInfo()
     }
 
-    val signAndVerifySeekerHolder: () -> Unit = {
-        scope.launch {
-
-            // `connect` dispatches an association intent to MWA-compatible wallet apps.
-            activityResultSender?.let { activityResultSender ->
-
-                // Instantiate the MWA client object
-                val walletAdapter = MobileWalletAdapter(
-                    connectionIdentity = ConnectionIdentity(
-                        identityUri = solanaUri,
-                        iconUri = iconUri,
-                        identityName = identityName,
-                    ),
-                )
-                walletAdapter.blockchain = Solana.Mainnet
-
-                val timestamp = Date().time.toString()
-                val message = "Verify Seeker Token Holder - $timestamp"
-                val result = walletAdapter.transact(activityResultSender) { authResult ->
-                    signMessagesDetached(arrayOf(message.toByteArray()), arrayOf((authResult.accounts.first().publicKey)))
-                }
-
-                val showNotice: (SeekerVerifyNotice) -> Unit = { notice ->
-                    val noticeMessage = when (notice) {
-                        SeekerVerifyNotice.NoWalletApp ->
-                            context.getString(R.string.seeker_verify_no_wallet_app)
-                        SeekerVerifyNotice.Failed ->
-                            context.getString(R.string.seeker_verify_failed)
-                        is SeekerVerifyNotice.NotHolder ->
-                            context.getString(R.string.seeker_token_not_found, notice.walletSuffix)
-                        is SeekerVerifyNotice.ServerMessage -> notice.message
-                    }
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = noticeMessage,
-                            withDismissAction = true,
-                            duration = SnackbarDuration.Indefinite
-                        )
-                    }
-                }
-
-                // a wallet app that cannot sign is shown, not only logged
-                val signedMessageBytes = (result as? TransactionResult.Success)
-                    ?.successPayload?.messages?.firstOrNull()?.signatures?.firstOrNull()
-                val signOutcome = when (result) {
-                    is TransactionResult.Success ->
-                        if (signedMessageBytes == null) SeekerSignOutcome.NoSignature else SeekerSignOutcome.Signed
-                    is TransactionResult.NoWalletFound -> SeekerSignOutcome.NoWalletApp
-                    is TransactionResult.Failure -> {
-                        Log.i(TAG, "Error during transaction signing: ${result.e}")
-                        SeekerSignOutcome.Failed
-                    }
-                }
-
-                val signNotice = SeekerVerifyNotice.fromSign(signOutcome)
-                if (signNotice != null) {
-                    showNotice(signNotice)
-                } else if (result is TransactionResult.Success && signedMessageBytes != null) {
-                    val signatureBase64 = Base64.encodeToString(signedMessageBytes, Base64.NO_WRAP)
-                    val pk = SolanaPublicKey(result.authResult.accounts.first().publicKey)
-
-                    earningsViewModel.verifySeekerHolder(
-                        pk,
-                        message,
-                        signatureBase64,
-                        showNotice
-                    )
-                }
-            }
-
-        }
-    }
-
     SettingsScreen(
         navController,
         clientId = accountViewModel.clientId,
-        currentPlan = if (isPro) Plan.Supporter else Plan.Basic,
-        shownPlan = shownPlan,
-        retryPlan = retryPlan,
         notificationsAllowed = notificationsAllowed,
         requestAllowNotifications = settingsViewModel.triggerPermissionRequest,
         notificationsPermanentlyDenied = settingsViewModel.notificationsPermanentlyDenied,
@@ -364,7 +272,6 @@ fun SettingsScreen(
             isPresentingRenameDevice = true
         },
         networkName = networkUser?.networkName,
-        planAccountName = planAccountName,
         showDeleteAccountDialog = showDeleteAccountDialog,
         setShowDeleteAccountDialog = settingsViewModel.setShowDeleteAccountDialog,
         deleteAccount = settingsViewModel.deleteAccount,
@@ -372,8 +279,6 @@ fun SettingsScreen(
         routeLocal = settingsViewModel.routeLocal.collectAsState().value,
         toggleRouteLocal = settingsViewModel.toggleRouteLocal,
         snackbarHostState = snackbarHostState,
-        signAndVerifySeekerHolder = signAndVerifySeekerHolder,
-        isSeekerHolder = earningsViewModel.isSeekerHolder.collectAsState().value,
         version = settingsViewModel.version,
         onOpenReleaseNotes = if (releaseNote != null) {
             { isPresentingReleaseNotes = true }
@@ -390,9 +295,6 @@ fun SettingsScreen(
         setDisplayAuthCodeDialog = settingsViewModel.setIsPresentingAuthCodeDialog,
         provideIndicatorColor = settingsViewModel.provideIndicatorColor,
         provideIndicatorRingColor = settingsViewModel.provideIndicatorRingColor,
-        stripePortalUrl = settingsViewModel.stripePortalUrl.collectAsState().value,
-        currentStore = currentStore,
-        planNotices = planNotices,
         authMethods = authMethods,
         onRemoveAuthMethod = { method -> pendingRemoveMethod = method },
         onAddAuthMethodClick = { presentAddAuthSheet = true },
@@ -630,9 +532,6 @@ private fun displayVersion(version: String): String = version.ifEmpty { "0.0.0" 
 private fun SettingsScreen(
     navController: NavController,
     clientId: String,
-    currentPlan: Plan,
-    shownPlan: ShownPlan = if (currentPlan == Plan.Supporter) ShownPlan.Pro else ShownPlan.Free,
-    retryPlan: () -> Unit = {},
     notificationsAllowed: Boolean,
     notificationsPermanentlyDenied: Boolean,
     requestAllowNotifications: () -> Unit,
@@ -644,8 +543,6 @@ private fun SettingsScreen(
     deviceSpec: String = "",
     onEditDeviceName: () -> Unit = {},
     networkName: String? = null,
-    // the account the plan is on (Sdk.planAccountName), under the plan; empty shows none
-    planAccountName: String = "",
     setShowDeleteAccountDialog: (Boolean) -> Unit = {},
     showDeleteAccountDialog: Boolean,
     deleteAccount: (onSuccess: (signedOutDevice: com.bringyour.sdk.DeviceLocal) -> Unit, onFailure: (DeleteAccountOutcome.Failed) -> Unit) -> Unit,
@@ -653,8 +550,6 @@ private fun SettingsScreen(
     routeLocal: Boolean,
     toggleRouteLocal: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    signAndVerifySeekerHolder: () -> Unit,
-    isSeekerHolder: Boolean,
     version: String,
     // opens the bundled release notes from the version row; null leaves the
     // row plain text, when the app has no note it can read
@@ -669,10 +564,6 @@ private fun SettingsScreen(
     setDisplayAuthCodeDialog: (Boolean) -> Unit,
     provideIndicatorColor: Color,
     provideIndicatorRingColor: Color? = null,
-    stripePortalUrl: String?,
-    currentStore: String? = null,
-    // the lines under the plan row (PaymentPastDueNotice)
-    planNotices: @Composable () -> Unit = {},
     authMethods: List<String>,
     onRemoveAuthMethod: (String) -> Unit,
     onAddAuthMethodClick: () -> Unit,
@@ -699,7 +590,10 @@ private fun SettingsScreen(
 
     val depinHubStr = "DePIN Hub"
     val depinHubLink = "https://depinhub.io/projects/urnetwork"
-    val seekerLink = "https://ur.io/seeker"
+
+    // the app language: "system" follows the device, a tag pins one app-wide
+    var languageSheetPresented by rememberSaveable { mutableStateOf(false) }
+    var selectedLanguageTag by rememberSaveable { mutableStateOf(currentAppLanguageTag()) }
 
     Scaffold(
         snackbarHost = {
@@ -812,31 +706,6 @@ private fun SettingsScreen(
             )
 
             Spacer(modifier = Modifier.height(18.dp))
-
-            /**
-             * Balance codes link
-             */
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        navController.navigate(Route.BalanceCodes)
-                    }
-                    .padding(vertical = 6.dp)
-                ,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    stringResource(id = R.string.balance_codes_link),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = null,
-                    tint = TextMuted
-                )
-            }
 
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -1319,6 +1188,51 @@ private fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            /**
+             * Language
+             */
+            URTextInputLabel(text = stringResource(id = R.string.language))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { languageSheetPresented = true }
+                    .padding(vertical = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    languageDisplayName(selectedLanguageTag),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = TextMuted
+                )
+            }
+            Text(
+                stringResource(id = R.string.language_note),
+                style = MaterialTheme.typography.bodySmall,
+                color = TextMuted
+            )
+
+            if (languageSheetPresented) {
+                LanguagePickerSheet(
+                    selectedTag = selectedLanguageTag,
+                    onSelected = { tag ->
+                        selectedLanguageTag = tag
+                        applyAppLanguage(tag)
+                        languageSheetPresented = false
+                    },
+                    onDismiss = { languageSheetPresented = false },
+                )
+            }
+
             // allow notifications
             URTextInputLabel(text = stringResource(id = R.string.notifications_label))
             Row(
@@ -1487,101 +1401,6 @@ private fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-
-            /**
-             * Plan
-             */
-            URTextInputLabel(text = stringResource(id = R.string.plan))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    // before the server answers, a spinner or the read's retry,
-                    // never Free (support inbox 4074)
-                    ShownPlanName(
-                        shownPlan = shownPlan,
-                        retryPlan = retryPlan,
-                        style = MaterialTheme.typography.bodyMedium.copy(color = Color.White),
-                    )
-
-
-                    if (shownPlan.sellsPro) {
-                        InfoIconWithOverlay() {
-                            Column() {
-
-                                Text(
-                                    stringResource(id = R.string.unlock_supporter_tooltip),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = BlueLight
-                                )
-
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            navController.navigate(Route.Upgrade)
-                                        },
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        stringResource(id = R.string.become_supporter),
-                                        style = TextStyle(
-                                            fontSize = 12.sp,
-                                            lineHeight = 20.sp,
-                                            fontWeight = FontWeight(700),
-                                            color = BlueLight,
-                                        )
-                                    )
-                                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                        contentDescription = null,
-                                        tint = BlueLight,
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (shownPlan.sellsPro) {
-                    Text(
-                        stringResource(id = R.string.change),
-                        style = TextStyle(
-                            color = BlueMedium
-                        ),
-                        modifier = Modifier.clickable {
-                            navController.navigate(Route.Upgrade)
-                        }
-                    )
-                }
-
-                if (currentPlan == Plan.Supporter) {
-
-                    // a one-time crypto payment does not renew and has nothing to manage
-                    // (src/cryptoPay); otherwise the flavor's manage button
-                    SubscriptionManageLine(currentStore = currentStore, stripePortalUrl = stripePortalUrl)
-
-                }
-            }
-
-            // which account the plan is on (support inbox 6546)
-            PlanAccountNameLine(name = planAccountName)
-
-            // a renewal whose payment did not go through, under the manage line
-            planNotices()
-
-            // the free plan's info icon makes its row 48 dp tall, 14 dp of it
-            // below the text
-            Spacer(modifier = Modifier.height(if (shownPlan.sellsPro) 18.dp else 32.dp))
-
             /**
             * Version
              */
@@ -1688,91 +1507,6 @@ private fun SettingsScreen(
                     contentDescription = null,
                 )
             }
-
-            // The Seeker/Saga data multiplier is promoted only on the Solana Mobile flavor.
-            if (BuildConfig.BRINGYOUR_BUNDLE_STORE == "solana_dapp") {
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            /**
-             * Seeker wallet holder
-             */
-            URTextInputLabel(stringResource(id = R.string.earning_multipliers))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    stringResource(id = R.string.claim_multiplier),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
-                )
-
-                if (isSeekerHolder) {
-                    Icon(
-                        Icons.Filled.Check,
-                        contentDescription = stringResource(id = R.string.claim_confirmed),
-                        tint = Green
-                    )
-                } else {
-
-                    TextButton(onClick = {
-                        signAndVerifySeekerHolder()
-                    }) {
-                        Text(
-                            stringResource(id = R.string.claim),
-                            color = BlueMedium
-                        )
-                    }
-                }
-
-            }
-
-            Text(
-                stringResource(id = R.string.connect_seeker_wallet),
-                style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
-            )
-
-            // the multiplier doubles points, free daily data and referral data; it does not grant Pro
-            Text(
-                stringResource(id = R.string.seeker_multiplier_benefit),
-                style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
-            )
-
-            Spacer(modifier = Modifier.height(18.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    stringResource(id = R.string.learn_more_about_multiplier),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
-                )
-
-                IconButton(
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, seekerLink.toUri())
-                        context.startActivity(intent)
-                    },
-                    modifier = Modifier.size(20.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.Outbound,
-                        contentDescription = stringResource(id = R.string.learn_more),
-                        tint = TextMuted,
-                    )
-                }
-            }
-            } // end Solana-only seeker multiplier block
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -1996,7 +1730,6 @@ private fun SettingsScreenPreview() {
         SettingsScreen(
             navController,
             clientId = "0000abc0-1111-0000-a123-000000abc000",
-            currentPlan = Plan.Basic,
             notificationsAllowed = true,
             notificationsPermanentlyDenied = false,
             requestAllowNotifications = {},
@@ -2011,8 +1744,6 @@ private fun SettingsScreenPreview() {
             routeLocal = false,
             toggleRouteLocal = {},
             snackbarHostState = remember { SnackbarHostState() },
-            signAndVerifySeekerHolder = {},
-            isSeekerHolder = false,
             version = "1.2.3",
             allowProvideCell = true,
             toggleProvideCell = {},
@@ -2073,7 +1804,6 @@ private fun SettingsScreenSupporterPreview() {
         SettingsScreen(
             navController,
             clientId = "0000abc0-1111-0000-a123-000000abc000",
-            currentPlan = Plan.Supporter,
             notificationsAllowed = true,
             notificationsPermanentlyDenied = false,
             requestAllowNotifications = {},
@@ -2088,8 +1818,6 @@ private fun SettingsScreenSupporterPreview() {
             routeLocal = false,
             toggleRouteLocal = {},
             snackbarHostState = remember { SnackbarHostState() },
-            signAndVerifySeekerHolder = {},
-            isSeekerHolder = false,
             version = "1.2.3",
             allowProvideCell = true,
             toggleProvideCell = {},
@@ -2118,7 +1846,6 @@ private fun SettingsScreenNotificationsDisabledPreview() {
         SettingsScreen(
             navController,
             clientId = "0000abc0-1111-0000-a123-000000abc000",
-            currentPlan = Plan.Supporter,
             notificationsAllowed = false,
             notificationsPermanentlyDenied = true,
             requestAllowNotifications = {},
@@ -2133,8 +1860,6 @@ private fun SettingsScreenNotificationsDisabledPreview() {
             routeLocal = false,
             toggleRouteLocal = {},
             snackbarHostState = remember { SnackbarHostState() },
-            signAndVerifySeekerHolder = {},
-            isSeekerHolder = true,
             version = "1.2.3",
             allowProvideCell = true,
             toggleProvideCell = {},
@@ -2163,7 +1888,6 @@ private fun SettingsScreenNotificationsAllowedPreview() {
         SettingsScreen(
             navController,
             clientId = "0000abc0-1111-0000-a123-000000abc000",
-            currentPlan = Plan.Supporter,
             notificationsAllowed = false,
             notificationsPermanentlyDenied = false,
             requestAllowNotifications = {},
@@ -2178,8 +1902,6 @@ private fun SettingsScreenNotificationsAllowedPreview() {
             routeLocal = false,
             toggleRouteLocal = {},
             snackbarHostState = remember { SnackbarHostState() },
-            signAndVerifySeekerHolder = {},
-            isSeekerHolder = false,
             version = "1.2.3",
             allowProvideCell = true,
             toggleProvideCell = {},
@@ -2208,7 +1930,6 @@ private fun SettingsScreenDeleteAccountDialogPreview() {
         SettingsScreen(
             navController,
             clientId = "0000abc0-1111-0000-a123-000000abc000",
-            currentPlan = Plan.Supporter,
             notificationsAllowed = false,
             notificationsPermanentlyDenied = false,
             requestAllowNotifications = {},
@@ -2224,8 +1945,6 @@ private fun SettingsScreenDeleteAccountDialogPreview() {
             routeLocal = false,
             toggleRouteLocal = {},
             snackbarHostState = remember { SnackbarHostState() },
-            signAndVerifySeekerHolder = {},
-            isSeekerHolder = false,
             version = "1.2.3",
             allowProvideCell = true,
             toggleProvideCell = {},
