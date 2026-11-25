@@ -13,7 +13,8 @@ jobs:
 
     env:
       BRINGYOUR_HOME: ${{ github.workspace }}/build-home
-      WARP_HOME: ${{ runner.temp }}/warp-home
+      WARP_HOME: ${{ github.workspace }}/warp-home
+      APK_HOME: ${{ github.workspace }}/apks
 
     steps:
       - name: Free disk space
@@ -110,15 +111,15 @@ jobs:
       - name: Collect the APKs
         run: |
           set -e
-          mkdir -p "$RUNNER_TEMP/apks"
-          find "$BRINGYOUR_HOME/android/app/app/build/outputs/apk/github/release" -name '*.apk' -exec cp {} "$RUNNER_TEMP/apks/" \;
-          ls -la "$RUNNER_TEMP/apks"
+          mkdir -p "$APK_HOME"
+          find "$BRINGYOUR_HOME/android/app/app/build/outputs/apk/github/release" -name '*.apk' -exec cp {} "$APK_HOME/" \;
+          ls -la "$APK_HOME"
 
       - name: Upload the APK artifacts
         uses: actions/upload-artifact@v4
         with:
           name: urnetwork-apks
-          path: ${{ runner.temp }}/apks/*.apk
+          path: apks/*.apk
           if-no-files-found: error
 
       - name: Publish the GitHub release
@@ -128,5 +129,5 @@ jobs:
         run: |
           set -e
           TAG="${GITHUB_REF#refs/tags/}"
-          UNIVERSAL=$(ls "$RUNNER_TEMP/apks"/*universal*.apk | head -1)
+          UNIVERSAL=$(ls "$APK_HOME"/*universal*.apk | head -1)
           gh release create "$TAG" --title "$TAG" --notes "Custom community build of URnetwork for Android (github flavor, universal APK). See CUSTOMIZATIONS.md for what changed." "$UNIVERSAL"
