@@ -595,9 +595,9 @@ private fun SettingsScreen(
     var selectedLanguageTag by rememberSaveable { mutableStateOf(currentAppLanguageTag()) }
 
     // the navigation style: the look of the bottom bar, chosen from a sheet
-    // and applied the moment it is made
+    // and applied the moment it is made (the row shows the live choice)
     var navStyleSheetPresented by rememberSaveable { mutableStateOf(false) }
-    var selectedNavStyleName by rememberSaveable { mutableStateOf(currentNavStyle().name) }
+    val selectedNavStyle = currentNavStyle()
 
     Scaffold(
         snackbarHost = {
@@ -1245,7 +1245,7 @@ private fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    navStyleDisplayName(NavStyle.valueOf(selectedNavStyleName)),
+                    navStyleDisplayName(selectedNavStyle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = AppTheme.textPrimary
                 )
@@ -1264,9 +1264,8 @@ private fun SettingsScreen(
 
             if (navStyleSheetPresented) {
                 NavStylePickerSheet(
-                    selected = NavStyle.valueOf(selectedNavStyleName),
+                    selected = selectedNavStyle,
                     onSelected = { style ->
-                        selectedNavStyleName = style.name
                         NavStylePreferences.set(context, style)
                         navStyleSheetPresented = false
                     },
