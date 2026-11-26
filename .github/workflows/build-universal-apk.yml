@@ -6,6 +6,11 @@ on:
     tags:
       - "v*"
 
+# the release-publishing step (gh release create) needs this; the repo's
+# Actions "Workflow permissions" setting is read-and-write too
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -139,4 +144,4 @@ jobs:
           ASSETS=("$UNIVERSAL")
           if [ -n "$ARM64" ]; then ASSETS+=("$ARM64"); fi
           if [ -n "$ARMV7" ]; then ASSETS+=("$ARMV7"); fi
-          gh release create "$TAG" --title "$TAG" --notes "Custom community build of URnetwork for Android (github flavor). New in this build: light and dark appearance (Settings -> Appearance), a floating rounded glass navigation bar, the selected country's flag on the connect screen, the Telegram and Instagram channels in Account, the per-country ping test removed (the network exposes no testable endpoints for nearly all countries), and a much smaller APK (unused code and resources shrunk). See CUSTOMIZATIONS.md for the full list." "${ASSETS[@]}"
+          gh release create "$TAG" --title "$TAG" --notes "Custom community build of URnetwork for Android (github flavor). See CUSTOMIZATIONS.md for the list of customizations and the build's LICENSE notes." "${ASSETS[@]}"
