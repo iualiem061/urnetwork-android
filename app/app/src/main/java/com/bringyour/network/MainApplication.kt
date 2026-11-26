@@ -27,6 +27,7 @@ import android.util.Log
 import com.bringyour.network.analytics.WHITELIST_PROBE_HTTP_TIMEOUT_MILLIS
 import com.bringyour.network.analytics.WHITELIST_PROBE_LOG_TAG
 import com.bringyour.network.analytics.WhitelistProbeStep
+import com.bringyour.network.ui.settings.ThemePreferences
 import java.net.HttpURLConnection
 import java.net.URL
 import androidx.core.content.ContextCompat
@@ -1021,6 +1022,10 @@ class MainApplication : Application() {
             File(logRootDir(filesDir), APP_LOG_PROCESS_NAME)
         }
         super.onCreate()
+
+        // the user's appearance choice (Settings -> Appearance) before any
+        // activity resolves its theme; harmless in the vpn service process
+        ThemePreferences.load(this)
 
         if (!isCredentialStorageUnlocked()) {
             enterDirectBootMode("application-create")

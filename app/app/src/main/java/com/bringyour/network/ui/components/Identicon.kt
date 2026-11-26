@@ -53,7 +53,7 @@ fun Identicon(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White.copy(alpha = 0.15f))
+                    .background(AppTheme.textPrimary.copy(alpha = 0.15f))
             )
         }
     }

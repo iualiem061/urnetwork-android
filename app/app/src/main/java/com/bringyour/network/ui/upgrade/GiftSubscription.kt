@@ -14,8 +14,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.Sdk
+import com.bringyour.network.ui.theme.AppTheme
 
 /*
  * A redeemed gift code's year of Pro (GIFTOFPRIVACY.md 10.5, "After
@@ -65,7 +66,7 @@ fun GiftDoesNotRenewLine() {
     Text(
         stringResource(id = R.string.gift_does_not_renew),
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted,
+        color = AppTheme.textMuted,
         textAlign = TextAlign.End,
         modifier = Modifier.padding(start = 16.dp)
     )
@@ -84,7 +85,7 @@ fun GiftPlanNotice(subscriptionBalanceViewModel: SubscriptionBalanceViewModel) {
         Text(
             stringResource(id = R.string.gift_does_not_renew),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
     }
 }

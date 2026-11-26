@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The "Periodic product updates" line on every sign-up page: on by default,
@@ -35,7 +35,7 @@ fun ProductUpdatesOptOutRow(
         Text(
             stringResource(id = R.string.periodic_product_updates),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
         URSwitch(
             checked = checked,

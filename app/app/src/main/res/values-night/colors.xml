@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The dark launch window's background: the DayNight base theme's night
+     variant (the light default lives in values/colors.xml). -->
+<resources>
+    <color name="by_background">#101010</color>
+</resources>

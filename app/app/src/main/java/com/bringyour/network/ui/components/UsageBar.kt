@@ -46,10 +46,10 @@ import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.utils.formatBalanceBytes
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun UsageBar(
@@ -76,7 +76,7 @@ fun UsageBar(
 
     val usedColor = BlueMedium
     val pendingColor = Red
-    val availableColor = TextFaint
+    val availableColor = AppTheme.textFaint
 
     fun minNonZeroBytes(bytes: Long): Long {
 
@@ -109,7 +109,7 @@ fun UsageBar(
                         .weight(1f)
                         .fillMaxHeight()
                         .clip(RoundedCornerShape(cornerRadius))
-                        .background(TextFaint.copy(alpha = 0.3f))
+                        .background(AppTheme.textFaint.copy(alpha = 0.3f))
                 )
             } else {
                 /**
@@ -132,7 +132,6 @@ fun UsageBar(
                         .background(usedColor)
                 )
 
-
                 /**
                  * pending
                  * hide if all data is used for the day
@@ -154,7 +153,6 @@ fun UsageBar(
                             .background(pendingColor)
                     )
                 }
-
 
                 // available
                 if (availableBytes > 0) {
@@ -228,7 +226,7 @@ fun UsageBar(
                 Text(
                     stringResource(id = R.string.daily_data_balance_label),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
 
                 Spacer(modifier = Modifier.width(4.dp))
@@ -236,7 +234,7 @@ fun UsageBar(
                 Icon(
                     Icons.Outlined.Info,
                     contentDescription = dataInfoLabel,
-                    tint = TextMuted,
+                    tint = AppTheme.textMuted,
                     modifier = Modifier.size(16.dp)
                 )
             }
@@ -245,7 +243,7 @@ fun UsageBar(
             Text(
                 formatBalanceBytes(dailyByteCount),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
 

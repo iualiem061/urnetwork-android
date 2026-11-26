@@ -29,8 +29,7 @@ import com.bringyour.network.ui.components.ProvideModeRow
 import com.bringyour.network.ui.shared.models.ProvideControlMode
 import com.bringyour.network.ui.theme.Red
 import com.bringyour.network.ui.theme.MutedCoral
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Provider statistics: local and blocked traffic relayed for remote
@@ -72,13 +71,13 @@ fun ProviderStatsSection(
             Text(
                 stringResource(id = R.string.provider_statistics),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             if (throughputViewModel.providerStatsEnabled) {
                 Icon(
                     Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = TextFaint,
+                    tint = AppTheme.textFaint,
                     modifier = Modifier.size(16.dp)
                 )
             }
@@ -162,7 +161,7 @@ fun ProviderStatsSection(
             Text(
                 stringResource(id = R.string.providing_disabled),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextFaint,
+                color = AppTheme.textFaint,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 

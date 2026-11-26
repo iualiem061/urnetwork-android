@@ -14,8 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ShownPlan
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The plan's name on a plan card (Account, Connect, Settings): Pro or Free as
@@ -37,8 +36,8 @@ fun ShownPlanName(
             modifier = Modifier
                 .width(24.dp)
                 .height(24.dp),
-            color = TextMuted,
-            trackColor = TextFaint,
+            color = AppTheme.textMuted,
+            trackColor = AppTheme.textFaint,
             strokeWidth = 2.dp
         )
         ShownPlan.Unreachable -> SectionLoadError(onRetry = retryPlan)

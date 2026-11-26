@@ -76,13 +76,14 @@ import com.bringyour.network.ui.components.overlays.OverlayMode
 import com.bringyour.network.ui.shared.managers.rememberReviewManager
 import com.bringyour.network.ui.shared.models.BundleStore
 import com.bringyour.network.ui.shared.viewmodels.OverlayViewModel
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.components.tabletReadableColumn
 import com.bringyour.sdk.Sdk
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun FeedbackScreen(
@@ -140,7 +141,6 @@ fun FeedbackScreen(
         }
     }
 
-
     // the overlay and review prompt wait for the send to succeed; a failure keeps the form
     val submitFeedback = {
 
@@ -176,7 +176,7 @@ fun FeedbackScreen(
 
             Column(
                 modifier = Modifier
-                    .background(Black)
+                    .background(AppTheme.bg)
                     .imePadding()
                     .tabletReadableColumn()
                     .padding(16.dp)

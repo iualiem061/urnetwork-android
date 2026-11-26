@@ -44,7 +44,7 @@ import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URInlineErrorText
 import com.bringyour.network.ui.components.referral.ReferralAppliedChip
 import com.bringyour.network.ui.components.referral.ReferralCodeInput
-import com.bringyour.network.ui.theme.Black
+import com.bringyour.network.ui.theme.AppTheme
 
 internal const val ACCEPTANCE_INSTANT_TERMS_TAG = "acceptance.instant.terms"
 internal const val ACCEPTANCE_INSTANT_CREATE_TAG = "acceptance.instant.create"
@@ -134,7 +134,7 @@ internal fun CreateNetworkInstantContent(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
                 actions = {}
             )

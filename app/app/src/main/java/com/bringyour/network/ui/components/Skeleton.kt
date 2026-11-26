@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.referral.rememberReducedMotion
-import com.bringyour.network.ui.theme.MainBorderBase
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The shared placeholder style (mmm/DESIGNSTYLE.md "Placeholders, not pop-in"):
@@ -55,7 +55,7 @@ fun SkeletonBar(
             .width(width)
             .height(height)
             .clip(RoundedCornerShape(cornerRadius))
-            .background(MainBorderBase)
+            .background(AppTheme.border)
             .skeletonShimmer()
     )
 }
@@ -74,7 +74,7 @@ fun SkeletonLine(
             .fillMaxWidth()
             .height(height)
             .clip(RoundedCornerShape(cornerRadius))
-            .background(MainBorderBase)
+            .background(AppTheme.border)
             .skeletonShimmer()
     )
 }
@@ -103,7 +103,7 @@ fun SkeletonText(
                 .matchParentSize()
                 .padding(vertical = 2.dp)
                 .clip(RoundedCornerShape(50))
-                .background(MainBorderBase)
+                .background(AppTheme.border)
                 .skeletonShimmer()
         )
     }
@@ -155,7 +155,7 @@ fun Modifier.skeletonShimmer(): Modifier {
             brush = Brush.linearGradient(
                 colors = listOf(
                     Color.Transparent,
-                    Color.White.copy(alpha = 0.06f),
+                    AppTheme.textPrimary.copy(alpha = 0.06f),
                     Color.Transparent,
                 ),
                 start = Offset(start, 0f),

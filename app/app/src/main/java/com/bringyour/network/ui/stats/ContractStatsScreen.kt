@@ -84,12 +84,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bringyour.network.R
 import com.bringyour.network.ui.indexedLazyListKey
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Green
 import com.bringyour.network.ui.theme.Pink
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.utils.formatByteCountCompact
 import kotlinx.coroutines.delay
@@ -97,6 +96,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
+import com.bringyour.network.ui.theme.AppTheme
 
 // tetris timings, mirroring the shared design: a leaver slides off over the
 // slide window while holding its slot open, then one settle transaction drops the
@@ -211,11 +211,11 @@ fun ContractStatsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         Box(
@@ -236,7 +236,7 @@ fun ContractStatsScreen(
                     Text(
                         stringResource(id = R.string.no_open_contracts),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -244,7 +244,7 @@ fun ContractStatsScreen(
                             id = if (provider) R.string.contracts_appear_providing else R.string.contracts_appear_connected
                         ),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextFaint
+                        color = AppTheme.textFaint
                     )
                 }
 
@@ -304,7 +304,7 @@ fun ContractStatsScreen(
                             pendingCount,
                         ),
                         style = TextStyle(fontSize = 12.sp),
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
                 }
             }
@@ -331,7 +331,7 @@ private fun ContractPeerRowView(
         Text(
             row.clientId,
             style = TextStyle(fontSize = 13.sp, fontFamily = FontFamily.Monospace),
-            color = Color.White,
+            color = AppTheme.textPrimary,
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
@@ -541,7 +541,7 @@ private fun ContractStackView(
         Text(
             stringResource(id = R.string.contract_stack_max, formatByteCountCompact(stackMax)),
             style = TextStyle(fontSize = 10.sp),
-            color = TextFaint,
+            color = AppTheme.textFaint,
             modifier = Modifier.alpha(if (displayed.isEmpty()) 0f else 1f)
         )
     }
@@ -552,7 +552,7 @@ private fun HeaderTitle(title: String) {
     Text(
         title,
         style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-        color = TextMuted
+        color = AppTheme.textMuted
     )
 }
 
@@ -732,12 +732,12 @@ private fun ContractStats(
         Text(
             formatByteCountCompact(entry.usedByteCount),
             style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-            color = Color.White
+            color = AppTheme.textPrimary
         )
         Text(
             stringResource(id = R.string.of_total, formatByteCountCompact(entry.totalByteCount)),
             style = TextStyle(fontSize = 10.sp),
-            color = TextMuted
+            color = AppTheme.textMuted
         )
     }
 }

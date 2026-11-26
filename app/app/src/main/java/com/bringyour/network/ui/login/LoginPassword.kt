@@ -65,13 +65,14 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URInlineErrorText
 import com.bringyour.network.ui.components.URTextInput
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
 import android.net.Uri
 import com.bringyour.network.ui.theme.URNetworkTheme
-import com.bringyour.network.ui.theme.TextMuted
+
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,7 +162,7 @@ fun LoginPassword(
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Black
+                        containerColor = AppTheme.bg
                     ),
                     actions = {},
                 )
@@ -296,7 +297,7 @@ fun LoginPasswordForm(
             Text(
                 stringResource(id = R.string.reset_it),
                 style = TextStyle(
-                    color = if (inProgress) TextMuted else BlueMedium,
+                    color = if (inProgress) AppTheme.textMuted else BlueMedium,
                     fontSize = 16.sp
                 ),
                 modifier = Modifier.clickable {

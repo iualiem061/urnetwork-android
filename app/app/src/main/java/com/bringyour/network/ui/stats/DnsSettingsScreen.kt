@@ -73,19 +73,19 @@ import com.bringyour.network.ui.connection_region.ConnectionRegionSettingsRow
 import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.theme.Amber
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.TextDanger
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.utils.isIpAddressValue
 import com.bringyour.sdk.Sdk
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 // how often the screen reads this connection's blocked count while it shows it
 private const val DNS_BLOCKED_COUNT_POLL_MILLIS = 2000L
@@ -192,11 +192,11 @@ fun DnsSettingsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         val currentDraft = draft
@@ -237,7 +237,7 @@ fun DnsSettingsScreen(
                 Text(
                     stringResource(id = R.string.traffic_dns),
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -395,7 +395,7 @@ fun DnsSettingsScreen(
                     Text(
                         stringResource(id = FastDnsOnConnectToggle.descriptionRes),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextFaint
+                        color = AppTheme.textFaint
                     )
                     val presetName = dnsSettingsViewModel.selectedPresetName?.let { dnsPresetName(it) }
                     if (presetName != null) {
@@ -403,7 +403,7 @@ fun DnsSettingsScreen(
                         Text(
                             stringResource(id = R.string.dns_preset_fast_dns_note, presetName),
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
                 }
@@ -504,7 +504,7 @@ private fun DnsSelectionPanel(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                MainTintedBackgroundBase,
+                AppTheme.bgTinted,
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(16.dp)
@@ -526,7 +526,7 @@ private fun DnsSelectionPanel(
             Text(
                 detail,
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
 
@@ -535,7 +535,7 @@ private fun DnsSelectionPanel(
             Text(
                 verification,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
         }
 
@@ -583,12 +583,12 @@ private fun DnsSelectionPanel(
                     dnsPresetName(status.name),
                 ),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             Text(
                 stringResource(id = R.string.dns_blocked_count_floor_note),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextFaint
+                color = AppTheme.textFaint
             )
         }
 
@@ -597,7 +597,7 @@ private fun DnsSelectionPanel(
             Text(
                 stringResource(id = R.string.dns_preset_disclosure, selection.providerName),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             if (preset != null) {
                 FlowRow(
@@ -645,7 +645,7 @@ private fun DnsDroppedNotice(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                MainTintedBackgroundBase,
+                AppTheme.bgTinted,
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(16.dp)
@@ -697,7 +697,7 @@ private fun DnsPickerCard(
         if (title != null) {
             Text(
                 title,
-                style = TextStyle(color = TextMuted)
+                style = TextStyle(color = AppTheme.textMuted)
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -705,7 +705,7 @@ private fun DnsPickerCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    MainTintedBackgroundBase,
+                    AppTheme.bgTinted,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(horizontal = 4.dp, vertical = 4.dp)
@@ -747,13 +747,13 @@ private fun DnsPickRow(
             Text(
                 label,
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             if (copy != null) {
                 Text(
                     copy,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
             if (preset != null) {
@@ -791,7 +791,7 @@ private fun DnsPresetFacts(preset: DnsPresetUi) {
     Text(
         facts,
         style = MaterialTheme.typography.bodySmall,
-        color = TextFaint
+        color = AppTheme.textFaint
     )
 }
 
@@ -846,7 +846,7 @@ private fun DnsPersonalIdField(
             Text(
                 formatMessage,
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
         if (errorMessage != null || formatMessage != null) {
@@ -873,20 +873,20 @@ private fun DnsPersonalIdField(
             Text(
                 quotaNote,
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Spacer(modifier = Modifier.height(4.dp))
         }
         Text(
             stringResource(id = R.string.dns_personal_id_block_response, providerName),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             stringResource(id = R.string.dns_personal_id_linked_ip_note),
             style = MaterialTheme.typography.bodySmall,
-            color = TextFaint
+            color = AppTheme.textFaint
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -925,7 +925,7 @@ private fun DnsCustomEditor(
         Text(
             stringResource(id = R.string.dns_custom_mix_note),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -1008,7 +1008,7 @@ private fun DnsCustomEditor(
                 Text(
                     stringResource(id = R.string.suggested_remote_dns_servers_description),
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextFaint
+                    color = AppTheme.textFaint
                 )
             }
 
@@ -1084,7 +1084,7 @@ private fun SettingsGroup(
         if (title != null) {
             Text(
                 title,
-                style = TextStyle(color = TextMuted)
+                style = TextStyle(color = AppTheme.textMuted)
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -1092,7 +1092,7 @@ private fun SettingsGroup(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    MainTintedBackgroundBase,
+                    AppTheme.bgTinted,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(16.dp)
@@ -1120,14 +1120,14 @@ private fun DnsToggleRow(
             Text(
                 label,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             if (detail != null) {
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     detail,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
         }
@@ -1175,19 +1175,19 @@ private fun RegionalServerRow(
                     Text(
                         server.name,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         server.countryCode.uppercase(),
                         style = TextStyle(fontSize = 10.sp),
-                        color = TextFaint
+                        color = AppTheme.textFaint
                     )
                 }
                 Text(
                     server.ipv4,
                     style = TextStyle(fontSize = 12.sp, fontFamily = FontFamily.Monospace),
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
 
@@ -1205,7 +1205,7 @@ private fun countryColor(countryCode: String): Color {
     return try {
         Color(android.graphics.Color.parseColor("#${Sdk.getColorHex(countryCode)}"))
     } catch (e: Throwable) {
-        TextMuted
+        AppTheme.textMuted
     }
 }
 
@@ -1265,7 +1265,7 @@ private fun EditableValueList(
         Text(
             label,
             style = MaterialTheme.typography.bodySmall,
-            color = TextFaint
+            color = AppTheme.textFaint
         )
 
         for (value in values) {
@@ -1279,13 +1279,13 @@ private fun EditableValueList(
                 Text(
                     value,
                     style = TextStyle(fontSize = 13.sp, fontFamily = FontFamily.Monospace),
-                    color = Color.White,
+                    color = AppTheme.textPrimary,
                     modifier = Modifier.weight(1f)
                 )
                 Icon(
                     Icons.Filled.Clear,
                     contentDescription = stringResource(id = R.string.remove),
-                    tint = TextFaint,
+                    tint = AppTheme.textFaint,
                     modifier = Modifier
                         .size(16.dp)
                         .clickable {
@@ -1312,7 +1312,7 @@ private fun EditableValueList(
             Icon(
                 Icons.Filled.Add,
                 contentDescription = stringResource(id = R.string.add),
-                tint = if (canAdd) Green else TextFaint,
+                tint = if (canAdd) Green else AppTheme.textFaint,
                 modifier = Modifier
                     .size(20.dp)
                     .clickable(enabled = canAdd) {

@@ -29,8 +29,9 @@ import com.bringyour.network.ui.connect.EXTENDER_RING_STROKE_DP
 import com.bringyour.network.ui.connect.extenderColorArgb
 import com.bringyour.network.ui.theme.Green
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.Yellow
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The extender panel of the connect drawer (EXTENDER.md K4), under the IP
@@ -145,7 +146,7 @@ fun ExtenderPanel(
         Text(
             stringResource(id = R.string.extenders),
             style = labelStyle,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         /**
@@ -159,7 +160,7 @@ fun ExtenderPanel(
             Text(
                 stringResource(id = R.string.active_extenders),
                 style = labelStyle,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 modifier = Modifier.width(LABEL_WIDTH),
             )
 
@@ -184,7 +185,7 @@ fun ExtenderPanel(
                     panel.reserveCount,
                 ),
                 style = labelStyle,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
         }
 
@@ -199,7 +200,7 @@ fun ExtenderPanel(
             Text(
                 stringResource(id = R.string.gossip_network),
                 style = labelStyle,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 modifier = Modifier.width(LABEL_WIDTH),
             )
 
@@ -212,7 +213,7 @@ fun ExtenderPanel(
             Text(
                 stringResource(id = panel.gossip.labelResId()),
                 style = labelStyle,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 modifier = Modifier.weight(1f),
             )
 
@@ -225,7 +226,7 @@ fun ExtenderPanel(
                     panel.eventCountLastMinute,
                 ),
                 style = labelStyle,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
         }
     }
@@ -238,7 +239,7 @@ fun ExtenderPanel(
 @Composable
 fun ExtenderRing(colorHex: String, diameter: Dp = RING_SIZE) {
     val argb = extenderColorArgb(colorHex)
-    val color = if (argb != null) Color(argb) else TextMuted
+    val color = if (argb != null) Color(argb) else AppTheme.textMuted
     Canvas(modifier = Modifier.size(diameter)) {
         val stroke = EXTENDER_RING_STROKE_DP.dp.toPx()
         drawCircle(

@@ -41,14 +41,13 @@ import androidx.lifecycle.ViewModel
 import com.bringyour.network.NetworkSpaceManagerProvider
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.FoldSafeAlertDialog
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.utils.sdkStringListToList
 import com.bringyour.sdk.Sdk
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Locale
 import javax.inject.Inject
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The connection region kept in the active network space, the same space
@@ -119,12 +118,12 @@ fun ConnectionRegionLoginControl(
         Text(
             "${stringResource(id = R.string.connecting_from)}: ${regionLabel(model.selected)}",
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
         Icon(
             Icons.Filled.ArrowDropDown,
             contentDescription = null,
-            tint = TextMuted,
+            tint = AppTheme.textMuted,
             modifier = Modifier.size(16.dp)
         )
     }
@@ -147,13 +146,13 @@ fun ConnectionRegionSettingsRow(
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             stringResource(id = R.string.connection_region),
-            style = TextStyle(color = TextMuted)
+            style = TextStyle(color = AppTheme.textMuted)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MainTintedBackgroundBase, shape = RoundedCornerShape(12.dp))
+                .background(AppTheme.bgTinted, shape = RoundedCornerShape(12.dp))
                 .clickable {
                     model.refresh()
                     showPicker = true
@@ -164,16 +163,16 @@ fun ConnectionRegionSettingsRow(
             Text(
                 regionLabel(model.selected),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White,
+                color = AppTheme.textPrimary,
                 modifier = Modifier.weight(1f)
             )
-            Icon(Icons.Filled.ArrowDropDown, contentDescription = null, tint = TextMuted)
+            Icon(Icons.Filled.ArrowDropDown, contentDescription = null, tint = AppTheme.textMuted)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             stringResource(id = R.string.connection_region_description),
             style = MaterialTheme.typography.bodySmall,
-            color = TextFaint
+            color = AppTheme.textFaint
         )
     }
 
@@ -258,14 +257,14 @@ fun ConnectionRegionPicker(
                 Text(
                     stringResource(id = R.string.connection_region_description),
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextFaint
+                    color = AppTheme.textFaint
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 if (resolvers.usesDefaults) {
                     Text(
                         stringResource(id = R.string.connection_region_default_resolvers),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 } else {
                     ResolverList(
@@ -292,14 +291,14 @@ private fun ResolverList(title: String, values: List<String>) {
     if (values.isEmpty()) {
         return
     }
-    Text(title, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+    Text(title, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
     for (value in values) {
         Row {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 value,
                 style = TextStyle(fontSize = 12.sp, fontFamily = FontFamily.Monospace),
-                color = TextFaint
+                color = AppTheme.textFaint
             )
         }
     }

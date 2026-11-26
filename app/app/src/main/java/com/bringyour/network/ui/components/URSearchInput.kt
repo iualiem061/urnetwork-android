@@ -52,10 +52,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.theme.Blue500
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun URSearchInput(
@@ -71,12 +70,12 @@ fun URSearchInput(
 
     var isFocused by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
-    val isFocusedBgColor = MainTintedBackgroundBase.copy(alpha = 0.6f)
+    val isFocusedBgColor = AppTheme.bgTinted.copy(alpha = 0.6f)
     val bgColor = animateColorAsState(
         targetValue = if (isFocused) {
             isFocusedBgColor
         } else {
-            MainTintedBackgroundBase
+            AppTheme.bgTinted
         }, label = ""
     )
 
@@ -102,7 +101,7 @@ fun URSearchInput(
             Icon(
                 imageVector = Icons.Filled.Search,
                 contentDescription = null,
-                tint = TextMuted
+                tint = AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -137,7 +136,7 @@ fun URSearchInput(
                     if (value.text.isEmpty()) {
                         Text(
                             text = placeholder,
-                            style = TextStyle(color = TextFaint)
+                            style = TextStyle(color = AppTheme.textFaint)
                         )
                     }
                     innerTextField()
@@ -166,7 +165,7 @@ fun URSearchInput(
                             onClear()
                             keyboardController?.hide()
                                    },
-                    tint = TextMuted
+                    tint = AppTheme.textMuted
                 )
             }
         }

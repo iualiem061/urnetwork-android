@@ -17,9 +17,10 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.PlanAccountNameLine
 import com.bringyour.network.ui.components.URButton
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Green100
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Post-purchase overlay.
@@ -55,39 +56,39 @@ fun PlanUpgradedOverlay(
                 Text(
                     stringResource(id = R.string.you_re_premium),
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Black
+                    color = AppTheme.bg
                 )
                 PlanAccountNameLine(
                     name = planAccountName,
                     modifier = Modifier.padding(top = 8.dp),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Black,
+                    color = AppTheme.bg,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     stringResource(id = R.string.thanks_for_building_the_new_internet_with_us),
                     style = MaterialTheme.typography.headlineLarge,
-                    color = Black
+                    color = AppTheme.bg
                 )
             } else {
                 Text(
                     stringResource(id = R.string.payment_received_title),
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Black
+                    color = AppTheme.bg
                 )
                 PlanAccountNameLine(
                     name = planAccountName,
                     modifier = Modifier.padding(top = 8.dp),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Black,
+                    color = AppTheme.bg,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     stringResource(id = R.string.payment_confirmation_processing),
                     style = MaterialTheme.typography.headlineLarge,
-                    color = Black
+                    color = AppTheme.bg
                 )
             }
 
@@ -98,7 +99,7 @@ fun PlanUpgradedOverlay(
                     onDismiss()
                 },
                 style = ButtonStyle.OUTLINE,
-                borderColor = Black
+                borderColor = AppTheme.bg
             ) { buttonTextStyle ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -107,7 +108,7 @@ fun PlanUpgradedOverlay(
                     Text(
                         stringResource(id = R.string.close),
                         style = buttonTextStyle,
-                        color = Black
+                        color = AppTheme.bg
                     )
                 }
             }

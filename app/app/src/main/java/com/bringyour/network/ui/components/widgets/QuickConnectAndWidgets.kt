@@ -50,12 +50,12 @@ import com.bringyour.network.QuickConnectTileService
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.URButton
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Green
 import com.bringyour.network.ui.theme.NeueBitLargeTextStyle
-import com.bringyour.network.ui.theme.OffBlack
+
 import com.bringyour.network.ui.theme.Pink
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.widgets.ContractsWidgetReceiver
 import com.bringyour.network.widgets.DashboardWidgetReceiver
@@ -75,6 +75,7 @@ import com.bringyour.network.widgets.render.ContractStackRenderer
 import com.bringyour.network.widgets.render.GlobeBitmapRenderer
 import com.bringyour.network.widgets.render.ThroughputChartRenderer
 import com.bringyour.network.widgets.requestPinWidget
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The quick connect tile and the home screen widgets, with the system flow
@@ -164,7 +165,7 @@ fun QuickConnectAndWidgets(
                 Text(
                     stringResource(id = R.string.intro_quick_tile_manual),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
         }
@@ -215,7 +216,7 @@ fun QuickConnectAndWidgets(
                 id = if (canPinWidgets) R.string.intro_widgets_tap_to_add else R.string.intro_widgets_manual
             ),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
     }
 }
@@ -230,7 +231,7 @@ private fun QuickTilePreview(
     modifier: Modifier = Modifier,
 ) {
     val fill = if (connected) Pink else Color(0xFF3A3A3C)
-    val ink = if (connected) Black else Color(0xFFB8B8B8)
+    val ink = if (connected) AppTheme.bg else Color(0xFFB8B8B8)
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -252,7 +253,7 @@ private fun QuickTilePreview(
         Text(
             stringResource(id = if (connected) R.string.tile_status_connected else R.string.tile_status_disconnected),
             style = MaterialTheme.typography.bodySmall,
-            color = if (connected) Pink else TextMuted,
+            color = if (connected) Pink else AppTheme.textMuted,
             maxLines = 1
         )
     }
@@ -291,7 +292,7 @@ private fun WidgetPreviewCard(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(OffBlack)
+            .background(AppTheme.bgElevated)
             .clickable { onAdd() }
             .padding(14.dp)
     ) {
@@ -317,21 +318,21 @@ private fun DashboardPreview(entry: WidgetEntry) {
             Text(
                 locationTitle(context, entry),
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                color = Color.White,
+                color = AppTheme.textPrimary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
                 subtitle(context, entry),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
         // the quick connect button: pink while connected, like the widget's
         Icon(
             painter = painterResource(id = R.drawable.ic_tile_quick_on),
             contentDescription = null,
-            tint = if (entry.isOn) Pink else TextMuted,
+            tint = if (entry.isOn) Pink else AppTheme.textMuted,
             modifier = Modifier.size(24.dp)
         )
     }
@@ -341,7 +342,7 @@ private fun DashboardPreview(entry: WidgetEntry) {
     Text(
         stringResource(id = R.string.balance),
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted
+        color = AppTheme.textMuted
     )
     Spacer(modifier = Modifier.height(4.dp))
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
@@ -392,7 +393,7 @@ private fun PreviewThroughputChart(entry: WidgetEntry, provider: Boolean) {
         Text(
             heading,
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -400,7 +401,7 @@ private fun PreviewThroughputChart(entry: WidgetEntry, provider: Boolean) {
             Text(
                 stringResource(id = R.string.widget_peak_rate, peakLabel),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
     }
@@ -415,7 +416,7 @@ private fun PreviewThroughputChart(entry: WidgetEntry, provider: Boolean) {
             Text(
                 stringResource(id = R.string.widget_provider_stats_when_enabled),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 textAlign = TextAlign.Center
             )
         }
@@ -451,12 +452,12 @@ private fun GlobePreview(entry: WidgetEntry) {
         Text(
             stringResource(id = R.string.site_app_providers),
             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-            color = Color.White
+            color = AppTheme.textPrimary
         )
         Text(
             if (providers.isEmpty()) stringResource(id = R.string.widget_no_providers) else "${providers.size}",
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
     }
     Spacer(modifier = Modifier.height(8.dp))
@@ -486,7 +487,7 @@ private fun ContractsPreview(entry: WidgetEntry) {
     Text(
         stringResource(id = R.string.site_app_contracts),
         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-        color = Color.White
+        color = AppTheme.textPrimary
     )
     Spacer(modifier = Modifier.height(8.dp))
     if (peers.isEmpty()) {
@@ -500,7 +501,7 @@ private fun ContractsPreview(entry: WidgetEntry) {
                 }
             ),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
     }
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -508,13 +509,13 @@ private fun ContractsPreview(entry: WidgetEntry) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Black, RoundedCornerShape(8.dp))
+                    .background(AppTheme.bg, RoundedCornerShape(8.dp))
                     .padding(horizontal = 7.dp, vertical = 5.dp)
             ) {
                 Text(
                     peer.id.take(8),
                     style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace, fontSize = 11.sp),
-                    color = Color.White,
+                    color = AppTheme.textPrimary,
                     maxLines = 1
                 )
                 Spacer(modifier = Modifier.height(3.dp))

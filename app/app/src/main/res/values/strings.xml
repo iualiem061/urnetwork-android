@@ -1791,10 +1791,13 @@
     <string name="language">Language</string>
     <string name="language_note">Persian and every language the app ships</string>
     <string name="system_default_language">System default</string>
-    <!-- Location ping test (custom build) -->
-    <string name="test_ping">Test ping</string>
-    <string name="ping_ms">%1$d ms</string>
-    <string name="ping_testing">…</string>
-    <string name="ping_unavailable">–</string>
-    <string name="ping_auto">auto</string>
+    <!-- Appearance (custom build) -->
+    <string name="appearance">Appearance</string>
+    <string name="appearance_note">Light, dark, or follow the device</string>
+    <string name="theme_system">System default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <!-- Social channels (custom build) -->
+    <string name="social_telegram">Telegram</string>
+    <string name="social_instagram">Instagram</string>
 </resources>

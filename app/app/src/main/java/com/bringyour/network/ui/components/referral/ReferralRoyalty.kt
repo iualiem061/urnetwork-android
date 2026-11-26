@@ -71,12 +71,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bringyour.network.R
 import com.bringyour.network.ui.POST_LOGIN_OVERLAY_CLOSE_TAG
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.ReferralGold
 import com.bringyour.network.ui.theme.ReferralGoldInk
 import com.bringyour.network.ui.theme.ReferralGoldLight
 import com.bringyour.network.ui.theme.ReferralGoldPale
 import com.bringyour.network.utils.isTv
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The referral king-frog gold system, matching the ur.io referral panel:
@@ -351,7 +352,7 @@ fun RoyalWelcomeContent(
             Text(
                 stringResource(id = R.string.referral_royal_welcome_detail, LocalReferralTerms.current.bonusGibPerDay),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White,
+                color = AppTheme.textPrimary,
                 textAlign = TextAlign.Center
             )
         }
@@ -424,7 +425,7 @@ fun GoldOverlayScaffold(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Black)
+            .background(AppTheme.bg)
             .pointerInput(Unit) {
                 // intercept all touch events so taps cannot fall through to the
                 // screen behind the overlay

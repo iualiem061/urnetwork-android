@@ -14,10 +14,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.theme.ProGoldLight
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.upgrade.OfferPresentation
 import com.bringyour.network.ui.upgrade.WinbackPresentation
 import com.bringyour.network.ui.upgrade.formatOfferDeadline
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The welcome offer on the Account plan row while it can still be redeemed
@@ -46,7 +47,7 @@ fun AccountOfferLine(
             Text(
                 stringResource(id = R.string.offer_available_until, formatOfferDeadline(offer.expiresAtMillis)),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
     }
@@ -78,7 +79,7 @@ fun AccountWinbackLine(
             Text(
                 stringResource(id = R.string.offer_available_until, formatOfferDeadline(winback.expiresAtMillis)),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
     }

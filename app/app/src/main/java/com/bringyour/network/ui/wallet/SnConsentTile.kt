@@ -33,12 +33,11 @@ import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.SectionLoadError
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URTextInput
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.SheetBlack
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The payout consent block, the payout card: without a consent, why to sign
@@ -65,7 +64,7 @@ fun SnConsentBlock(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MainTintedBackgroundBase, RoundedCornerShape(12.dp))
+            .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
         Text(
@@ -110,7 +109,7 @@ fun SnConsentBlock(
                 Text(
                     stringResource(id = R.string.sn_consent_change_note),
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
             key != null && key.showsKeyPath -> BittensorKeyNoConsentBody(key = key, actions = keyActions)
@@ -124,7 +123,7 @@ fun SnConsentBlock(
                 Text(
                     stringResource(id = R.string.sn_consent_body),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 URButton(
@@ -142,7 +141,7 @@ fun SnConsentBlock(
             Text(
                 stringResource(id = R.string.sn_consent_signing),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
 
@@ -189,7 +188,7 @@ fun SnConsentColdkeySheet(
     FoldSafeModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = SheetBlack,
+        containerColor = AppTheme.sheet,
     ) {
         Column(
             modifier = Modifier
@@ -204,7 +203,7 @@ fun SnConsentColdkeySheet(
             Text(
                 stringResource(id = R.string.sn_consent_body),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Spacer(modifier = Modifier.height(16.dp))
             URTextInput(
@@ -244,8 +243,8 @@ private fun ConsentSpinner() {
     ) {
         CircularProgressIndicator(
             modifier = Modifier.size(16.dp),
-            color = TextMuted,
-            trackColor = TextFaint,
+            color = AppTheme.textMuted,
+            trackColor = AppTheme.textFaint,
             strokeWidth = 2.dp
         )
     }

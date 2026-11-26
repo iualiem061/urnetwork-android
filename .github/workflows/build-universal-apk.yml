@@ -1,4 +1,4 @@
-name: Build universal APK (github flavor)
+name: Build APKs (github flavor)
 
 on:
   workflow_dispatch:
@@ -86,7 +86,7 @@ jobs:
         run: |
           set -e
           # the version this custom build ships
-          printf 'warp.version=2026.11.26\nwarp.version_code=2026112600\n' \
+          printf 'warp.version=2026.11.26\nwarp.version_code=2026112601\n' \
             > "$BRINGYOUR_HOME/android/app/local.properties"
           cat "$BRINGYOUR_HOME/android/app/local.properties"
 
@@ -129,5 +129,12 @@ jobs:
         run: |
           set -e
           TAG="${GITHUB_REF#refs/tags/}"
+          # the per-abi APKs first: arm64 for the phones nearly everyone
+          # holds, armeabi-v7a for the rest, universal for anything else
+          ARM64=$(ls "$APK_HOME"/*arm64-v8a*.apk 2>/dev/null | head -1 || true)
+          ARMV7=$(ls "$APK_HOME"/*armeabi-v7a*.apk 2>/dev/null | head -1 || true)
           UNIVERSAL=$(ls "$APK_HOME"/*universal*.apk | head -1)
-          gh release create "$TAG" --title "$TAG" --notes "Custom community build of URnetwork for Android (github flavor, universal APK). See CUSTOMIZATIONS.md for what changed." "$UNIVERSAL"
+          ASSETS=("$UNIVERSAL")
+          if [ -n "$ARM64" ]; then ASSETS+=("$ARM64"); fi
+          if [ -n "$ARMV7" ]; then ASSETS+=("$ARMV7"); fi
+          gh release create "$TAG" --title "$TAG" --notes "Custom community build of URnetwork for Android (github flavor). New in this build: light and dark appearance (Settings -> Appearance), a floating rounded glass navigation bar, the selected country's flag on the connect screen, the Telegram and Instagram channels in Account, the per-country ping test removed (the network exposes no testable endpoints for nearly all countries), and a much smaller APK (unused code and resources shrunk). See CUSTOMIZATIONS.md for the full list." "${ASSETS[@]}"

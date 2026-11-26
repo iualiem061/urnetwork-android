@@ -30,11 +30,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.referral.rememberReducedMotion
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.ProGold
 import com.bringyour.network.ui.theme.ProGoldLight
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The Pro-gold dress of the recommended sign-up box, shared by every flavor's
@@ -89,13 +90,16 @@ fun Modifier.goldPlanDress(
     cornerRadius: Dp = 12.dp,
     strokeWidth: Dp = 2.dp,
     selected: Boolean = true,
+    // read in composition (the draw scope cannot): the theme's background
+    groundColor: Color,
 ): Modifier = drawBehind {
     drawGoldDress(
         cornerRadius = cornerRadius.toPx(),
         strokeWidth = strokeWidth.toPx(),
         sweep = dress.sweep,
         breath = dress.breath,
-        selected = selected
+        selected = selected,
+        groundColor = groundColor
     )
 }
 
@@ -121,14 +125,14 @@ fun BestValuePill(
             )
             .border(
                 width = 1.dp,
-                color = Color.White.copy(alpha = 0.45f),
+                color = AppTheme.textPrimary.copy(alpha = 0.45f),
                 shape = shape
             )
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text(
             stringResource(id = R.string.best_value),
-            color = Black,
+            color = AppTheme.bg,
             style = TopBarTitleTextStyle
         )
     }
@@ -140,6 +144,7 @@ private fun DrawScope.drawGoldDress(
     sweep: Float,
     breath: Float,
     selected: Boolean,
+    groundColor: Color,
 ) {
     val corner = CornerRadius(cornerRadius)
 
@@ -168,7 +173,7 @@ private fun DrawScope.drawGoldDress(
     }
 
     // opaque ground, then the gold wash with a brighter top-left
-    drawRoundRect(color = Black, cornerRadius = corner)
+    drawRoundRect(color = groundColor, cornerRadius = corner)
     drawRoundRect(color = ProGold.copy(alpha = 0.08f), cornerRadius = corner)
     drawRoundRect(
         brush = Brush.radialGradient(

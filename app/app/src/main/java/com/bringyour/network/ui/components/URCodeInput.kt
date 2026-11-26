@@ -35,9 +35,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.theme.ppNeueBitBold
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun URCodeInput(
@@ -118,7 +119,7 @@ fun URCodeInput(
                     singleLine = true,
                     textStyle = androidx.compose.ui.text.TextStyle(
                         fontSize = 24.sp,
-                        color = if (enabled) Color.White else TextMuted,
+                        color = if (enabled) Color.White else AppTheme.textMuted,
                         textAlign = TextAlign.Center,
                         fontFamily = ppNeueBitBold
                     ),

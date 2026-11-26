@@ -98,16 +98,14 @@ import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Green300
 import com.bringyour.network.ui.theme.Green500
 import com.bringyour.network.ui.theme.HeadingLargeCondensed
-import com.bringyour.network.ui.theme.MainBorderBase
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.Sdk
 import kotlinx.coroutines.flow.distinctUntilChanged
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The Protocol tab of the leaderboard (apple/LEADERTOP.md), the first tab and
@@ -273,7 +271,7 @@ fun ProtocolLeaderboardTab(
                         Text(
                             stringResource(id = R.string.leaderboard_protocol_empty),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextMuted,
+                            color = AppTheme.textMuted,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -406,7 +404,7 @@ private fun ProtocolHeader(
         Text(
             stringResource(id = R.string.leaderboard_protocol_explainer),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -451,7 +449,7 @@ private fun ProtocolCardBox(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MainTintedBackgroundBase, RoundedCornerShape(12.dp))
+            .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -492,13 +490,13 @@ private fun ProtocolStandingCard(
                 Text(
                     stringResource(id = R.string.leaderboard_protocol_projected),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                 )
                 if (0L < standing.totalRanked) {
                     Text(
                         protocolOfRankedText(standing.totalRanked, text),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextMuted,
+                        color = AppTheme.textMuted,
                     )
                 }
             }
@@ -542,7 +540,7 @@ private fun ProtocolStandingCard(
         Text(
             protocolWhyText(standing, text) + " " + protocolSoloText(standing, text),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
 
         standing.notMeasurable?.let { reason ->
@@ -640,7 +638,7 @@ private fun ProtocolNotMeasurableLine(
         Icon(
             imageVector = Icons.Outlined.VisibilityOff,
             contentDescription = null,
-            tint = TextMuted,
+            tint = AppTheme.textMuted,
             modifier = Modifier.size(18.dp),
         )
         Text(
@@ -658,7 +656,7 @@ private fun ProtocolNameSwitch(
     settingNamePublic: Boolean,
     onNamePublic: (Boolean) -> Unit,
 ) {
-    HorizontalDivider(color = MainBorderBase)
+    HorizontalDivider(color = AppTheme.border)
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -692,7 +690,7 @@ private fun ProtocolClaimPromptView(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.Black.copy(alpha = 0.25f), RoundedCornerShape(10.dp))
-            .border(1.dp, MainBorderBase, RoundedCornerShape(10.dp))
+            .border(1.dp, AppTheme.border, RoundedCornerShape(10.dp))
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -728,7 +726,7 @@ private fun ProtocolClaimPromptView(
         Text(
             stringResource(id = R.string.leaderboard_protocol_claim_warning),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
     }
 }
@@ -740,11 +738,11 @@ internal fun ProtocolLabelChip(
     modifier: Modifier = Modifier,
 ) {
     val (fill, edge, ink) = when (label) {
-        ProtocolLabel.ESTIMATE -> Triple(Color.Transparent, TextMuted, Color.White)
+        ProtocolLabel.ESTIMATE -> Triple(Color.Transparent, AppTheme.textMuted, Color.White)
         ProtocolLabel.LIKELY -> Triple(Green500.copy(alpha = 0.16f), Green500.copy(alpha = 0.5f), Green300)
         ProtocolLabel.BORDERLINE -> Triple(Amber.copy(alpha = 0.16f), Amber.copy(alpha = 0.5f), Amber)
-        ProtocolLabel.UNLIKELY -> Triple(MainBorderBase, TextFaint, TextMuted)
-        ProtocolLabel.NOT_MEASURABLE -> Triple(Color.Transparent, TextFaint, TextMuted)
+        ProtocolLabel.UNLIKELY -> Triple(AppTheme.border, AppTheme.textFaint, AppTheme.textMuted)
+        ProtocolLabel.NOT_MEASURABLE -> Triple(Color.Transparent, AppTheme.textFaint, AppTheme.textMuted)
     }
     Box(
         modifier = modifier
@@ -820,7 +818,7 @@ private fun ProtocolProgressChart(
             Text(
                 stringResource(id = R.string.leaderboard_protocol_chart_title),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 modifier = Modifier.weight(1f),
             )
             val day = points.getOrNull(selected)
@@ -840,6 +838,8 @@ private fun ProtocolProgressChart(
             }
         }
 
+        // read in composition (the draw scope cannot) for the guide line
+        val guideLineColor = AppTheme.textMuted
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
@@ -896,7 +896,7 @@ private fun ProtocolProgressChart(
             val chosen = selected
             if (chosen in points.indices) {
                 val x = xOf(chosen)
-                drawLine(color = TextMuted, start = Offset(x, 0f), end = Offset(x, size.height), strokeWidth = 1.dp.toPx())
+                drawLine(color = guideLineColor, start = Offset(x, 0f), end = Offset(x, size.height), strokeWidth = 1.dp.toPx())
                 drawCircle(color = Color.White, radius = 4.dp.toPx(), center = Offset(x, yOf(points[chosen].rank.toDouble())))
             }
         }
@@ -940,7 +940,7 @@ private fun ProtocolRowItem(
     val nameText = protocolRowNameText(protocolRowName(row), text)
     val ink = if (row.isMe) Green500 else Color.White
     Column {
-        HorizontalDivider(color = MainBorderBase)
+        HorizontalDivider(color = AppTheme.border)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -963,7 +963,7 @@ private fun ProtocolRowItem(
                 protocolPositionText(row.position, text),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = if (row.isMe) FontWeight.ExtraBold else FontWeight.Normal,
-                color = if (row.isMe) Green500 else TextMuted,
+                color = if (row.isMe) Green500 else AppTheme.textMuted,
                 modifier = Modifier.width(48.dp),
                 maxLines = 1,
             )
@@ -979,7 +979,7 @@ private fun ProtocolRowItem(
                     nameText,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = if (row.isMe) FontWeight.ExtraBold else FontWeight.Normal,
-                    color = if (row.name.isEmpty() && !row.isMe) TextMuted else ink,
+                    color = if (row.name.isEmpty() && !row.isMe) AppTheme.textMuted else ink,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false),
@@ -1007,7 +1007,7 @@ private fun ProtocolRowItem(
                 Icon(
                     imageVector = Icons.Outlined.VisibilityOff,
                     contentDescription = null,
-                    tint = TextMuted,
+                    tint = AppTheme.textMuted,
                     modifier = Modifier.size(16.dp),
                 )
             }
@@ -1103,7 +1103,7 @@ private fun ProtocolFooter(
 @Composable
 private fun ProtocolRowPlaceholder() {
     SkeletonGroup {
-        HorizontalDivider(color = MainBorderBase)
+        HorizontalDivider(color = AppTheme.border)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1151,7 +1151,7 @@ private fun ProtocolDetailSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = MainTintedBackgroundBase,
+        containerColor = AppTheme.bgTinted,
     ) {
         Column(
             modifier = Modifier
@@ -1182,7 +1182,7 @@ private fun ProtocolDetailSheet(
                         Text(
                             subtitle,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextMuted,
+                            color = AppTheme.textMuted,
                         )
                     }
                     fleet.selected?.let { selected ->
@@ -1192,11 +1192,11 @@ private fun ProtocolDetailSheet(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, MainBorderBase, RoundedCornerShape(12.dp))
+                        .border(1.dp, AppTheme.border, RoundedCornerShape(12.dp))
                 ) {
                     protocolDetailFacts(row, fleet, text).forEachIndexed { index, fact ->
                         if (0 < index) {
-                            HorizontalDivider(color = MainBorderBase)
+                            HorizontalDivider(color = AppTheme.border)
                         }
                         Row(
                             modifier = Modifier
@@ -1208,7 +1208,7 @@ private fun ProtocolDetailSheet(
                             Text(
                                 fact.label,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = TextMuted,
+                                color = AppTheme.textMuted,
                                 modifier = Modifier.weight(1f),
                             )
                             Text(
@@ -1237,7 +1237,7 @@ private fun ProtocolDetailSheet(
                     Text(
                         stringResource(id = R.string.leaderboard_protocol_detail_incentive_note),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted,
+                        color = AppTheme.textMuted,
                     )
                 }
             }
@@ -1260,10 +1260,10 @@ internal fun ProtocolSelectedChip(
     Box(
         modifier = Modifier
             .background(
-                if (selected) Green500.copy(alpha = 0.16f) else MainBorderBase,
+                if (selected) Green500.copy(alpha = 0.16f) else AppTheme.border,
                 RoundedCornerShape(50),
             )
-            .border(1.dp, if (selected) Green500.copy(alpha = 0.5f) else TextFaint, RoundedCornerShape(50))
+            .border(1.dp, if (selected) Green500.copy(alpha = 0.5f) else AppTheme.textFaint, RoundedCornerShape(50))
             .padding(horizontal = 9.dp, vertical = 2.dp)
     ) {
         Text(
@@ -1272,7 +1272,7 @@ internal fun ProtocolSelectedChip(
             ),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
-            color = if (selected) Green300 else TextMuted,
+            color = if (selected) Green300 else AppTheme.textMuted,
             maxLines = 1,
         )
     }

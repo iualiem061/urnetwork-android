@@ -63,11 +63,9 @@ import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.components.URTextInputLabel
 import com.bringyour.network.ui.components.tabletReadableColumn
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Account > Settings > VLESS: the VLESS server of this network space
@@ -136,11 +134,11 @@ private fun VlessSettingsScaffold(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
         VlessSettingsForm(
             viewModel = viewModel,
@@ -179,7 +177,7 @@ private fun VlessSettingsForm(
         Text(
             stringResource(id = R.string.vless_settings_description),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
 
         // the switch's 48 dp touch target fills the rest, above and below
@@ -501,19 +499,19 @@ private fun VlessPicker(
             ) {
                 Text(
                     vlessOptionText(selected, optionLabelResId),
-                    style = TextStyle(color = if (enabled) Color.LightGray else TextFaint),
+                    style = TextStyle(color = if (enabled) Color.LightGray else AppTheme.textFaint),
                 )
                 Icon(
                     Icons.Filled.KeyboardArrowDown,
                     contentDescription = null,
-                    tint = TextMuted,
+                    tint = AppTheme.textMuted,
                 )
             }
 
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                containerColor = MainTintedBackgroundBase,
+                containerColor = AppTheme.bgTinted,
             ) {
                 options.forEach { option ->
                     DropdownMenuItem(
@@ -532,7 +530,7 @@ private fun VlessPicker(
             }
         }
 
-        HorizontalDivider(color = TextFaint, thickness = 1.dp)
+        HorizontalDivider(color = AppTheme.textFaint, thickness = 1.dp)
 
         Spacer(modifier = Modifier.height(24.dp))
     }
@@ -557,7 +555,7 @@ private fun VlessSwitchRow(
         Text(
             text,
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White,
+            color = AppTheme.textPrimary,
             modifier = Modifier.weight(1f),
         )
         // the switch's touch target adds 6 dp of its own

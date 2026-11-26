@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.FoldSafeAlertDialog
-import com.bringyour.network.ui.theme.TextFaint
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun AuthCodeCreateDialog(
@@ -42,7 +42,7 @@ fun AuthCodeCreateDialog(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .background(
-                            TextFaint,
+                            AppTheme.textFaint,
                             shape = RoundedCornerShape(12.dp)
                         )
                         .padding(horizontal = 8.dp)

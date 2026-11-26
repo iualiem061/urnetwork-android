@@ -11,8 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextFaint
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The detail pane of the Account list-detail layout before a screen is
@@ -23,13 +22,13 @@ fun AccountDetailPlaceholder() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Black),
+            .background(AppTheme.bg),
         contentAlignment = Alignment.Center,
     ) {
         Icon(
             painter = painterResource(id = R.drawable.main_nav_user),
             contentDescription = null,
-            tint = TextFaint,
+            tint = AppTheme.textFaint,
             modifier = Modifier.size(48.dp),
         )
     }

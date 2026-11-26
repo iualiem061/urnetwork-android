@@ -44,10 +44,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Red
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * A row that reveals an action button when swiped left, mimicking iOS list
@@ -181,7 +182,7 @@ fun SwipeToRevealRow(
                     Text(
                         actionLabel,
                         style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Medium),
-                        color = Color.White,
+                        color = AppTheme.textPrimary,
                         maxLines = 1
                     )
                 }
@@ -192,7 +193,7 @@ fun SwipeToRevealRow(
                 modifier = Modifier
                     .offset { IntOffset(offsetX.value.roundToInt(), 0) }
                     .fillMaxWidth()
-                    .background(Black)
+                    .background(AppTheme.bg)
                     .semantics(mergeDescendants = mergeDescendants) {
                         customActions = if (enabled) {
                             swipeToRevealAccessibilityActions(accessibilityLabel, onAction)

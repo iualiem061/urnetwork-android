@@ -41,9 +41,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.widgets.QuickConnectAndWidgets
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Account > Widgets: the quick connect tile and the home screen widgets with
@@ -104,7 +105,7 @@ fun WidgetsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
                 actions = {},
             )

@@ -53,13 +53,13 @@ import com.bringyour.network.ui.components.rememberCountryFlag
 import com.bringyour.network.ui.components.RowRemoveControl
 import com.bringyour.network.ui.components.blockedLocationRemoveControls
 import com.bringyour.network.ui.components.SwipeToRevealRow
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.sdk.BlockedLocation
 import com.bringyour.sdk.ConnectLocation
 import com.bringyour.sdk.Id
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,7 +108,7 @@ fun BlockedRegionsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
                 actions = {
                     IconButton(onClick = {
@@ -122,7 +122,7 @@ fun BlockedRegionsScreen(
                 },
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { padding ->
 
         Box(modifier = Modifier
@@ -195,7 +195,7 @@ fun BlockedRegionsScreen(
                     Text(
                         stringResource(id = R.string.no_blocked_locations),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
             }
@@ -247,7 +247,7 @@ fun BlockedRegionListItem(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Black)
+                    .background(AppTheme.bg)
                     .padding(start = 16.dp, end = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -272,7 +272,7 @@ fun BlockedRegionListItem(
                         Icon(
                             Icons.Filled.Clear,
                             contentDescription = stringResource(id = R.string.remove),
-                            tint = TextMuted,
+                            tint = AppTheme.textMuted,
                         )
                     }
                 }

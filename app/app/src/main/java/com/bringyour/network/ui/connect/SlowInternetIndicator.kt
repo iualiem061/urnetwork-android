@@ -56,10 +56,11 @@ import com.bringyour.network.ui.components.TunnelIndicator
 import com.bringyour.network.ui.components.tunnelClearDelayMillis
 import com.bringyour.network.ui.components.tunnelDepth
 import com.bringyour.network.ui.theme.Amber
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainTextBase
+
 import kotlinx.coroutines.delay
+import com.bringyour.network.ui.theme.AppTheme
 
 /** The pill's outline: the 35% amber the island draws around a Live Activity. */
 private val SlowInternetPillOutline = Amber.copy(alpha = 0.35f)
@@ -197,7 +198,7 @@ fun SlowInternetPill(
                             Icon(
                                 Icons.Filled.Check,
                                 contentDescription = null,
-                                tint = Black,
+                                tint = AppTheme.bg,
                                 modifier = Modifier.size(12.dp),
                             )
                         }
@@ -216,7 +217,7 @@ fun SlowInternetPill(
                             Text(
                                 stringResource(id = R.string.slow_internet_recovered),
                                 style = SlowInternetNumberStyle,
-                                color = MainTextBase,
+                                color = AppTheme.textPrimary,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                             )
@@ -306,13 +307,13 @@ private fun SlowInternetNumber(
                 // drawn a touch above the baseline, as the design sets it
                 .graphicsLayer { translationY = -1.dp.toPx() },
             style = SlowInternetArrowStyle,
-            color = if (worse) Amber.copy(alpha = 0.75f) else Color.White.copy(alpha = 0.55f),
+            color = if (worse) Amber.copy(alpha = 0.75f) else AppTheme.textPrimary.copy(alpha = 0.55f),
         )
         Text(
             text,
             modifier = Modifier.alignByBaseline(),
             style = SlowInternetNumberStyle,
-            color = if (worse) Amber else MainTextBase,
+            color = if (worse) Amber else AppTheme.textPrimary,
         )
     }
 }

@@ -37,9 +37,10 @@ import com.bringyour.network.ui.components.URDialog
 import com.bringyour.network.ui.shared.viewmodels.PostQuantumIdentityViewModel
 import com.bringyour.network.ui.shared.viewmodels.ProviderIdentityRowUi
 import com.bringyour.network.ui.shared.viewmodels.formatIdentityKeyHashForShare
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.Sdk
 import java.io.File
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The identity share dialog: a share-size identicon (4x the panel) with the
@@ -81,7 +82,7 @@ fun PostQuantumIdentityShareDialog(
                 Text(
                     stringResource(id = R.string.post_quantum_identity),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -102,7 +103,7 @@ fun PostQuantumIdentityShareDialog(
                         fontWeight = FontWeight.Medium,
                         fontFamily = FontFamily.Monospace
                     ),
-                    color = Color.White,
+                    color = AppTheme.textPrimary,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -115,7 +116,7 @@ fun PostQuantumIdentityShareDialog(
                         fontSize = 12.sp,
                         fontFamily = FontFamily.Monospace
                     ),
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )

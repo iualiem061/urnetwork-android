@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.ProGold
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * A selectable plan card. The recommended plan (`glow`) wears the Pro-gold
@@ -55,11 +55,11 @@ fun PlanOptionContainer(
                 .fillMaxWidth()
                 .then(
                     if (dress != null) {
-                        Modifier.goldPlanDress(dress = dress, selected = isSelected)
+                        Modifier.goldPlanDress(dress = dress, selected = isSelected, groundColor = AppTheme.bg)
                     } else {
                         Modifier.border(
                             width = 2.dp,
-                            color = if (isSelected) accent else TextMuted,
+                            color = if (isSelected) accent else AppTheme.textMuted,
                             shape = shape
                         )
                     }
@@ -78,7 +78,7 @@ fun PlanOptionContainer(
                     .size(12.dp)
                     .clip(CircleShape)
                     .background(if (isSelected) accent else Color.Transparent)
-                    .border(width = 2.dp, color = if (isSelected) accent else TextMuted, shape = RoundedCornerShape(12.dp))
+                    .border(width = 2.dp, color = if (isSelected) accent else AppTheme.textMuted, shape = RoundedCornerShape(12.dp))
             )
 
             Spacer(modifier = Modifier.width(8.dp))

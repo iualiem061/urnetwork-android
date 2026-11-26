@@ -58,10 +58,9 @@ import com.bringyour.network.R
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.layout.size
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.Yellow
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -118,7 +117,7 @@ fun SeedphraseDisplayScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
                 actions = {}
             )
@@ -160,7 +159,7 @@ fun SeedphraseDisplayScreen(
                     stringResource(id = R.string.write_it_down_and_store_it_somewhere),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -174,7 +173,7 @@ fun SeedphraseDisplayScreen(
                             .fillMaxWidth()
                             .border(
                                 width = 1.dp,
-                                color = TextMuted.copy(alpha = 0.3f),
+                                color = AppTheme.textMuted.copy(alpha = 0.3f),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .padding(12.dp),
@@ -255,7 +254,7 @@ private fun SeedWordChip(
     Row(
         modifier = modifier
             .background(
-                color = MainTintedBackgroundBase,
+                color = AppTheme.bgTinted,
                 shape = RoundedCornerShape(6.dp)
             )
             .padding(vertical = 6.dp, horizontal = 8.dp),
@@ -264,7 +263,7 @@ private fun SeedWordChip(
         Text(
             "$number.",
             style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
-            color = TextMuted,
+            color = AppTheme.textMuted,
             textAlign = TextAlign.End,
             modifier = Modifier.width(24.dp)
         )
@@ -272,7 +271,7 @@ private fun SeedWordChip(
         Text(
             word,
             style = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace),
-            color = Color.White,
+            color = AppTheme.textPrimary,
             maxLines = 1
         )
     }

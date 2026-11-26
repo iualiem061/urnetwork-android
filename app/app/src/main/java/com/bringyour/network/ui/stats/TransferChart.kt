@@ -46,16 +46,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainBorderBase
-import com.bringyour.network.ui.theme.MainTextBase
+
 import com.bringyour.network.ui.theme.Pink
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.utils.formatByteRate
 import com.bringyour.network.utils.formatPacketRate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlin.math.max
 import kotlin.math.min
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Live transfer chart for one throughput route.
@@ -103,9 +103,10 @@ fun TransferChart(
 
     // paint for the sliding peak byte-rate labels, in the muted text color
     val density = LocalDensity.current
-    val peakLabelPaint = remember(density) {
+    val peakLabelColor = AppTheme.textMuted
+    val peakLabelPaint = remember(density, peakLabelColor) {
         android.graphics.Paint().apply {
-            color = TextMuted.toArgb()
+            color = peakLabelColor.toArgb()
             textSize = with(density) { 9.sp.toPx() }
             textAlign = android.graphics.Paint.Align.CENTER
             isAntiAlias = true
@@ -177,6 +178,8 @@ fun TransferChart(
             .graphicsLayer()
     ) {
 
+        // read in composition (the draw scope cannot) for the chart's axis
+        val chartAxisColor = AppTheme.border
         Canvas(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -191,6 +194,7 @@ fun TransferChart(
                 scalePackets = packetScaleTransition.valueAt(now),
                 byteColor = byteColor,
                 packetColor = packetColor,
+                axisColor = chartAxisColor,
                 peakEgressValue = peakEgress?.second?.egressBytes ?: 0L,
                 peakEgressTimeMillis = peakEgress?.first ?: 0L,
                 peakIngressValue = peakIngress?.second?.ingressBytes ?: 0L,
@@ -208,7 +212,7 @@ fun TransferChart(
                 Text(
                     title,
                     style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
 
@@ -315,7 +319,7 @@ private fun DirectionLabel(
         // activity, like a link light
         DirectionTriangle(
             pointsUp = pointsUp,
-            color = if (0 < byteValue || 0 < packetValue) MainTextBase else TextMuted
+            color = if (0 < byteValue || 0 < packetValue) AppTheme.textPrimary else AppTheme.textMuted
         )
     }
 }
@@ -348,7 +352,7 @@ private fun equilateralTrianglePath(rect: Rect, pointsUp: Boolean): Path {
  * (filled, then stroked with a round join).
  */
 @Composable
-private fun DirectionTriangle(pointsUp: Boolean, color: Color = TextMuted) {
+private fun DirectionTriangle(pointsUp: Boolean, color: Color = AppTheme.textMuted) {
     Canvas(modifier = Modifier.size(7.dp)) {
         // inset so the round-join stroke stays inside the frame
         val rect = Rect(1f, 1f, size.width - 1f, size.height - 1f)
@@ -370,6 +374,7 @@ private fun DrawScope.drawTransferChart(
     scalePackets: Float,
     byteColor: Color,
     packetColor: Color,
+    axisColor: Color,
     peakEgressValue: Long,
     peakEgressTimeMillis: Long,
     peakIngressValue: Long,
@@ -390,7 +395,7 @@ private fun DrawScope.drawTransferChart(
     // full width and reads consistently as data shifts in
     val drawAxis = {
         drawLine(
-            color = MainBorderBase,
+            color = axisColor,
             start = Offset(0f, centerY),
             end = Offset(size.width, centerY),
             strokeWidth = 1.dp.toPx()

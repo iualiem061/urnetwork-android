@@ -52,16 +52,16 @@ import com.bringyour.network.ui.leaderboard.rememberProtocolText
 import com.bringyour.network.ui.theme.Amber
 import com.bringyour.network.ui.theme.BlueLight
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.HeadingLargeCondensed
-import com.bringyour.network.ui.theme.MainBorderBase
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.ReferralGold
 import com.bringyour.network.ui.theme.ReferralGoldInk
 import com.bringyour.network.ui.theme.ReferralGoldLight
 import com.bringyour.network.ui.theme.ReferralGoldPale
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 // the ur.io route that walks a qualifying network through claiming a head spot
 const val TOP200_URL = "https://ur.io/app/account/top200"
@@ -84,6 +84,8 @@ fun Top200Tile(
     val context = LocalContext.current
     val text = rememberProtocolText()
     val shape = RoundedCornerShape(16.dp)
+    // read in composition (the draw lambda cannot) for the tile's ground
+    val tileGround = AppTheme.bg
 
     Box(
         modifier = modifier
@@ -96,7 +98,7 @@ fun Top200Tile(
             )
             .clip(shape)
             .drawBehind {
-                drawRect(Black)
+                drawRect(tileGround)
                 drawRect(ReferralGold.copy(alpha = 0.05f))
                 drawRect(
                     brush = Brush.radialGradient(
@@ -154,7 +156,7 @@ fun Top200Tile(
                 Text(
                     stringResource(id = R.string.leaderboard_protocol_claim_warning),
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             } else {
                 ClaimingSoonNote()
@@ -186,7 +188,7 @@ fun Top200BoundRow(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(MainTintedBackgroundBase, RoundedCornerShape(12.dp))
+            .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
         Top200Heading(label = state.label)
@@ -204,7 +206,7 @@ fun Top200BoundRow(
         Text(
             stringResource(id = R.string.top200_bound_detail),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
         if (state.nearLine) {
             Spacer(modifier = Modifier.height(8.dp))
@@ -265,7 +267,7 @@ private fun Top200Position(
         Text(
             top200ProjectedText(margin, text),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
     }
 }
@@ -313,8 +315,8 @@ private fun ClaimingSoonNote() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Black.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
-            .border(1.dp, MainBorderBase, RoundedCornerShape(10.dp))
+            .background(AppTheme.bg.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
+            .border(1.dp, AppTheme.border, RoundedCornerShape(10.dp))
             .padding(12.dp)
             .semantics(mergeDescendants = true) {},
         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -336,7 +338,7 @@ private fun ClaimingSoonNote() {
             Text(
                 stringResource(id = R.string.earnings_top200_claiming_soon_body),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
         }
     }

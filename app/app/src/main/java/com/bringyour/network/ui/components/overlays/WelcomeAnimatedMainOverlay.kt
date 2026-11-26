@@ -45,8 +45,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.bringyour.network.ui.POST_LOGIN_WELCOME_ENTER_TAG
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Yellow
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun WelcomeAnimatedMainOverlay(
@@ -142,12 +143,12 @@ fun WelcomeAnimatedMainOverlay(
                         Text(
                             stringResource(id = R.string.nicely_done),
                             style = MaterialTheme.typography.headlineMedium,
-                            color = Black
+                            color = AppTheme.bg
                         )
                         Text(
                             stringResource(id = R.string.step_in),
                             style = MaterialTheme.typography.headlineLarge,
-                            color = Black
+                            color = AppTheme.bg
                         )
                         Spacer(modifier = Modifier.height(48.dp))
 
@@ -156,7 +157,7 @@ fun WelcomeAnimatedMainOverlay(
                                 close()
                             },
                             style = ButtonStyle.OUTLINE,
-                            borderColor = Black,
+                            borderColor = AppTheme.bg,
                             modifier = Modifier.testTag(POST_LOGIN_WELCOME_ENTER_TAG),
                         ) { buttonTextStyle ->
                             Row(
@@ -167,7 +168,7 @@ fun WelcomeAnimatedMainOverlay(
                                 Text(
                                     stringResource(id = R.string.enter),
                                     style = buttonTextStyle,
-                                    color = Black
+                                    color = AppTheme.bg
                                 )
                             }
                         }

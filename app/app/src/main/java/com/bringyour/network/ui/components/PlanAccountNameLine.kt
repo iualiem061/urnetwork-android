@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * "Account: name" under a plan (support inbox 6546): customers with several
@@ -24,7 +24,7 @@ fun PlanAccountNameLine(
     name: String,
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.bodySmall,
-    color: Color = TextMuted,
+    color: Color = AppTheme.textMuted,
 ) {
     if (name.isEmpty()) {
         return

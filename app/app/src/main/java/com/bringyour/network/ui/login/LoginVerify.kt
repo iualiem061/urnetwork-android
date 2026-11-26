@@ -68,11 +68,11 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.URCodeInput
 import com.bringyour.network.ui.components.URInlineErrorText
 import com.bringyour.network.ui.components.overlays.WelcomeAnimatedOverlayLogin
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -272,7 +272,6 @@ fun LoginVerify(
 
     }
 
-
     AnimatedVisibility(
         visible = isContentVisible,
         enter = EnterTransition.None,
@@ -292,7 +291,7 @@ fun LoginVerify(
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Black
+                        containerColor = AppTheme.bg
                     ),
                     actions = {},
                 )
@@ -335,7 +334,7 @@ fun LoginVerify(
 
                             Text(
                                 stringResource(id = R.string.login_verify_details),
-                                color = TextMuted
+                                color = AppTheme.textMuted
                             )
 
                             Spacer(modifier = Modifier.height(32.dp))
@@ -392,14 +391,14 @@ internal fun ResendCode(
         ) {
             Text(
                 stringResource(id = R.string.dont_see_it),
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Spacer(modifier = Modifier.width(4.dp))
 
             Text(
                 stringResource(id = R.string.resend_verify_code),
                 style = TextStyle(
-                    color = if (resendBtnEnabled) Color.White else TextMuted,
+                    color = if (resendBtnEnabled) Color.White else AppTheme.textMuted,
                     fontSize = 16.sp
                 ),
                 modifier = Modifier.clickable {
@@ -414,7 +413,7 @@ internal fun ResendCode(
                 CircularProgressIndicator(
                     modifier = Modifier.size(16.dp),
                     color = MaterialTheme.colorScheme.secondary,
-                    trackColor = TextMuted,
+                    trackColor = AppTheme.textMuted,
                 )
             }
         }

@@ -17,8 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.connect.outOfBalanceKind
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.widgets.WidgetSnapshotStore
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Set by the upgrade destination when a start connect blocked by insufficient
@@ -54,7 +55,7 @@ fun UpgradeScreenHeader() {
             Text(
                 stringResource(id = R.string.insufficient_balance_refreshes_in, rememberFreeRefreshCountdown()),
                 style = MaterialTheme.typography.bodyLarge,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             // reserved data may come back before the refresh; used up does not
@@ -72,7 +73,7 @@ fun UpgradeScreenHeader() {
                 Text(
                     kindText,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
 

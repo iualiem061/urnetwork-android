@@ -63,13 +63,13 @@ import com.bringyour.network.ui.components.FoldSafeDialog
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.tabletReadableColumn
 import com.bringyour.network.ui.connect.clientLimitMessageId
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.utils.relativeTime
 import kotlinx.coroutines.delay
+import com.bringyour.network.ui.theme.AppTheme
 
 // how often "Last seen" moves on while the list shows
 private const val MANAGE_DEVICES_CLOCK_MILLIS = 30_000L
@@ -294,11 +294,11 @@ private fun ManageDevicesScaffold(
                 },
                 navigationIcon = navigationIcon,
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
         content(
             Modifier
@@ -344,7 +344,7 @@ private fun ManageDevicesList(
                 Text(
                     stringResource(id = R.string.manage_devices_help),
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                 )
             }
         }
@@ -359,8 +359,8 @@ private fun ManageDevicesList(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     CircularProgressIndicator(
-                        color = TextMuted,
-                        trackColor = TextFaint,
+                        color = AppTheme.textMuted,
+                        trackColor = AppTheme.textFaint,
                         strokeWidth = 2.dp,
                         modifier = Modifier.size(16.dp)
                     )
@@ -397,8 +397,8 @@ private fun ManageDevicesList(
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
-                        color = TextMuted,
-                        trackColor = TextFaint,
+                        color = AppTheme.textMuted,
+                        trackColor = AppTheme.textFaint,
                     )
                 }
             }
@@ -520,7 +520,7 @@ private fun ManagedDeviceRow(
                 Text(
                     detail,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -530,8 +530,8 @@ private fun ManagedDeviceRow(
             Spacer(modifier = Modifier.width(8.dp))
             if (removing == device.clientId) {
                 CircularProgressIndicator(
-                    color = TextMuted,
-                    trackColor = TextFaint,
+                    color = AppTheme.textMuted,
+                    trackColor = AppTheme.textFaint,
                     strokeWidth = 2.dp,
                     modifier = Modifier.size(20.dp)
                 )
@@ -543,7 +543,7 @@ private fun ManagedDeviceRow(
                 ) {
                     Text(
                         stringResource(id = R.string.remove),
-                        color = if (removing == null) Red else TextMuted,
+                        color = if (removing == null) Red else AppTheme.textMuted,
                     )
                 }
             }
@@ -566,7 +566,7 @@ private fun ManageDevicesMessage(
         Text(
             message,
             style = MaterialTheme.typography.bodyLarge,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
         action()
     }

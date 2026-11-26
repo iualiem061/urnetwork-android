@@ -14,8 +14,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bringyour.network.ui.theme.TextDanger
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun URTextInputLabel(
@@ -31,7 +32,7 @@ fun URTextInputLabel(
                  text,
                  style = TextStyle(
                      fontSize = 12.sp,
-                     color = if (inputIsValid) TextMuted else TextDanger
+                     color = if (inputIsValid) AppTheme.textMuted else TextDanger
                  )
              )
          }

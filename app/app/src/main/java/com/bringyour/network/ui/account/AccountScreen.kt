@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -57,13 +59,13 @@ import com.bringyour.network.ui.components.UsageBar
 import com.bringyour.network.ui.shared.viewmodels.OverlayViewModel
 import com.bringyour.network.ui.shared.viewmodels.PostQuantumIdentityViewModel
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.OffBlack
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +116,7 @@ fun AccountScreen(
                         .tabletReadableColumn()
                         .fillMaxSize()
                         .verticalScroll(scrollState)
-                        .background(Black)
+                        .background(AppTheme.bg)
                 ) {
 
                     AccountScreenContent(
@@ -163,7 +165,7 @@ fun AccountScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Black)
+            .background(AppTheme.bg)
             .padding(vertical = 16.dp),
         verticalArrangement = Arrangement.Top
     ) {
@@ -189,7 +191,7 @@ fun AccountScreenContent(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .background(
-                    OffBlack,
+                    AppTheme.bgElevated,
                     RoundedCornerShape(12.dp)
                 )
                 .fillMaxWidth()
@@ -317,7 +319,7 @@ fun AccountScreenContent(
                 Icon(
                     Icons.Filled.LocationOn,
                     contentDescription = null,
-                    tint = TextMuted
+                    tint = AppTheme.textMuted
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(stringResource(id = R.string.check_ip))
@@ -326,7 +328,7 @@ fun AccountScreenContent(
                 Icon(
                     Icons.Filled.ArrowOutward,
                     contentDescription = null,
-                    tint = TextMuted,
+                    tint = AppTheme.textMuted,
                     modifier = Modifier
                         .size(18.dp)
                 )
@@ -334,6 +336,27 @@ fun AccountScreenContent(
                 Spacer(modifier = Modifier.width(4.dp))
             }
         }
+        HorizontalDivider()
+
+        /**
+         * The network's social channels: Telegram and Instagram, each with
+         * the platform's own glyph in its brand color
+         */
+        SocialLinkRow(
+            iconResourceId = R.drawable.ic_telegram,
+            iconTint = TelegramBrandBlue,
+            title = stringResource(id = R.string.social_telegram),
+            handle = "@Aliem_061",
+            onClick = { uriHandler.openUri("https://t.me/Aliem_061") },
+        )
+        HorizontalDivider()
+        SocialLinkRow(
+            iconResourceId = R.drawable.ic_instagram,
+            iconTint = InstagramBrandPink,
+            title = stringResource(id = R.string.social_instagram),
+            handle = "@Aliem061",
+            onClick = { uriHandler.openUri("https://instagram.com/Aliem061") },
+        )
         HorizontalDivider()
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -350,6 +373,61 @@ fun AccountScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+    }
+}
+
+/**
+ * The platforms' own brand colors, at their official values.
+ */
+private val TelegramBrandBlue = Color(0xFF26A5E4)
+private val InstagramBrandPink = Color(0xFFE4405F)
+
+/**
+ * One social channel row: the platform's glyph in its brand color, the
+ * channel's name and handle, and an outward arrow; the row opens the link.
+ */
+@Composable
+private fun SocialLinkRow(
+    iconResourceId: Int,
+    iconTint: Color,
+    title: String,
+    handle: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp, horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(id = iconResourceId),
+                contentDescription = title,
+                tint = iconTint,
+                modifier = Modifier.size(22.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(
+                    title,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    handle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = AppTheme.textMuted
+                )
+            }
+        }
+        Icon(
+            Icons.Filled.ArrowOutward,
+            contentDescription = null,
+            tint = AppTheme.textMuted,
+            modifier = Modifier.size(18.dp)
+        )
     }
 }
 

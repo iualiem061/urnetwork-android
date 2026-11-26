@@ -19,7 +19,7 @@ import com.bringyour.network.ui.theme.Blue600
 import com.bringyour.network.ui.theme.BlueLight
 import com.bringyour.network.ui.theme.Green
 import com.bringyour.network.ui.theme.Pink
-import com.bringyour.network.ui.theme.TextFaint
+
 import com.bringyour.network.ui.theme.Yellow400
 import com.bringyour.network.utils.sdkStringListToList
 import com.bringyour.sdk.DeviceLocal
@@ -31,6 +31,7 @@ import com.bringyour.sdk.TransportStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The stable transport vocabulary shared with the sdk. The raw values are the
@@ -78,7 +79,7 @@ enum class TransportTypeUi(
      * admitted but not yet attributed to a physical carrier (queued); a dark
      * neutral -- muted gray read too close to the pale H1 blue in the bar
      */
-    UNKNOWN(Sdk.TransportTypeUnknown, null, R.string.transport_queued, null, TextFaint);
+    UNKNOWN(Sdk.TransportTypeUnknown, null, R.string.transport_queued, null, AppTheme.textFaint);
 
     /**
      * The display name. The dns carriers carry their product names, which are

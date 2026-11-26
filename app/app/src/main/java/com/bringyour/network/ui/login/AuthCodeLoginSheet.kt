@@ -31,10 +31,10 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URInlineErrorText
 import com.bringyour.network.ui.components.URTextInput
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -116,7 +116,7 @@ fun AuthCodeLoginSheet(
                 Text(
                     stringResource(id = R.string.step_into_the_internet),
                     style = MaterialTheme.typography.headlineMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -153,7 +153,7 @@ fun AuthCodeLoginSheet(
                         )
 
                     },
-                    borderColor = if (authCode.text.isNotEmpty()) Black else TextMuted,
+                    borderColor = if (authCode.text.isNotEmpty()) AppTheme.bg else AppTheme.textMuted,
                     enabled = authCode.text.isNotEmpty() && !authCodeLoginLoading,
                     isProcessing = authCodeLoginLoading
                 ) { buttonTextStyle ->
@@ -164,7 +164,7 @@ fun AuthCodeLoginSheet(
                         Text(
                             stringResource(id = R.string.launch),
                             style = buttonTextStyle,
-                            color = if (authCode.text.isNotEmpty()) Black else TextMuted
+                            color = if (authCode.text.isNotEmpty()) AppTheme.bg else AppTheme.textMuted
                         )
                     }
                 }

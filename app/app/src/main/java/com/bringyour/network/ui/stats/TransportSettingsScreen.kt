@@ -49,13 +49,12 @@ import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.theme.Amber
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.sdk.Sdk
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Editor for the device transport settings: one carrier, or auto with a
@@ -150,11 +149,11 @@ fun TransportSettingsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         Column(
@@ -207,7 +206,7 @@ fun TransportSettingsScreen(
                             }
                         ),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextFaint
+                        color = AppTheme.textFaint
                     )
                 }
 
@@ -221,7 +220,7 @@ fun TransportSettingsScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(MainTintedBackgroundBase, RoundedCornerShape(12.dp))
+                                .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
                                 .padding(16.dp),
                             verticalAlignment = Alignment.Top,
                         ) {
@@ -241,7 +240,7 @@ fun TransportSettingsScreen(
                                     }
                                 ),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color.White,
+                                color = AppTheme.textPrimary,
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
@@ -271,7 +270,7 @@ fun TransportSettingsScreen(
                         Text(
                             stringResource(id = R.string.enabled_under_auto_footer),
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextFaint
+                            color = AppTheme.textFaint
                         )
                     }
 
@@ -364,12 +363,12 @@ private fun ModeRow(
                     Text(
                         stringResource(id = R.string.auto),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
                     Text(
                         stringResource(id = R.string.transport_auto_description),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
             }
@@ -447,14 +446,14 @@ private fun TransportLabel(
             Text(
                 transport.label(),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             val detailRes = transport.detailRes
             if (showsDetail && detailRes != null) {
                 Text(
                     stringResource(id = detailRes),
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
         }
@@ -471,14 +470,14 @@ private fun SettingsGroup(
     ) {
         Text(
             title,
-            style = TextStyle(color = TextMuted)
+            style = TextStyle(color = AppTheme.textMuted)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    MainTintedBackgroundBase,
+                    AppTheme.bgTinted,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(16.dp)

@@ -14,8 +14,9 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.login.SSO_OAUTH_PURPOSE_ADD
 import com.bringyour.network.ui.login.launchGoogleOAuth
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.AddAuthArgs
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Adds Google on the github build, which is deliberately de-Googled (no
@@ -37,7 +38,7 @@ fun GoogleAddAuthButton(
     Text(
         stringResource(id = R.string.sign_in_with_google_to_add_it),
         style = MaterialTheme.typography.bodyMedium,
-        color = TextMuted
+        color = AppTheme.textMuted
     )
     Spacer(modifier = Modifier.height(12.dp))
     URButton(

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import com.bringyour.network.ui.theme.TextMuted
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.shared.models.ProvideControlMode
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun ProvideControlModePicker(
@@ -50,7 +51,7 @@ fun ProvideControlModePicker(
             Text(
                 stringResource(id = R.string.provide_mode),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
         }
 
@@ -81,7 +82,7 @@ fun ProvideControlModePicker(
                         Text(
                             stringResource(id = descriptionId),
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
                 }

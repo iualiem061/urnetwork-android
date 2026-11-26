@@ -31,8 +31,9 @@ import com.bringyour.network.ui.components.ContextMenuBox
 import com.bringyour.network.ui.components.ContextMenuItem
 import com.bringyour.network.ui.components.focusRing
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.ConnectLocation
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Network peers pinned at the top of the available providers list.
@@ -113,13 +114,13 @@ private fun NetworkPeerRow(
                 Text(
                     peer.displayName,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
                 if (peer.deviceName.isNotEmpty() && peer.deviceSpec.isNotEmpty()) {
                     Text(
                         peer.deviceSpec,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
             }

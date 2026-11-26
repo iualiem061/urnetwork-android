@@ -15,9 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.URButton
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.theme.Yellow
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * This overlay is deprecated
@@ -37,7 +38,7 @@ fun TransferSubmittedOverlay(
             Text(
                 stringResource(id = R.string.transfer_submitted),
                 style = MaterialTheme.typography.headlineLarge,
-                color = Black
+                color = AppTheme.bg
             )
     
             Spacer(modifier = Modifier.height(24.dp))
@@ -45,7 +46,7 @@ fun TransferSubmittedOverlay(
             Text(
                 stringResource(id = R.string.transfer_submitted_details),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Black
+                color = AppTheme.bg
             )
 
             Spacer(modifier = Modifier.height(128.dp))
@@ -55,7 +56,7 @@ fun TransferSubmittedOverlay(
                     onDismiss()
                 },
                 style = ButtonStyle.OUTLINE,
-                borderColor = Black
+                borderColor = AppTheme.bg
             ) { buttonTextStyle ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -64,7 +65,7 @@ fun TransferSubmittedOverlay(
                     Text(
                         stringResource(id = R.string.close),
                         style = buttonTextStyle,
-                        color = Black
+                        color = AppTheme.bg
                     )
                 }
             }

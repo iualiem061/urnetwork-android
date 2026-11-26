@@ -29,10 +29,10 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.Route
 import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.MutedCoral
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The connect statistics in two columns, for the stacked connect arrangement
@@ -122,7 +122,7 @@ fun ConnectStatsTiles(
                         blockActionsViewModel.splitRules.size,
                     ),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
             }
 
@@ -144,7 +144,7 @@ fun ConnectStatsTiles(
                     Text(
                         stringResource(id = R.string.dns_builtin_blocker_label),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White,
+                        color = AppTheme.textPrimary,
                         modifier = Modifier.weight(1f)
                     )
 
@@ -175,7 +175,7 @@ fun ConnectStatsTiles(
                     Text(
                         summary ?: stringResource(id = R.string.dns_over_https),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White,
+                        color = AppTheme.textPrimary,
                         modifier = Modifier.weight(1f)
                     )
 
@@ -183,7 +183,7 @@ fun ConnectStatsTiles(
                         Text(
                             stringResource(id = if (dohEnabled) R.string.on else R.string.off),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = if (dohEnabled) Green else TextMuted
+                            color = if (dohEnabled) Green else AppTheme.textMuted
                         )
                     }
                 }
@@ -202,7 +202,7 @@ private fun StatsTile(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
-            .background(MainTintedBackgroundBase)
+            .background(AppTheme.bgTinted)
             .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
             .padding(contentPadding),
         content = content,

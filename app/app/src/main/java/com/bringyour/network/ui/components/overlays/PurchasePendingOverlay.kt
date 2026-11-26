@@ -15,9 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.URButton
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Shown when Google Play accepted a purchase but has not completed it -- it is waiting
@@ -47,13 +48,13 @@ fun PurchasePendingOverlay(
             Text(
                 stringResource(id = R.string.purchase_pending_title),
                 style = MaterialTheme.typography.headlineMedium,
-                color = Black
+                color = AppTheme.bg
             )
 
             Text(
                 stringResource(id = R.string.purchase_pending_body),
                 style = MaterialTheme.typography.headlineLarge,
-                color = Black
+                color = AppTheme.bg
             )
             Spacer(modifier = Modifier.height(128.dp))
             URButton(
@@ -61,7 +62,7 @@ fun PurchasePendingOverlay(
                     onDismiss()
                 },
                 style = ButtonStyle.OUTLINE,
-                borderColor = Black
+                borderColor = AppTheme.bg
             ) { buttonTextStyle ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -70,7 +71,7 @@ fun PurchasePendingOverlay(
                     Text(
                         stringResource(id = R.string.got_it),
                         style = buttonTextStyle,
-                        color = Black
+                        color = AppTheme.bg
                     )
                 }
             }

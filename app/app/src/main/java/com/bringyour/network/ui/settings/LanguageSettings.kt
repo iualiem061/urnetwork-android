@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.bringyour.network.R
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.TextMuted
 
 /** The tag that means "follow the device's language settings". */
 const val LANGUAGE_TAG_SYSTEM = "system"

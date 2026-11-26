@@ -19,13 +19,13 @@ import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.theme.ppNeueBitBold
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Per-epoch history. Points are always shown; the alpha column appears only once a
@@ -47,7 +47,7 @@ fun EpochHistory(
         Text(
             stringResource(id = R.string.epoch_history),
             style = MaterialTheme.typography.bodyLarge,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -57,7 +57,7 @@ fun EpochHistory(
                 Text(
                     stringResource(id = R.string.no_points_yet),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
             return@Column
@@ -72,7 +72,7 @@ fun EpochHistory(
                 formatShareBps = formatShareBps
             )
             if (i < epochs.size - 1) {
-                HorizontalDivider(color = TextFaint)
+                HorizontalDivider(color = AppTheme.textFaint)
             }
         }
     }
@@ -101,13 +101,13 @@ fun EpochRow(
             Text(
                 epochDateRange(epoch.startMillis, epoch.endMillis),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             if (0 < epoch.shareBps) {
                 Text(
                     stringResource(id = R.string.epoch_share_of_block, formatShareBps(epoch.shareBps)),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
         }
@@ -121,11 +121,11 @@ fun EpochRow(
                 val (label, color) = when (claim.status) {
                     EpochClaimStatus.CLAIMABLE -> stringResource(id = R.string.unclaimed) to BlueMedium
                     EpochClaimStatus.CLAIMED -> stringResource(id = R.string.claim_confirmed) to Green
-                    EpochClaimStatus.EXPIRED -> stringResource(id = R.string.claim_expired) to TextMuted
+                    EpochClaimStatus.EXPIRED -> stringResource(id = R.string.claim_expired) to AppTheme.textMuted
                     // finalized by the vault with nothing to claim: no payout was published for it
-                    EpochClaimStatus.NOT_FINALIZED -> stringResource(id = R.string.sn_status_not_finalized) to TextMuted
+                    EpochClaimStatus.NOT_FINALIZED -> stringResource(id = R.string.sn_status_not_finalized) to AppTheme.textMuted
                     // not finalized yet: its amount only, once there is one
-                    EpochClaimStatus.OPEN -> null to TextMuted
+                    EpochClaimStatus.OPEN -> null to AppTheme.textMuted
                 }
                 if (0 < claim.amountRao) {
                     Text(

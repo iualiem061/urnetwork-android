@@ -267,8 +267,11 @@ android {
         }
 
         release {
-            minifyEnabled false
-//            shrinkResources false
+            // shrunk for the direct APK distribution: unused code and
+            // resources are removed (names kept; see proguard-rules.pro),
+            // which the 20-language, icons-extended build needs to stay lean
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

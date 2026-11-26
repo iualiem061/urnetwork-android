@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.bringyour.network.ui.components.FoldSafeModalBottomSheet
-import com.bringyour.network.ui.theme.TextMuted
+
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +25,7 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.theme.ppNeueBitBold
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,7 +86,7 @@ fun RedeemTransferBalanceCodeSheet(
             Text(
                 stringResource(id = R.string.balance_code_where_to_buy),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             URButton(

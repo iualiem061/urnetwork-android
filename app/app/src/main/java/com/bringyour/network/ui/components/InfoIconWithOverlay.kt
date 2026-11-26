@@ -45,8 +45,9 @@ import androidx.compose.ui.window.PopupProperties
 import com.bringyour.network.R
 import com.bringyour.network.ui.theme.BlueDark
 import com.bringyour.network.ui.theme.BlueLight
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * An info icon that opens a popup explaining something. The 16 dp glyph sits
@@ -73,7 +74,7 @@ fun InfoIconWithOverlay(
             Icon(
                 painter = painterResource(R.drawable.icon_info),
                 contentDescription = contentDescription,
-                tint = TextMuted,
+                tint = AppTheme.textMuted,
                 modifier = Modifier.size(16.dp),
             )
 

@@ -48,10 +48,10 @@ import com.bringyour.network.ui.components.URInlineErrorText
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.settings.VlessSettingsDialog
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.Yellow
 import com.bringyour.sdk.Sdk
+import com.bringyour.network.ui.theme.AppTheme
 
 private fun normalizeNetworkHost(raw: String): String {
     var value = raw.trim().lowercase(Locale.ROOT)
@@ -167,9 +167,9 @@ fun NetworkServerSelector(
     var isPresentingControlDoh by rememberSaveable { mutableStateOf(false) }
     var isFocused by remember { mutableStateOf(false) }
     val textColor = when {
-        !enabled -> TextFaint
+        !enabled -> AppTheme.textFaint
         isFocused -> BlueMedium
-        else -> TextMuted
+        else -> AppTheme.textMuted
     }
 
     Row(
@@ -352,25 +352,25 @@ private fun NetworkApiDialog(
             Text(
                 text = stringResource(id = R.string.change_network_api_title),
                 style = MaterialTheme.typography.headlineMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(id = R.string.network_api_description),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(id = R.string.network_api_current_api, currentApiUrl),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = stringResource(id = R.string.network_api_current_connect, currentConnectUrl),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -462,7 +462,7 @@ private fun NetworkApiDialog(
                 Text(
                     text = statusText,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
 
@@ -484,12 +484,12 @@ private fun NetworkApiDialog(
                 Text(
                     text = stringResource(id = R.string.vless),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (vlessEnabled) Color.White else TextFaint
+                    color = if (vlessEnabled) Color.White else AppTheme.textFaint
                 )
                 Icon(
                     Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = TextMuted
+                    tint = AppTheme.textMuted
                 )
             }
 
@@ -509,13 +509,13 @@ private fun NetworkApiDialog(
                 Text(
                     text = stringResource(id = R.string.control_doh_urls),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (controlDohEnabled) Color.White else TextFaint,
+                    color = if (controlDohEnabled) Color.White else AppTheme.textFaint,
                     modifier = Modifier.weight(1f)
                 )
                 Icon(
                     Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = TextMuted
+                    tint = AppTheme.textMuted
                 )
             }
         }

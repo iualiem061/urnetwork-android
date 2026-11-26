@@ -45,9 +45,9 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.theme.Blue500
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.TextDanger
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun URTextInput(
@@ -78,7 +78,7 @@ fun URTextInput(
     val underlineColor = when {
         !enabled -> Color.Transparent
         isFocused -> BlueMedium
-        else -> TextFaint
+        else -> AppTheme.textFaint
     }
 
     Column {
@@ -112,7 +112,7 @@ fun URTextInput(
                             if (value.text.isEmpty()) {
                                 Text(
                                     text = if (isPassword) "************" else placeholder,
-                                    style = TextStyle(color = TextFaint)
+                                    style = TextStyle(color = AppTheme.textFaint)
                                 )
                             }
                             innerTextField()
@@ -142,8 +142,8 @@ fun URTextInput(
                             modifier = Modifier
                                 .width(16.dp)
                                 .height(16.dp),
-                            color = TextMuted,
-                            trackColor = TextFaint,
+                            color = AppTheme.textMuted,
+                            trackColor = AppTheme.textFaint,
                             strokeWidth = 2.dp
                         )
                     }
@@ -184,7 +184,7 @@ fun URTextInput(
                     supportingText.toString(),
                     style = TextStyle(
                         fontSize = 12.sp,
-                        color = if (isValid) TextMuted else TextDanger
+                        color = if (isValid) AppTheme.textMuted else TextDanger
                     )
                 )
             }

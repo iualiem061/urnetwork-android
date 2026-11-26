@@ -23,10 +23,10 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.connect.OutOfBalanceKind
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.utils.formatBalanceBytes
 import kotlinx.coroutines.delay
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * "About your data": what Used, Pending and Available mean, the daily balance
@@ -91,7 +91,7 @@ fun DataInfoSheet(
 
             DataInfoRow(
                 label = stringResource(id = R.string.available_data_key),
-                color = TextFaint,
+                color = AppTheme.textFaint,
                 amount = info.available,
                 explanation = stringResource(id = R.string.data_info_available),
             )
@@ -109,12 +109,12 @@ fun DataInfoSheet(
                 Text(
                     stringResource(id = R.string.daily_data_balance_label),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 Text(
                     info.daily,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
 
@@ -123,7 +123,7 @@ fun DataInfoSheet(
                 Text(
                     stringResource(id = R.string.data_info_refresh_at, rememberFreeRefreshCountdown()),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
 
@@ -162,7 +162,7 @@ private fun DataInfoRow(
             Text(
                 amount,
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
         Spacer(modifier = Modifier.height(4.dp))

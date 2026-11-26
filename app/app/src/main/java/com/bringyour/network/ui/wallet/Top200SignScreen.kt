@@ -57,10 +57,9 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.tabletReadableColumn
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.sdk.DeviceLocal
@@ -68,6 +67,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 /** The sdk device behind the sign screen: the device's id, its public client key, its signer. */
 private class SdkTop200SignDevice(private val device: DeviceLocal) : Top200SignDevice {
@@ -186,7 +186,7 @@ fun Top200SignContent(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         }
@@ -202,7 +202,7 @@ fun Top200SignContent(
             Text(
                 stringResource(id = R.string.top200_sign_intro),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -212,7 +212,7 @@ fun Top200SignContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MainTintedBackgroundBase, RoundedCornerShape(12.dp))
+                    .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
                     .padding(16.dp)
             ) {
                 Text(
@@ -249,7 +249,7 @@ fun Top200SignContent(
                 Text(
                     stringResource(id = R.string.top200_sign_member_hint),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 val memberEntry = state.memberEntry
@@ -319,7 +319,7 @@ fun Top200SignContent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MainTintedBackgroundBase, RoundedCornerShape(12.dp))
+                        .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
                         .padding(16.dp)
                 ) {
                     Text(
@@ -379,7 +379,7 @@ fun Top200SignContent(
                         color = Color.White,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(MainTintedBackgroundBase, RoundedCornerShape(8.dp))
+                            .background(AppTheme.bgTinted, RoundedCornerShape(8.dp))
                             .padding(12.dp)
                     )
                 }
@@ -418,7 +418,7 @@ private fun ValueRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(label, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+            Text(label, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
             Text(display ?: "-", style = monospace, color = Color.White)
         }
         Spacer(modifier = Modifier.width(8.dp))
@@ -438,7 +438,7 @@ private fun ReviewRow(
     monospace: androidx.compose.ui.text.TextStyle,
 ) {
     Column(modifier = Modifier.padding(bottom = 6.dp)) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+        Text(label, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
         Text(value, style = monospace, color = Color.White)
     }
 }

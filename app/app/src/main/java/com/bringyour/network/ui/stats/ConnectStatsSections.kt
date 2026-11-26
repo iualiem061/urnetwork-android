@@ -54,14 +54,13 @@ import com.bringyour.network.ui.components.SkeletonGroup
 import com.bringyour.network.ui.components.SkeletonText
 import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainBorderBase
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.Red
 import com.bringyour.network.ui.theme.MutedCoral
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.Sdk
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The statistics sections in the connect sheet: client statistics,
@@ -207,7 +206,7 @@ fun ConnectStatsSections(
                 blockActionsViewModel.splitRules.size,
             ),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White
+            color = AppTheme.textPrimary
         )
 
     }
@@ -240,7 +239,7 @@ fun ConnectStatsSections(
                 Text(
                     summary,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -276,7 +275,7 @@ fun ConnectStatsSections(
             Text(
                 stringResource(id = R.string.dns_settings_unavailable),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextFaint
+                color = AppTheme.textFaint
             )
         }
 
@@ -311,7 +310,7 @@ fun BlockerTogglePanel(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                MainTintedBackgroundBase,
+                AppTheme.bgTinted,
                 shape = RoundedCornerShape(12.dp)
             )
             // the switch's 48 dp touch target fills the rest of the height
@@ -327,12 +326,12 @@ fun BlockerTogglePanel(
             Text(
                 stringResource(id = R.string.dns_builtin_blocker_label),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             Text(
                 stringResource(id = R.string.dns_builtin_blocker_note),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
 
@@ -379,7 +378,7 @@ fun AppSplitRulesPanel(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                MainTintedBackgroundBase,
+                AppTheme.bgTinted,
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable { onClick() }
@@ -389,7 +388,7 @@ fun AppSplitRulesPanel(
         Text(
             text,
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White
+            color = AppTheme.textPrimary
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -404,7 +403,7 @@ fun AppSplitRulesPanel(
         Icon(
             Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
-            tint = TextFaint,
+            tint = AppTheme.textFaint,
             modifier = Modifier.size(16.dp)
         )
     }
@@ -460,7 +459,7 @@ private fun AppIconDeck(
                         // leftmost on top
                         .zIndex((n - index).toFloat())
                         .size(iconSize + ring * 2)
-                        .background(MainTintedBackgroundBase, RoundedCornerShape(7.dp))
+                        .background(AppTheme.bgTinted, RoundedCornerShape(7.dp))
                         .padding(ring)
                 ) {
                     Image(
@@ -554,7 +553,7 @@ internal fun DnsRecommendationPill(
         Text(
             message,
             style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-            color = Color.White
+            color = AppTheme.textPrimary
         )
     }
 }
@@ -567,7 +566,7 @@ private fun countryColor(countryCode: String): Color {
     return try {
         Color(android.graphics.Color.parseColor("#${Sdk.getColorHex(countryCode)}"))
     } catch (e: Throwable) {
-        TextMuted
+        AppTheme.textMuted
     }
 }
 
@@ -596,9 +595,9 @@ private fun DnsStatusRow(
                     .size(6.dp)
                     .background(
                         color = when {
-                            placeholder -> MainBorderBase
+                            placeholder -> AppTheme.border
                             enabled -> Green
-                            else -> TextFaint.copy(alpha = 0.4f)
+                            else -> AppTheme.textFaint.copy(alpha = 0.4f)
                         },
                         shape = CircleShape
                     )
@@ -610,7 +609,7 @@ private fun DnsStatusRow(
                 Text(
                     label,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
             }
         }
@@ -624,7 +623,7 @@ private fun DnsStatusRow(
             Text(
                 stringResource(id = if (enabled) R.string.on else R.string.off),
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (enabled) Green else TextMuted
+                color = if (enabled) Green else AppTheme.textMuted
             )
         }
     }
@@ -640,7 +639,7 @@ private fun StatsCard(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                MainTintedBackgroundBase,
+                AppTheme.bgTinted,
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable { onClick() }
@@ -654,12 +653,12 @@ private fun StatsCard(
         ) {
             Text(
                 title,
-                style = TextStyle(color = TextMuted)
+                style = TextStyle(color = AppTheme.textMuted)
             )
             Icon(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = TextFaint,
+                tint = AppTheme.textFaint,
                 modifier = Modifier.size(16.dp)
             )
         }

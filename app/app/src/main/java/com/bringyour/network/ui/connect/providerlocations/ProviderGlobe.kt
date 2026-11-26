@@ -41,11 +41,11 @@ import com.bringyour.network.ui.connect.ExtenderRingGeometry
 import com.bringyour.network.ui.connect.drawExtenderDot
 import com.bringyour.network.ui.connect.extenderRingGeometry
 import com.bringyour.network.ui.components.focusRing
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.OffWhite
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.bringyour.network.ui.theme.AppTheme
 
 // visual constants, matching the /ip globe on ur.io (see PROVIDERLOCATIONS.md
 // "ur.io /ip globe"). All lengths are in the 600-unit virtual space.
@@ -230,6 +230,9 @@ fun ProviderGlobe(
             launch { rotationPhi.animateTo(shortest.second, RECENTER_SPRING) }
         }
     }
+    // read in composition (the draw scope cannot) for the globe's colors
+    val sphereColor = AppTheme.bg
+    val landColor = AppTheme.textPrimary
     Canvas(
         modifier = modifier
             .fillMaxWidth()
@@ -341,7 +344,7 @@ fun ProviderGlobe(
 
         // the sphere
         drawCircle(
-            color = Black,
+            color = sphereColor,
             radius = currentScale * unit,
             center = Offset(size.width / 2f, size.height / 2f),
         )
@@ -371,10 +374,10 @@ fun ProviderGlobe(
                 }
                 if (anyVisible) {
                     path.close()
-                    drawPath(path, color = OffWhite)
+                    drawPath(path, color = landColor)
                     drawPath(
                         path,
-                        color = Black,
+                        color = sphereColor,
                         style = Stroke(width = LAND_STROKE_WIDTH * unit),
                     )
                 }

@@ -48,18 +48,19 @@ import com.bringyour.network.ui.wallet.EarningsDebugFlags
 import androidx.compose.runtime.collectAsState
 import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.components.URTextInputLabel
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.RedDark
 import com.bringyour.network.ui.theme.TextDanger
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.utils.formatByteCountCompact
 import com.bringyour.sdk.Exit
 import kotlinx.coroutines.delay
 import java.io.File
 import java.util.Locale
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Developer tools for diagnosing connection problems.
@@ -107,7 +108,7 @@ fun DeveloperScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Black),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = AppTheme.bg),
             )
         },
     ) { innerPadding ->
@@ -131,7 +132,7 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
     Text(
         stringResource(id = R.string.developer_description),
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted,
+        color = AppTheme.textMuted,
     )
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -194,7 +195,7 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
             Text(
                 stringResource(id = R.string.dev_log_verbosity_warning),
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.White,
+                color = AppTheme.textPrimary,
             )
         }
     }
@@ -247,14 +248,14 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
     Text(
         inventoryLabel(developerViewModel.inventory.size, developerViewModel.inventoryByteCount),
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted,
+        color = AppTheme.textMuted,
     )
 
     developerViewModel.unavailableSources.forEach { unavailable ->
         Text(
             stringResource(id = R.string.dev_export_unavailable, unavailable),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
     }
 
@@ -291,7 +292,6 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
         developerViewModel.clearLogs(context.filesDir)
     }
 
-
     var showPicker by rememberSaveable { mutableStateOf(false) }
 
     DeveloperAction(
@@ -317,7 +317,7 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
                     color = if (developerViewModel.selectedLogNames.contains(info.name)) {
                         BlueMedium
                     } else {
-                        TextMuted
+                        AppTheme.textMuted
                     },
                 )
             }
@@ -329,7 +329,7 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
                 developerViewModel.selectedByteCount,
             ),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
 
         // Disabled -- and a no-op even if it were somehow tapped -- with
@@ -349,7 +349,7 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
         Text(
             stringResource(id = R.string.dev_exporting),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
     }
 
@@ -371,14 +371,14 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
                 )
             },
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
 
         lastExport.missingSources.forEach { missing ->
             Text(
                 stringResource(id = R.string.dev_export_not_included, missing),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
         }
     }
@@ -389,7 +389,7 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
         Text(
             stringResource(id = R.string.developer_disconnected),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
         return
     }
@@ -406,7 +406,7 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
     Text(
         stringResource(id = R.string.dev_measurements_detail),
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted,
+        color = AppTheme.textMuted,
     )
 
     Spacer(modifier = Modifier.height(8.dp))
@@ -508,7 +508,7 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
         Text(
             stringResource(id = R.string.dev_measure_none),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
     } else {
         DeveloperMetric(
@@ -853,7 +853,7 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
         Text(
             stringResource(id = R.string.dev_no_exits),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
     } else {
         developerViewModel.exits.forEach { exit ->
@@ -903,7 +903,7 @@ private fun DeveloperContent(developerViewModel: DeveloperViewModel) {
     // its results are about the provider, not the harness.
 
     developerViewModel.lastAction?.let { lastAction ->
-        Text(lastAction, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+        Text(lastAction, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
     }
 
     Spacer(modifier = Modifier.height(32.dp))
@@ -961,12 +961,12 @@ private fun DeveloperVerbositySetting(
             Text(
                 stringResource(id = R.string.dev_log_verbosity),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White,
+                color = AppTheme.textPrimary,
             )
             Text(
                 stringResource(id = detail),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
         }
         Text(
@@ -982,7 +982,7 @@ private fun DeveloperVerbositySetting(
             // a level that records real destinations is not an ordinary
             // setting value, and must not read as one
             color = when {
-                level == null -> TextMuted
+                level == null -> AppTheme.textMuted
                 logVerbosityRecordsDestinations(level) -> TextDanger
                 else -> BlueMedium
             },
@@ -1028,14 +1028,14 @@ private fun DeveloperIpFamilySetting(
             Text(
                 stringResource(id = R.string.dev_ip_family),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White,
+                color = AppTheme.textPrimary,
             )
             Text(
                 // the demoted variant is a %1$s format string; the quiet one
                 // ignores the argument
                 stringResource(id = detail, status),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
         }
         Text(
@@ -1074,8 +1074,8 @@ private fun DeveloperDurationSetting(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.fillMaxWidth(0.72f)) {
-            Text(label, style = MaterialTheme.typography.bodyLarge, color = Color.White)
-            Text(detail, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+            Text(label, style = MaterialTheme.typography.bodyLarge, color = AppTheme.textPrimary)
+            Text(detail, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
         }
         Text(
             formatDurationMillis(millis),
@@ -1113,8 +1113,8 @@ private fun DeveloperCountSetting(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.fillMaxWidth(0.72f)) {
-            Text(label, style = MaterialTheme.typography.bodyLarge, color = Color.White)
-            Text(detail, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+            Text(label, style = MaterialTheme.typography.bodyLarge, color = AppTheme.textPrimary)
+            Text(detail, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
         }
         Text(
             if (count <= 0) zeroLabel else count.toString(),
@@ -1171,10 +1171,10 @@ private fun DeveloperMetric(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.fillMaxWidth(0.6f)) {
-            Text(label, style = MaterialTheme.typography.bodyLarge, color = Color.White)
-            Text(detail, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+            Text(label, style = MaterialTheme.typography.bodyLarge, color = AppTheme.textPrimary)
+            Text(detail, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
         }
-        Text(value, style = MaterialTheme.typography.bodyMedium, color = TextMuted)
+        Text(value, style = MaterialTheme.typography.bodyMedium, color = AppTheme.textMuted)
     }
 }
 
@@ -1193,8 +1193,8 @@ private fun DeveloperToggle(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.fillMaxWidth(0.75f)) {
-            Text(label, style = MaterialTheme.typography.bodyLarge, color = Color.White)
-            Text(detail, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+            Text(label, style = MaterialTheme.typography.bodyLarge, color = AppTheme.textPrimary)
+            Text(detail, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
         }
         URSwitch(checked = checked, toggle = { toggle(!checked) })
     }
@@ -1213,7 +1213,7 @@ private fun DeveloperAction(
         // that silently does nothing reads as a broken app, and here the
         // "nothing" is deliberate (an empty selection, or an export already
         // running)
-        color = if (enabled) BlueMedium else TextMuted,
+        color = if (enabled) BlueMedium else AppTheme.textMuted,
         modifier = Modifier
             .padding(vertical = 8.dp)
             .clickable(enabled = enabled, onClick = onClick),
@@ -1231,7 +1231,7 @@ private fun DeveloperExitRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .background(MainTintedBackgroundBase, RoundedCornerShape(8.dp))
+            .background(AppTheme.bgTinted, RoundedCornerShape(8.dp))
             .padding(12.dp),
     ) {
         Row(
@@ -1246,12 +1246,12 @@ private fun DeveloperExitRow(
                 // the entropy is in the tail.
                 exitLabel(exit),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White,
+                color = AppTheme.textPrimary,
             )
             Text(
                 stringResource(id = R.string.dev_exit_flows, exit.flowCount),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
         }
 
@@ -1275,7 +1275,7 @@ private fun DeveloperExitRow(
                 is ExitStateText.SdkToken -> text.token
             }
         }.joinToString(" · ")
-        Text(state, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+        Text(state, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
 
         // shown only when the exit has reported upstream dials it could not
         // open in the recent window -- the out-of-capacity signal the re-race
@@ -1284,7 +1284,7 @@ private fun DeveloperExitRow(
             Text(
                 stringResource(id = R.string.dev_exit_dial_failures, exit.dialFailureCount),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
         }
 
@@ -1303,7 +1303,7 @@ private fun DeveloperExitRow(
             null -> null
         }
         if (policyGenerationText != null) {
-            Text(policyGenerationText, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+            Text(policyGenerationText, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
         }
 
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {

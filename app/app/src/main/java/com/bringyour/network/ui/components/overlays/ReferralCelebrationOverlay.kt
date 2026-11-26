@@ -36,6 +36,7 @@ import com.bringyour.network.ui.components.referral.ReferralGoldCodePill
 import com.bringyour.network.ui.components.referral.referralShareMessage
 import com.bringyour.network.ui.theme.ReferralGoldLight
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * One-time crowning celebration for the referrer: shown the first time a
@@ -103,7 +104,7 @@ fun ReferralCelebrationOverlay(
                             LocalReferralTerms.current.bonusGibPerDay
                         ),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White,
+                        color = AppTheme.textPrimary,
                         textAlign = TextAlign.Center
                     )
 

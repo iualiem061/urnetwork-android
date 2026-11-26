@@ -24,10 +24,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Pink
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun URNavListItem(
@@ -43,7 +44,7 @@ fun URNavListItem(
             .then(
                 if (selected) {
                     Modifier
-                        .background(MainTintedBackgroundBase)
+                        .background(AppTheme.bgTinted)
                         .border(1.dp, Pink.copy(alpha = 0.35f))
                         .semantics { this.selected = true }
                 } else {
@@ -59,7 +60,7 @@ fun URNavListItem(
             Icon(
                 painterResource(id = iconResourceId),
                 contentDescription = null,
-                tint = TextMuted
+                tint = AppTheme.textMuted
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(text)
@@ -67,7 +68,7 @@ fun URNavListItem(
         Icon(
             imageVector = actionIcon,
             contentDescription = null,
-            tint = TextMuted
+            tint = AppTheme.textMuted
         )
     }
 }

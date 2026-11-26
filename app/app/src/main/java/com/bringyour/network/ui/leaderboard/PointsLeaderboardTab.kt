@@ -62,12 +62,10 @@ import com.bringyour.network.ui.components.keyboardScrollable
 import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.theme.Green500
 import com.bringyour.network.ui.theme.HeadingLargeCondensed
-import com.bringyour.network.ui.theme.MainBorderBase
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.Sdk
 import kotlinx.coroutines.flow.distinctUntilChanged
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The Points tab of the leaderboard (android/POINTSLEADERBOARD.md): the
@@ -384,7 +382,7 @@ internal fun PointsHeader(
         Box(
             modifier = Modifier
                 .background(
-                    color = MainTintedBackgroundBase,
+                    color = AppTheme.bgTinted,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(16.dp)
@@ -414,7 +412,7 @@ internal fun PointsHeader(
                             contentDescription = stringResource(
                                 id = if (emojiTag.isEmpty()) R.string.add_emoji else R.string.edit_emoji
                             ),
-                            tint = TextMuted
+                            tint = AppTheme.textMuted
                         )
                     }
                 }
@@ -434,7 +432,7 @@ internal fun PointsHeader(
                             Sdk.formatPoints(viewModel.totalRanked.toDouble())
                         ),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
 
@@ -470,13 +468,13 @@ internal fun PointsHeader(
                     Text(
                         "${stringResource(id = R.string.longest_streak)}: ${ownRow.longestStreakText}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                HorizontalDivider(color = MainBorderBase)
+                HorizontalDivider(color = AppTheme.border)
 
                 // the switch's 48 dp touch target fills the rest
                 Spacer(modifier = Modifier.height(4.dp))
@@ -507,7 +505,7 @@ internal fun PointsHeader(
                     Text(
                         stringResource(id = R.string.points_leaderboard_private_hint),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
             }
@@ -518,7 +516,7 @@ internal fun PointsHeader(
         Text(
             stringResource(id = R.string.points_leaderboard_description),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -537,7 +535,7 @@ private fun PointsStatTile(
         Text(
             label,
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
         Text(
             value,
@@ -548,7 +546,7 @@ private fun PointsStatTile(
         Box(
             modifier = Modifier
                 .background(
-                    color = if (emphasized) Green500.copy(alpha = 0.18f) else MainBorderBase,
+                    color = if (emphasized) Green500.copy(alpha = 0.18f) else AppTheme.border,
                     shape = RoundedCornerShape(6.dp)
                 )
                 .padding(horizontal = 8.dp, vertical = 2.dp)
@@ -557,7 +555,7 @@ private fun PointsStatTile(
                 rank,
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Bold,
-                color = if (emphasized) Green500 else TextMuted
+                color = if (emphasized) Green500 else AppTheme.textMuted
             )
         }
     }
@@ -619,7 +617,7 @@ private fun PointsRow(
 
     val nameColor = when {
         isNetworkRow -> Green500
-        row.anonymous -> TextMuted
+        row.anonymous -> AppTheme.textMuted
         else -> Color.White
     }
 
@@ -633,7 +631,7 @@ private fun PointsRow(
             rank,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isNetworkRow) FontWeight.ExtraBold else FontWeight.Normal,
-            color = if (isNetworkRow) Green500 else TextMuted,
+            color = if (isNetworkRow) Green500 else AppTheme.textMuted,
             modifier = Modifier.width(56.dp),
             textAlign = TextAlign.Start,
             maxLines = 1,
@@ -704,7 +702,7 @@ private fun PointsRowValue(
         color = when {
             isNetworkRow -> Green500
             emphasized -> Color.White
-            else -> TextFaint
+            else -> AppTheme.textFaint
         },
         modifier = Modifier.width(width),
         textAlign = TextAlign.End,
@@ -734,7 +732,7 @@ private fun PointsFooter(
                 Text(
                     errorMessage,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     textAlign = TextAlign.Center
                 )
                 TextButton(onClick = retry) {
@@ -745,7 +743,7 @@ private fun PointsFooter(
                 Text(
                     stringResource(id = R.string.points_leaderboard_empty),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     textAlign = TextAlign.Center
                 )
             }

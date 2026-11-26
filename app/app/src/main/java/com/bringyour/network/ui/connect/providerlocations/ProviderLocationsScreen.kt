@@ -17,7 +17,7 @@ import com.bringyour.network.ui.connect.extenderRingGeometry
 import com.bringyour.network.ui.stats.ExtenderRing
 import com.bringyour.network.ui.stats.IpFamilyColumn
 import com.bringyour.network.ui.stats.tagResId
-import com.bringyour.network.ui.theme.MainBorderBase
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Column
@@ -83,13 +83,13 @@ import com.bringyour.network.ui.components.providerLocationRemoveControls
 import com.bringyour.network.ui.components.SwipeToRevealRow
 import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.shared.viewmodels.PostQuantumIdentityViewModel
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Pink
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.sdk.ConnectLocation
 import kotlinx.coroutines.delay
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The connected providers and where they are. A screen rather than a bottom
@@ -175,10 +175,10 @@ fun ProviderLocationsScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Black),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = AppTheme.bg),
             )
         },
-        containerColor = Black,
+        containerColor = AppTheme.bg,
     ) { innerPadding ->
         // The toggle and globe are fixed; only the list scrolls, in the space
         // left below them. The container's size decides how big the globe may
@@ -226,7 +226,7 @@ fun ProviderLocationsScreen(
                 Text(
                     stringResource(R.string.provider_locations_empty),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -343,7 +343,7 @@ private fun ProviderLocationRowItem(
                 Text(
                     row.clientId,
                     style = TextStyle(fontSize = 11.sp, fontFamily = FontFamily.Monospace),
-                    color = if (selected) Color.White else TextFaint,
+                    color = if (selected) Color.White else AppTheme.textFaint,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     // fill = false: a short id keeps the badge snug against the
@@ -388,7 +388,7 @@ private fun ProviderLocationRowItem(
             Text(
                 coordinatesLabel(row),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 maxLines = 1,
             )
 
@@ -397,7 +397,7 @@ private fun ProviderLocationRowItem(
             Text(
                 formatConnectedDuration(context, row.connectedSinceMillis, nowMillis),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 maxLines = 1,
             )
 
@@ -425,7 +425,7 @@ private fun ProviderLocationRowItem(
                     Text(
                         stringResource(R.string.stay_on_this_exit_note),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted,
+                        color = AppTheme.textMuted,
                     )
                     TextButton(
                         onClick = onStay,
@@ -442,7 +442,7 @@ private fun ProviderLocationRowItem(
                     Text(
                         stringResource(R.string.staying_on_this_exit),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted,
+                        color = AppTheme.textMuted,
                     )
                 }
                 StayOnExitState.NONE -> {}
@@ -456,7 +456,7 @@ private fun ProviderLocationRowItem(
                 Icon(
                     Icons.Filled.Clear,
                     contentDescription = stringResource(id = R.string.remove),
-                    tint = TextMuted,
+                    tint = AppTheme.textMuted,
                 )
             }
         }
@@ -548,7 +548,7 @@ private fun ProviderExtenderLine(
         Text(
             extender.ip,
             style = TextStyle(fontSize = 11.sp, fontFamily = FontFamily.Monospace),
-            color = if (selected) Color.White else TextFaint,
+            color = if (selected) Color.White else AppTheme.textFaint,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -564,10 +564,10 @@ private fun IpFamilyTag(row: ProviderLocationRow) {
     Text(
         stringResource(ipFamilyTagResId(row)),
         style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-        color = TextMuted,
+        color = AppTheme.textMuted,
         maxLines = 1,
         modifier = Modifier
-            .background(MainBorderBase, RoundedCornerShape(4.dp))
+            .background(AppTheme.border, RoundedCornerShape(4.dp))
             .padding(horizontal = 5.dp, vertical = 1.dp),
     )
 }

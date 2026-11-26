@@ -1,6 +1,5 @@
 package com.bringyour.network.ui.connect
 
-import com.bringyour.network.ui.theme.TextMuted
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -33,6 +32,7 @@ import com.bringyour.network.ui.shared.models.ConnectStatus
 import com.bringyour.network.ui.shared.viewmodels.Plan
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.sdk.ContractStatus
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun ConnectStatusIndicator(
@@ -168,7 +168,7 @@ fun ConnectStatusIndicator(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = TextMuted,
+                    tint = AppTheme.textMuted,
                     modifier = Modifier.size(18.dp)
                 )
             }

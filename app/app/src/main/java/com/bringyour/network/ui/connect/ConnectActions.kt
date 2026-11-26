@@ -47,8 +47,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.bringyour.network.R
 import com.bringyour.network.ShownPlan
+import com.bringyour.network.ui.components.CircleImage
 import com.bringyour.network.ui.components.ShownPlanName
 import com.bringyour.network.ui.components.PlanAccountNameLine
+import com.bringyour.network.ui.components.rememberCountryFlag
 import com.bringyour.network.ui.Route
 import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.outOfBalanceKindText
@@ -68,15 +70,15 @@ import com.bringyour.network.ui.stats.DnsSettingsViewModel
 import com.bringyour.network.ui.stats.ThroughputViewModel
 import com.bringyour.network.ui.stats.dnsPresetName
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.Amber
 import com.bringyour.network.ui.theme.Red400
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.upgrade.PLAN_CHECKOUT_RIDES_TUNNEL
 import com.bringyour.sdk.ConnectLocation
 import kotlin.math.roundToInt
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 internal fun ConnectActions(
@@ -185,12 +187,11 @@ internal fun ConnectActions(
             .fillMaxWidth()
     ) {
 
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    MainTintedBackgroundBase,
+                    AppTheme.bgTinted,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(
@@ -539,7 +540,7 @@ internal fun ConnectActionNotices(
                 Text(
                     stringResource(id = R.string.insufficient_balance_refreshes_in, rememberFreeRefreshCountdown()),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     modifier = Modifier.weight(1f, fill = false)
                 )
                 Text(
@@ -562,7 +563,7 @@ internal fun ConnectActionNotices(
             Text(
                 outOfBalanceKindText,
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp)
@@ -575,7 +576,7 @@ internal fun ConnectActionNotices(
             Text(
                 stringResource(id = line),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp)
@@ -592,7 +593,7 @@ internal fun ConnectActionNotices(
             Text(
                 stringResource(id = R.string.insufficient_balance_disconnect_first_kill_switch),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp)
@@ -614,7 +615,7 @@ internal fun ConnectActionNotices(
                 Text(
                     stringResource(id = line),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 4.dp)
@@ -634,7 +635,7 @@ internal fun ConnectActionNotices(
                 Text(
                     stringResource(id = R.string.insufficient_balance_will_reconnect),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     modifier = Modifier
                         .weight(1f, fill = false)
                         .testTag("acceptance.insufficient_balance_will_reconnect")
@@ -663,7 +664,7 @@ internal fun ConnectActionNotices(
             Text(
                 stringResource(id = R.string.private_dns_strict_notice, privateDnsStrictHost),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp)
@@ -676,7 +677,7 @@ internal fun ConnectActionNotices(
                 Text(
                     stringResource(id = R.string.dns_private_dns_overrides_preset, privateDnsPresetName),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 4.dp)
@@ -720,7 +721,7 @@ internal fun DeviceDiscoverableLine(
                 stringResource(id = R.string.device_not_discoverable)
         },
         style = MaterialTheme.typography.bodyMedium,
-        color = TextMuted,
+        color = AppTheme.textMuted,
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp)
@@ -784,14 +785,14 @@ internal fun ConnectOptions(
                 Text(
                     stringResource(id = R.string.fixed_ip),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
                 // a Fixed IP window keeps its one exit for the session
                 // (connect stickyExit): no hourly rotation, no spare
                 Text(
                     stringResource(id = R.string.fixed_ip_subtitle),
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
 
@@ -820,7 +821,7 @@ internal fun ConnectOptions(
             Text(
                 stringResource(id = R.string.strong_anonymization),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
 
             /**
@@ -847,7 +848,7 @@ internal fun ConnectOptions(
             Text(
                 stringResource(id = R.string.post_quantum_encryption),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
 
             /**
@@ -880,7 +881,7 @@ internal fun ConnectPlanCard(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                MainTintedBackgroundBase,
+                AppTheme.bgTinted,
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(16.dp)
@@ -941,6 +942,17 @@ fun OpenProviderListButton(
         getLocationColor(key)
     }
 
+    // a selected country shows its circular flag, like the location list's
+    // rows; everything else (best available, a peer, a client id) keeps the
+    // globe
+    val countryFlagResourceId = rememberCountryFlag(
+        selectedLocation?.countryCode?.takeIf { it.isNotEmpty() }
+    )?.takeIf {
+        selectedPeerName == null &&
+            selectedLocation != null &&
+            !selectedLocation.connectLocationId.bestAvailable
+    }
+
     Row(
         modifier = modifier
             .padding(vertical = 4.dp)
@@ -960,12 +972,20 @@ fun OpenProviderListButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Icon(
-                painter = painterResource(id = R.drawable.main_nav_globe),
-                contentDescription = stringResource(id = R.string.select_location_provider_content_description),
-                tint = iconTint,
-                modifier = Modifier.size(36.dp)
-            )
+            if (countryFlagResourceId != null) {
+                CircleImage(
+                    size = 36.dp,
+                    imageResourceId = countryFlagResourceId,
+                    backgroundColor = Color.Transparent,
+                )
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.main_nav_globe),
+                    contentDescription = stringResource(id = R.string.select_location_provider_content_description),
+                    tint = iconTint,
+                    modifier = Modifier.size(36.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -973,7 +993,7 @@ fun OpenProviderListButton(
 
                 Text(
                     text,
-                    color = Color.White,
+                    color = AppTheme.textPrimary,
                     style = MaterialTheme.typography.bodyLarge,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -989,7 +1009,7 @@ fun OpenProviderListButton(
                                 providerCount,
                             ),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
 
@@ -1051,7 +1071,7 @@ fun NetworkPeersStatusLine(
                 peerCount,
             ),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
     }
 }

@@ -34,14 +34,14 @@ import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URDialog
 import com.bringyour.network.ui.connection_region.localizedCountryName
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.theme.gravityCondensedFamily
 import com.bringyour.network.utils.Ss58
 import com.bringyour.sdk.Sdk
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The Settlement v2 tile, under the v1 Unclaimed tile: per account Claimable
@@ -80,7 +80,7 @@ fun SnLedgerTileBlock(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MainTintedBackgroundBase, RoundedCornerShape(12.dp))
+            .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
         Text(
@@ -104,7 +104,7 @@ fun SnLedgerTileBlock(
                     Text(
                         stringResource(id = R.string.sn_ledger_claimable),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                     Text(
                         formatAlpha(tile.relayClaimableRao),
@@ -139,7 +139,7 @@ fun SnLedgerTileBlock(
                     Text(
                         stringResource(id = R.string.sn_ledger_claimable),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                     Text(
                         formatAlpha(account.claimableRao),
@@ -161,7 +161,7 @@ fun SnLedgerTileBlock(
                         Text(
                             stringResource(id = R.string.sn_ledger_pending, formatAlpha(it)),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
                 }
@@ -251,7 +251,7 @@ private fun LedgerAmountRow(label: String, amount: String, valueColor: Color = C
             .padding(vertical = 2.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(label, style = MaterialTheme.typography.bodyMedium, color = TextMuted)
+        Text(label, style = MaterialTheme.typography.bodyMedium, color = AppTheme.textMuted)
         Text(amount, style = MaterialTheme.typography.bodyMedium, color = valueColor)
     }
 }
@@ -267,8 +267,8 @@ private fun LedgerSpinner() {
     ) {
         CircularProgressIndicator(
             modifier = Modifier.size(16.dp),
-            color = TextMuted,
-            trackColor = TextFaint,
+            color = AppTheme.textMuted,
+            trackColor = AppTheme.textFaint,
             strokeWidth = 2.dp
         )
     }
@@ -312,7 +312,7 @@ fun SnLedgerClaimDialog(
             Text(
                 stringResource(id = R.string.sn_ledger_title),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -419,7 +419,7 @@ private fun LedgerReadyContent(
         LedgerUnavailableRows(state.unavailablePools, inView)
 
         Spacer(modifier = Modifier.height(12.dp))
-        HorizontalDivider(color = TextFaint)
+        HorizontalDivider(color = AppTheme.textFaint)
         Spacer(modifier = Modifier.height(12.dp))
 
         state.gasKey?.let { gasKey ->
@@ -436,7 +436,7 @@ private fun LedgerReadyContent(
         Text(
             stringResource(id = R.string.claim_sends_from_device),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -474,7 +474,7 @@ private fun LedgerAccountRows(
             Text(
                 stringResource(id = R.string.sn_ledger_pool_under_floor),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
     }
@@ -487,7 +487,7 @@ private fun LedgerUnavailableRows(unavailablePools: List<SnLedgerPool>, inView: 
         LedgerAmountRow(
             snLedgerPoolNameText(snLedgerPoolName(pool, inView)),
             stringResource(id = R.string.sn_ledger_pool_unavailable),
-            valueColor = TextMuted
+            valueColor = AppTheme.textMuted
         )
     }
 }
@@ -542,7 +542,7 @@ private fun LedgerProgressContent(
                         Text(
                             formatAlpha(p.amountRao),
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
                     if (p.status == SnLedgerClaimStatus.FAILED && !p.message.isNullOrBlank()) {
@@ -558,7 +558,7 @@ private fun LedgerProgressContent(
                         Text(
                             stringResource(id = res),
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
                     // nothing was sent for it: the gas key needs topping up to claim it
@@ -566,7 +566,7 @@ private fun LedgerProgressContent(
                         Text(
                             stringResource(id = R.string.add_tao_for_gas),
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
                 }
@@ -593,7 +593,7 @@ private fun LedgerProgressContent(
 
         confirmedRao?.let {
             Spacer(modifier = Modifier.height(8.dp))
-            HorizontalDivider(color = TextFaint)
+            HorizontalDivider(color = AppTheme.textFaint)
             Spacer(modifier = Modifier.height(8.dp))
             LedgerAmountRow(stringResource(id = R.string.claim_confirmed), formatAlpha(it), valueColor = Green)
         }

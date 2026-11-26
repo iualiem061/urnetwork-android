@@ -35,8 +35,9 @@ import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.openSupportUri
 import com.bringyour.network.ui.components.supportLinkSpans
 import com.bringyour.network.ui.theme.Pink
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.Yellow
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun ApiErrorScreen(
@@ -53,7 +54,7 @@ fun ApiErrorScreen(
     )
 
     val supportAnnotatedString = buildAnnotatedString {
-        withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle().copy(color = TextMuted)) {
+        withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle().copy(color = AppTheme.textMuted)) {
             append(supportFullText)
             // a link text missing from a translation gets no span instead of a negative range
             for (span in supportLinkSpans(supportFullText, SupportContact.apiErrorLinks)) {
@@ -64,7 +65,6 @@ fun ApiErrorScreen(
     }
 
     var layoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
-
 
     Scaffold() { innerPadding ->
 

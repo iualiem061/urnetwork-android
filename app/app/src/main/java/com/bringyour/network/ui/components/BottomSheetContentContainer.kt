@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.bringyour.network.ui.theme.MainBorderBase
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun BottomSheetContentContainer(
@@ -35,7 +35,7 @@ fun BottomSheetContentContainer(
             .offset(y = 1.dp)
             .border(
                 1.dp,
-                MainBorderBase,
+                AppTheme.border,
                 shape = RoundedCornerShape(
                     topStart = 12.dp,
                     topEnd = 12.dp,

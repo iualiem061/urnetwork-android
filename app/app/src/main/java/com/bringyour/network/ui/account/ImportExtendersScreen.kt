@@ -60,9 +60,9 @@ import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URDialog
 import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.components.tabletReadableColumn
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Import extenders (EXTENDER.md K7, K8): a scanned code, a chosen photo or
@@ -165,11 +165,11 @@ fun ImportExtendersScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         Column(
@@ -278,7 +278,7 @@ fun ImportExtendersScreen(
                         Text(
                             stringResource(id = R.string.import_extenders_control_doh_urls, servers),
                             style = TextStyle(fontSize = 12.sp),
-                            color = TextMuted,
+                            color = AppTheme.textMuted,
                         )
                     }
                 }
@@ -294,7 +294,7 @@ fun ImportExtendersScreen(
                             step.networkHost,
                         ),
                         style = TextStyle(fontSize = 12.sp),
-                        color = TextMuted,
+                        color = AppTheme.textMuted,
                     )
                 }
 
@@ -332,7 +332,7 @@ fun ImportExtendersScreen(
                 Text(
                     line,
                     style = TextStyle(fontSize = 12.sp),
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                 )
             }
 

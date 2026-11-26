@@ -58,13 +58,13 @@ import com.bringyour.network.location.openDeveloperOptions
 import com.bringyour.network.location.openLocationSettings
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URSwitch
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.utils.lighten
 import com.bringyour.network.ui.components.tabletReadableColumn
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Walks the user through making URnetwork the Android mock location app.
@@ -138,10 +138,10 @@ fun MockLocationGuideScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Black),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = AppTheme.bg),
             )
         },
-        containerColor = Black,
+        containerColor = AppTheme.bg,
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -179,7 +179,7 @@ fun MockLocationGuideScreen(
                         Text(
                             stringResource(id = R.string.mock_location_error_stuck_detail),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White,
+                            color = AppTheme.textPrimary,
                         )
                         Spacer(modifier = Modifier.height(14.dp))
                         URButton(
@@ -295,19 +295,19 @@ fun MockLocationGuideScreen(
             Text(
                 stringResource(id = R.string.mock_location_disclosure_device_wide),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 stringResource(id = R.string.mock_location_disclosure_detectable),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 stringResource(id = R.string.mock_location_disclosure_turn_off_first),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -336,7 +336,7 @@ private fun GuideStep(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                MainTintedBackgroundBase.lighten(0.1f),
+                AppTheme.bgTinted.lighten(0.1f),
                 shape = RoundedCornerShape(12.dp),
             )
             .padding(16.dp),
@@ -356,7 +356,7 @@ private fun GuideStep(
                 Text(
                     text,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (done) TextMuted else Color.White,
+                    color = if (done) AppTheme.textMuted else Color.White,
                 )
             }
 

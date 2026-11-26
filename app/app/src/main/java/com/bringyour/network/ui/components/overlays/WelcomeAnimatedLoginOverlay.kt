@@ -35,10 +35,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import kotlinx.coroutines.delay
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun WelcomeAnimatedOverlayLogin() {
@@ -89,7 +89,7 @@ fun WelcomeAnimatedOverlayLogin() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MainTintedBackgroundBase)
+                .background(AppTheme.bgTinted)
                 .pointerInput(Unit) {
                     // Intercept all touch events
                     // fixes a bug where account switcher was being toggled
@@ -126,7 +126,7 @@ fun WelcomeAnimatedOverlayLogin() {
                         .fillMaxWidth()
                         .height(verticalBarSize + 2.dp) // add pixels to avoid bar spacing
                         .align(Alignment.TopCenter)
-                        .background(Black)
+                        .background(AppTheme.bg)
                 )
 
                 // Bottom bar
@@ -135,7 +135,7 @@ fun WelcomeAnimatedOverlayLogin() {
                         .fillMaxWidth()
                         .height(verticalBarSize + 2.dp)
                         .align(Alignment.BottomCenter)
-                        .background(Black)
+                        .background(AppTheme.bg)
                 )
 
                 // Left bar
@@ -144,7 +144,7 @@ fun WelcomeAnimatedOverlayLogin() {
                         .width(horizontalBarSize + 2.dp)
                         .height(scaledSize)
                         .align(Alignment.CenterStart)
-                        .background(Black)
+                        .background(AppTheme.bg)
                 )
 
                 // Right bar
@@ -153,7 +153,7 @@ fun WelcomeAnimatedOverlayLogin() {
                         .width(horizontalBarSize + 2.dp)
                         .height(scaledSize)
                         .align(Alignment.CenterEnd)
-                        .background(Black)
+                        .background(AppTheme.bg)
                 )
 
                 // Centered mask

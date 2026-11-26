@@ -22,13 +22,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.theme.ppNeueBitBold
+import com.bringyour.network.ui.theme.AppTheme
 
 enum class ButtonStyle {
     PRIMARY, SECONDARY, OUTLINE, WARNING,
@@ -64,7 +64,7 @@ fun URButton(
         )
         ButtonStyle.OUTLINE -> ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
-            contentColor = TextMuted
+            contentColor = AppTheme.textMuted
         )
         ButtonStyle.WARNING -> ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
@@ -72,9 +72,9 @@ fun URButton(
         )
         ButtonStyle.DESTRUCTIVE -> ButtonDefaults.buttonColors(
             containerColor = Red,
-            contentColor = Black,
+            contentColor = AppTheme.bg,
             disabledContainerColor = Red.copy(alpha = 0.4f),
-            disabledContentColor = Black.copy(alpha = 0.6f),
+            disabledContentColor = AppTheme.bg.copy(alpha = 0.6f),
         )
     }
 
@@ -90,7 +90,7 @@ fun URButton(
             .border(1.dp, Red, RoundedCornerShape(12.dp))
         ButtonStyle.OUTLINE -> when(enabled) {
             true -> Modifier
-                .border(1.dp, borderColor ?: TextFaint, RoundedCornerShape(12.dp))
+                .border(1.dp, borderColor ?: AppTheme.textFaint, RoundedCornerShape(12.dp))
             false -> Modifier
         }
     }
@@ -125,7 +125,7 @@ fun URButton(
                         .padding(end = 4.dp)
                         .size(24.dp),
                     color = MaterialTheme.colorScheme.secondary,
-                    trackColor = TextMuted,
+                    trackColor = AppTheme.textMuted,
                 )
             }
         }

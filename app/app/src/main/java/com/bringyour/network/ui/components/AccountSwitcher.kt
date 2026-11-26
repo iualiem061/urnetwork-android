@@ -66,12 +66,13 @@ import androidx.compose.ui.graphics.Color
 import com.bringyour.network.ui.theme.ProGold
 import com.bringyour.network.ui.theme.ProGoldLight
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.MainBorderBase
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.wallet.BittensorKeyScreenRequests
 import com.bringyour.network.ui.wallet.BittensorKeySignOut
 import com.bringyour.network.ui.wallet.BittensorKeySignOutDialog
 import com.bringyour.network.utils.isTv
+import com.bringyour.network.ui.theme.AppTheme
 
 enum class LoginMode {
     Guest, Authenticated
@@ -302,12 +303,12 @@ fun PopupActionRow(
 ) {
 
     var isFocused by remember { mutableStateOf(false) }
-    val isFocusedBgColor = MainBorderBase.copy(alpha = 0.6f)
+    val isFocusedBgColor = AppTheme.border.copy(alpha = 0.6f)
     val bgColor = animateColorAsState(
         targetValue = if (isFocused) {
             isFocusedBgColor
         } else {
-            MainBorderBase
+            AppTheme.border
         }, label = ""
     )
 

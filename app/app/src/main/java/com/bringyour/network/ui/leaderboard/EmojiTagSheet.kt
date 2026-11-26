@@ -44,12 +44,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.emoji2.emojipicker.EmojiPickerView
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.MainBorderBase
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.TextDanger
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.ppNeueBitBold
 import com.bringyour.sdk.Sdk
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The emoji tag editor. The tag is typed on an emoji-only keyboard
@@ -130,7 +130,7 @@ fun EmojiTagSheet(
             Text(
                 stringResource(id = R.string.emoji_tag_hint, maxCount),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -145,7 +145,7 @@ fun EmojiTagSheet(
                         .weight(1f)
                         .heightIn(min = 56.dp)
                         .background(
-                            color = MainTintedBackgroundBase,
+                            color = AppTheme.bgTinted,
                             shape = RoundedCornerShape(12.dp)
                         )
                         .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -186,7 +186,7 @@ fun EmojiTagSheet(
             Text(
                 supportingText,
                 style = MaterialTheme.typography.bodySmall,
-                color = if (showsError || saveError != null) TextDanger else TextMuted
+                color = if (showsError || saveError != null) TextDanger else AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -223,7 +223,7 @@ fun EmojiTagSheet(
                     .fillMaxWidth()
                     .height(320.dp)
                     .background(
-                        color = MainBorderBase,
+                        color = AppTheme.border,
                         shape = RoundedCornerShape(12.dp)
                     )
             )

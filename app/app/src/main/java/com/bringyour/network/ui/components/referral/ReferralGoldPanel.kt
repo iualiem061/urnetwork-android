@@ -60,17 +60,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.SectionLoadError
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueLight
 import com.bringyour.network.ui.theme.Green
 import com.bringyour.network.ui.theme.ReferralGold
 import com.bringyour.network.ui.theme.ReferralGoldInk
 import com.bringyour.network.ui.theme.ReferralGoldLight
 import com.bringyour.network.ui.theme.ReferralGoldPale
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.theme.URNetworkTheme
 import kotlinx.coroutines.delay
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The ur.io referral panel (react/src/components/ReferralPanel.jsx, its
@@ -112,6 +113,8 @@ fun ReferralGoldPanel(
 
     val shape = RoundedCornerShape(20.dp)
     val borderAlpha = if (crowned) 0.75f else 0.4f
+    // read in composition (the draw lambda cannot) for the panel's ground
+    val panelGround = AppTheme.bg
 
     Box(
         modifier = modifier
@@ -125,7 +128,7 @@ fun ReferralGoldPanel(
             .clip(shape)
             .drawBehind {
                 // opaque ground so the aura never shows what is behind the panel
-                drawRect(Black)
+                drawRect(panelGround)
                 drawRect(ReferralGold.copy(alpha = 0.04f))
                 // the top-left gold wash
                 drawRect(
@@ -186,7 +189,7 @@ fun ReferralGoldPanel(
                     stringResource(id = R.string.referral_panel_heading)
                 },
                 style = TopBarTitleTextStyle.copy(lineHeight = 28.sp),
-                color = Color.White,
+                color = AppTheme.textPrimary,
                 textAlign = TextAlign.Center
             )
 
@@ -232,7 +235,7 @@ fun ReferralGoldPanel(
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
                     color = ReferralGoldLight,
-                    trackColor = TextMuted,
+                    trackColor = AppTheme.textMuted,
                 )
             }
 
@@ -449,7 +452,7 @@ fun ReferralGoldCodeCopyPill(
 @Composable
 private fun ReferralGoldPanelPreview() {
     URNetworkTheme {
-        Box(modifier = Modifier.background(Black).padding(16.dp)) {
+        Box(modifier = Modifier.background(AppTheme.bg).padding(16.dp)) {
             ReferralGoldPanel(
                 referralCode = "asdlfkjsldkfjsdf",
                 totalReferrals = 0
@@ -462,7 +465,7 @@ private fun ReferralGoldPanelPreview() {
 @Composable
 private fun ReferralGoldPanelCrownedPreview() {
     URNetworkTheme {
-        Box(modifier = Modifier.background(Black).padding(16.dp)) {
+        Box(modifier = Modifier.background(AppTheme.bg).padding(16.dp)) {
             ReferralGoldPanel(
                 referralCode = "asdlfkjsldkfjsdf",
                 totalReferrals = 4

@@ -55,12 +55,13 @@ import com.bringyour.network.ui.components.URDialog
 import com.bringyour.network.ui.theme.Amber
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.Sdk
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 /*
  * The payout key's part of the payout card, and the banner above Earnings,
@@ -135,7 +136,7 @@ fun BittensorFundsDisclaimerText(
             .then(
                 if (boxed) {
                     Modifier
-                        .background(MainTintedBackgroundBase, RoundedCornerShape(8.dp))
+                        .background(AppTheme.bgTinted, RoundedCornerShape(8.dp))
                         .padding(12.dp)
                 } else {
                     Modifier
@@ -148,7 +149,7 @@ fun BittensorFundsDisclaimerText(
         Icon(
             Icons.Outlined.GppGood,
             contentDescription = null,
-            tint = TextMuted,
+            tint = AppTheme.textMuted,
             modifier = Modifier.size(18.dp),
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -212,7 +213,7 @@ fun BittensorKeyNoConsentBody(
                 Text(
                     stringResource(id = R.string.bittensor_key_setting_up),
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                 )
             }
             BittensorKeyCardLink(
@@ -365,7 +366,7 @@ fun BittensorKeyBackupBanner(onOpen: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(MainTintedBackgroundBase)
+            .background(AppTheme.bgTinted)
             .border(1.dp, Amber.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
             .clickable(onClick = onOpen)
             .padding(16.dp)
@@ -388,14 +389,14 @@ fun BittensorKeyBackupBanner(onOpen: () -> Unit) {
             Text(
                 stringResource(id = R.string.bittensor_key_banner_body),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
         Icon(
             Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
-            tint = TextMuted,
+            tint = AppTheme.textMuted,
         )
     }
 }
@@ -422,7 +423,7 @@ private fun BittensorKeyChangeWalletButton(enabled: Boolean, processing: Boolean
     Text(
         stringResource(id = R.string.sn_consent_change_note),
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted,
+        color = AppTheme.textMuted,
     )
 }
 
@@ -442,7 +443,7 @@ fun BittensorKeyCardBody(text: String) {
     Text(
         text,
         style = MaterialTheme.typography.bodyMedium,
-        color = TextMuted,
+        color = AppTheme.textMuted,
     )
 }
 
@@ -462,7 +463,7 @@ fun BittensorKeyCardLink(
             .padding(vertical = 4.dp)
             .testTag(testTag),
         style = MaterialTheme.typography.bodyMedium,
-        color = if (enabled) BlueMedium else TextMuted,
+        color = if (enabled) BlueMedium else AppTheme.textMuted,
     )
 }
 
@@ -502,7 +503,7 @@ fun BittensorKeyAddressRow(address: String, shortSs58: (String) -> String) {
             Icon(
                 if (copied) Icons.Filled.Check else Icons.Filled.ContentCopy,
                 contentDescription = stringResource(id = R.string.copy),
-                tint = TextMuted,
+                tint = AppTheme.textMuted,
                 modifier = Modifier.size(16.dp),
             )
         }
@@ -530,7 +531,7 @@ fun BittensorKeyStatusRow(
             Icon(
                 icon,
                 contentDescription = null,
-                tint = TextMuted,
+                tint = AppTheme.textMuted,
                 modifier = Modifier.size(18.dp),
             )
         }
@@ -653,7 +654,7 @@ fun BittensorKeyChangeWalletOffer(
     Text(
         stringResource(id = R.string.bittensor_key_create_here_body),
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted,
+        color = AppTheme.textMuted,
     )
     Spacer(modifier = Modifier.height(12.dp))
     BittensorFundsDisclaimerText(disclaimer = fundsDisclaimer, boxed = true)

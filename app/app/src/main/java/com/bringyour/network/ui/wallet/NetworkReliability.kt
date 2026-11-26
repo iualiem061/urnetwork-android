@@ -41,16 +41,16 @@ import com.bringyour.network.ui.components.ChartKey
 import com.bringyour.network.ui.components.buttonTextStyle
 import com.bringyour.network.ui.theme.Green
 import com.bringyour.network.ui.theme.HeadingLargeCondensed
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.OffWhite
+
 import com.bringyour.network.ui.theme.Pink
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.utils.sdkFloat64ListToArray
 import com.bringyour.network.utils.sdkIntListToArray
 import com.bringyour.sdk.CountryMultiplier
 import com.bringyour.sdk.ReliabilityWindow
 import java.util.Locale
 import kotlin.math.ceil
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun NetworkReliability(
@@ -83,7 +83,7 @@ fun NetworkReliability(
         modifier =
             Modifier
                 .background(
-                    color = MainTintedBackgroundBase,
+                    color = AppTheme.bgTinted,
                     shape = RoundedCornerShape(12.dp)
                 )
                 //  .padding(16.dp)
@@ -119,7 +119,7 @@ fun NetworkReliability(
             ) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
         }
@@ -154,13 +154,13 @@ private fun CountryMultipliers(
             Text(
                 stringResource(id = R.string.country),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             Text(
                 stringResource(id = R.string.multiplier),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
         }
@@ -178,7 +178,7 @@ private fun CountryMultipliers(
                     countryMultiplier.country,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = if (countryMultiplier.reliabilityMultiplier >= highlightMultiplierThreshold) FontWeight.Bold else FontWeight.Normal,
-                    color = if (countryMultiplier.reliabilityMultiplier >= highlightMultiplierThreshold) Green else OffWhite
+                    color = if (countryMultiplier.reliabilityMultiplier >= highlightMultiplierThreshold) Green else AppTheme.textPrimary
                 )
 
                 Row {
@@ -187,7 +187,7 @@ private fun CountryMultipliers(
                         String.format(Locale.US, "x%,.2f",countryMultiplier.reliabilityMultiplier),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = if (countryMultiplier.reliabilityMultiplier >= highlightMultiplierThreshold) FontWeight.Bold else FontWeight.Normal,
-                        color = if (countryMultiplier.reliabilityMultiplier >= highlightMultiplierThreshold) Green else OffWhite
+                        color = if (countryMultiplier.reliabilityMultiplier >= highlightMultiplierThreshold) Green else AppTheme.textPrimary
                     )
 
                 }
@@ -240,8 +240,9 @@ private fun NetworkReliabilityChart(reliabilityWindow: ReliabilityWindow) {
 
     val weightsColor = remember { Pink.copy(alpha = 0.6f) }
     val clientsColor = remember { Green }
-    val gridLineColor = remember { TextMuted.copy(alpha = 0.5f) }
-    val averageLineColor = remember { TextMuted }
+    val chartMutedColor = AppTheme.textMuted
+    val gridLineColor = remember(chartMutedColor) { chartMutedColor.copy(alpha = 0.5f) }
+    val averageLineColor = chartMutedColor
     val rightPadding = 50f
 
     val weightsData = remember(weights) { weights.map { it.toFloat() } }
@@ -252,7 +253,7 @@ private fun NetworkReliabilityChart(reliabilityWindow: ReliabilityWindow) {
 
     val textPaint = remember {
         android.graphics.Paint().apply {
-            color = android.graphics.Color.parseColor("#989898") // TextMuted
+            color = android.graphics.Color.parseColor("#989898") // AppTheme.textMuted
             textSize = 28f
             textAlign = android.graphics.Paint.Align.LEFT
         }
@@ -262,7 +263,7 @@ private fun NetworkReliabilityChart(reliabilityWindow: ReliabilityWindow) {
         Text(
             stringResource(id = R.string.average_reliability),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Text("${String.format(Locale.US, "%,.2f", mean.doubleValue)}", style = HeadingLargeCondensed)

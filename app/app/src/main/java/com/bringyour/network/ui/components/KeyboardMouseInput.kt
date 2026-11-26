@@ -56,10 +56,11 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import com.bringyour.network.ui.theme.BlueLight
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Red
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 /*
  * Keyboard, mouse and trackpad support, after Tier 2 of Google's adaptive app
@@ -298,7 +299,7 @@ fun ContextMenuBox(
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    containerColor = MainTintedBackgroundBase,
+                    containerColor = AppTheme.bgTinted,
                 ) {
                     val firstItem = remember { FocusRequester() }
                     items.forEachIndexed { index, item ->

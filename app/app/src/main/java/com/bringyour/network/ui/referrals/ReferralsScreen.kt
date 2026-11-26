@@ -61,16 +61,15 @@ import com.bringyour.network.ui.settings.SettingsViewModel
 import com.bringyour.network.ui.shared.models.SectionLoad
 import com.bringyour.network.ui.shared.models.referralStatLoads
 import com.bringyour.network.ui.settings.updateReferralNetworkBottomSheet.UpdateReferralNetworkBottomSheet
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.HeadingLargeCondensed
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.wallet.EarningsFormat
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 internal const val ACCEPTANCE_REFERRALS_ADD_CODE_TAG = "acceptance.referrals.addCode"
 
@@ -204,7 +203,7 @@ fun ReferralsScreenContent(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
                 actions = {},
             )
@@ -240,7 +239,7 @@ fun ReferralsScreenContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MainTintedBackgroundBase, RoundedCornerShape(12.dp))
+                    .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
                     .padding(16.dp)
             ) {
                 ReferralStatColumn(
@@ -260,7 +259,7 @@ fun ReferralsScreenContent(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-            HorizontalDivider(color = TextFaint)
+            HorizontalDivider(color = AppTheme.textFaint)
             Spacer(modifier = Modifier.height(16.dp))
 
             /**
@@ -318,7 +317,7 @@ private fun ReferralStatColumn(
         Text(
             label,
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
         if (load == SectionLoad.Loaded) {
             Text(value, style = HeadingLargeCondensed)
@@ -328,7 +327,7 @@ private fun ReferralStatColumn(
             Text(
                 "\u2014",
                 style = HeadingLargeCondensed,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 modifier = Modifier.semantics { contentDescription = loadFailed }
             )
             TextButton(
@@ -344,8 +343,8 @@ private fun ReferralStatColumn(
             Spacer(modifier = Modifier.height(6.dp))
             CircularProgressIndicator(
                 modifier = Modifier.size(16.dp),
-                color = TextMuted,
-                trackColor = TextFaint,
+                color = AppTheme.textMuted,
+                trackColor = AppTheme.textFaint,
                 strokeWidth = 2.dp
             )
         }

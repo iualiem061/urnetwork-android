@@ -57,10 +57,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.focusRing
 import com.bringyour.network.ui.shared.models.ConnectStatus
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.theme.ppNeueBitBold
 import com.bringyour.network.utils.isTv
@@ -70,6 +70,7 @@ import com.bringyour.sdk.ProviderGridPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun ConnectButton(
@@ -97,7 +98,6 @@ fun ConnectButton(
 
     var currentStatus by remember { mutableStateOf<ConnectStatus?>(null) }
     var disconnectedVisible by remember { mutableStateOf(true) }
-
 
     LaunchedEffect(updatedStatus) {
 
@@ -152,7 +152,6 @@ fun ConnectButton(
                 .zIndex(0f)
         ) {
 
-
             AnimatedVisibility(
                 visible = disconnectedVisible && !insufficientBalance && !isPollingSubscriptionBalance,
                 enter = fadeIn(),
@@ -178,7 +177,7 @@ fun ConnectButton(
                     Icon(
                         painter = painterResource(id = R.drawable.icon_warning),
                         contentDescription = null,
-                        tint = TextMuted
+                        tint = AppTheme.textMuted
                     )
                 }
             }
@@ -205,7 +204,7 @@ fun ConnectButton(
                     Icon(
                         painter = painterResource(id = R.drawable.icon_warning),
                         contentDescription = null,
-                        tint = TextMuted
+                        tint = AppTheme.textMuted
                     )
                 }
             }
@@ -278,7 +277,6 @@ private fun ConnectingButtonContent(
         }
 
     }
-
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -458,7 +456,6 @@ fun GridCanvas(
             }
         }
 
-
         //
         // disconnect
         //
@@ -537,10 +534,8 @@ fun GridCanvas(
 
         providerGridPoints.values.forEach { point ->
 
-
             var animatedPoint = animatedPoints[point.clientId]
             val newState = ProviderPointState.fromString(point.state) ?: return@forEach
-
 
             if (animatedPoint == null) {
                 val done =
@@ -722,7 +717,7 @@ fun GridCanvas(
                     Icon(
                         painter = painterResource(id = R.drawable.icon_warning),
                         contentDescription = null,
-                        tint = TextMuted
+                        tint = AppTheme.textMuted
                     )
                 }
             }
@@ -750,7 +745,7 @@ private fun DisconnectedButtonContent() {
                 lineHeight = 20.sp,
                 fontFamily = ppNeueBitBold,
                 fontWeight = FontWeight(700),
-                color = Color.White
+                color = AppTheme.textPrimary
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -763,6 +758,8 @@ private fun DisconnectedButtonContent() {
 fun TapToConnectAnimation() {
 
     val initialSize = 56f
+    // the ring's inner circle, in the theme's background color
+    val pulseGround = AppTheme.bg
     val targetSize = 82f
     val progress = remember { Animatable(0f) }
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -798,7 +795,7 @@ fun TapToConnectAnimation() {
             radius = (frame.diameter / 2f).dp.toPx(),
         )
         drawCircle(color = BlueMedium, radius = 28.dp.toPx())
-        drawCircle(color = Black, radius = 26.dp.toPx())
+        drawCircle(color = pulseGround, radius = 26.dp.toPx())
         drawCircle(color = BlueMedium, radius = 24.dp.toPx())
     }
 }
@@ -819,7 +816,6 @@ internal fun tapToConnectPulseFrame(
         alpha = 1f - boundedProgress,
     )
 }
-
 
 @Preview
 @Composable

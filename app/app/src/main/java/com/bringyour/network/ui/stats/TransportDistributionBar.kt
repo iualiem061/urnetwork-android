@@ -55,14 +55,12 @@ import androidx.compose.ui.unit.sp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.SkeletonGroup
 import com.bringyour.network.ui.components.SkeletonText
-import com.bringyour.network.ui.theme.MainBorderBase
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.max
 import kotlin.math.min
+import com.bringyour.network.ui.theme.AppTheme
 
 // the app's general tween: segment resizing, legend, and the empty fade
 private const val TRANSPORT_TWEEN_MILLIS = 1000
@@ -151,12 +149,12 @@ fun TransportDistributionBar(
             Text(
                 stringResource(id = R.string.transports),
                 style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Icon(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = TextFaint,
+                tint = AppTheme.textFaint,
                 modifier = Modifier.size(14.dp)
             )
         }
@@ -167,7 +165,7 @@ fun TransportDistributionBar(
                 .fillMaxWidth()
                 .height(BAR_HEIGHT)
                 .clip(RoundedCornerShape(BAR_HEIGHT / 2))
-                .background(MainBorderBase)
+                .background(AppTheme.border)
         ) {
             Canvas(
                 modifier = Modifier
@@ -180,7 +178,7 @@ fun TransportDistributionBar(
                 drawTransportSegments(
                     boundaries = boundaryTween.current(),
                     colors = colors,
-                    separatorColor = MainTintedBackgroundBase,
+                    separatorColor = AppTheme.bgTinted,
                 )
             }
         }
@@ -241,7 +239,7 @@ private fun TransportPlaceholderRow() {
                     Box(
                         modifier = Modifier
                             .size(6.dp)
-                            .background(MainBorderBase, CircleShape)
+                            .background(AppTheme.border, CircleShape)
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     SkeletonText(transportType.label(), style = style)
@@ -319,14 +317,14 @@ private fun LegendItem(
         Text(
             share.transportType.label(share.h1PlusActive),
             style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-            color = Color.White
+            color = AppTheme.textPrimary
         )
         Spacer(modifier = Modifier.width(5.dp))
         Text(
             percentLabel,
             // tabular digits so the roll does not shift the row
             style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium, fontFeatureSettings = "tnum"),
-            color = TextMuted
+            color = AppTheme.textMuted
         )
     }
 }
@@ -347,7 +345,7 @@ private fun UnusedRow(shares: List<TransportShareUi>) {
         Text(
             stringResource(id = R.string.transport_unused),
             style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-            color = TextFaint,
+            color = AppTheme.textFaint,
             modifier = Modifier.padding(end = ITEM_SPACING)
         )
         for (share in shares) {
@@ -371,7 +369,7 @@ private fun UnusedRow(shares: List<TransportShareUi>) {
                     Text(
                         share.transportType.label(share.h1PlusActive),
                         style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-                        color = TextFaint
+                        color = AppTheme.textFaint
                     )
                 }
             }

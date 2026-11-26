@@ -67,7 +67,7 @@ import com.bringyour.network.ui.components.stackedSplit
 import com.bringyour.network.ui.stats.AppSplitRulesPanel
 import com.bringyour.network.ui.stats.ConnectStatsTiles
 import com.bringyour.network.ui.stats.dnsPresetName
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -128,8 +128,7 @@ import com.bringyour.network.ui.shared.models.ConnectStatus
 import com.bringyour.network.ui.shared.viewmodels.OverlayViewModel
 import com.bringyour.network.ui.shared.viewmodels.Plan
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.SheetBlack
+
 import com.bringyour.sdk.ContractStatus
 import com.bringyour.sdk.DeviceLocal
 import kotlinx.coroutines.delay
@@ -138,6 +137,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.math.abs
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -215,7 +215,6 @@ fun ConnectScreen(
     val setPromptSolanaReview: (Boolean) -> Unit = {
         promptSolanaReview = it
     }
-
 
     val reviewManagerRequest = rememberReviewManager()
     val context = LocalContext.current
@@ -550,7 +549,7 @@ fun ConnectScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(SheetBlack)
+                            .background(AppTheme.sheet)
                             .onGloballyPositioned {
                                 locationPaneOnScreen = Rect(it.positionOnScreen(), it.size.toSize())
                             }
@@ -610,7 +609,7 @@ fun ConnectScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(SheetBlack)
+                            .background(AppTheme.sheet)
                             .onGloballyPositioned {
                                 locationPaneOnScreen = Rect(it.positionOnScreen(), it.size.toSize())
                             }
@@ -630,7 +629,7 @@ fun ConnectScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(MainTintedBackgroundBase, RoundedCornerShape(12.dp))
+                                    .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
                                     .padding(horizontal = 16.dp, vertical = 8.dp)
                             ) {
                                 OpenProviderListButton(
@@ -654,7 +653,7 @@ fun ConnectScreen(
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(MainTintedBackgroundBase, RoundedCornerShape(12.dp))
+                                    .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
                                     // the last option switch's 48 dp touch target
                                     // fills the rest of the bottom
                                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 2.dp)
@@ -831,9 +830,6 @@ fun ConnectScreen(
                         connectViewModel.disconnect()
                         setLocationPickerOpen(false)
                     },
-                    locationPings = locationsViewModel.locationPings.toMap(),
-                    onTestPings = { locationsViewModel.testLocationPings() },
-                    pingTestRunning = locationsViewModel.pingTestRunning,
                 )
             }
         }
@@ -1041,7 +1037,7 @@ fun ConnectActionsSheetScaffold(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Black)
+                .background(AppTheme.bg)
         ) {
             Box(
                 modifier = Modifier
@@ -1135,7 +1131,7 @@ fun ConnectActionsSheetScaffold(
                         }
                     },
                 shape = BottomSheetDefaults.ExpandedShape,
-                color = SheetBlack,
+                color = AppTheme.sheet,
                 shadowElevation = 1.dp,
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {

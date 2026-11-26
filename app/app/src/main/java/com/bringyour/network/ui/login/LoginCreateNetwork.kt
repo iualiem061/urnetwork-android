@@ -71,7 +71,7 @@ import com.bringyour.network.ui.components.referral.ReferralCodeInput
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.TextUnit
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.wallet.bittensorSignatureMismatchText
 import com.bringyour.network.ui.wallet.bittensorSignatureMismatchWallet
@@ -79,6 +79,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.bringyour.network.ui.components.overlays.WelcomeAnimatedOverlayLogin
+import com.bringyour.network.ui.theme.AppTheme
 
 // Base class with common parameters
 open class CommonLoginParams(
@@ -433,7 +434,7 @@ fun LoginCreateNetwork(
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Black
+                        containerColor = AppTheme.bg
                     ),
                     actions = {},
                 )
@@ -497,7 +498,6 @@ fun LoginCreateNetwork(
             }
         }
     }
-
 
     if (welcomeOverlayVisible) {
         WelcomeAnimatedOverlayLogin()
@@ -617,7 +617,6 @@ private fun NetworkCreateForm(
                     modifier = Modifier.testTag("acceptance.create.password")
                 )
             }
-
 
             Spacer(modifier = Modifier.height(16.dp))
 

@@ -40,12 +40,12 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.components.redeemTransferBalanceCode.RedeemTransferBalanceCodeSheet
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.utils.formatBalanceBytes
 import com.bringyour.sdk.RedeemedBalanceCode
 import com.bringyour.sdk.Sdk
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,7 +85,7 @@ fun BalanceCodesScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
                 actions = {
                     IconButton(onClick = {
@@ -99,7 +99,7 @@ fun BalanceCodesScreen(
                 },
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { padding ->
 
         Box(
@@ -162,7 +162,7 @@ private fun BalanceCodesTable(
                     Text(
                         stringResource(id = R.string.no_redeemed_balance_codes_found),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
             }
@@ -183,28 +183,28 @@ private fun BalanceCodesTable(
                         Text(
                             stringResource(id = R.string.balance_code),
                             modifier = Modifier.weight(1f),
-                            color = TextMuted,
+                            color = AppTheme.textMuted,
                             style = MaterialTheme.typography.labelMedium
                         )
 
                         Text(
                             stringResource(id = R.string.data),
                             modifier = Modifier.weight(1f),
-                            color = TextMuted,
+                            color = AppTheme.textMuted,
                             style = MaterialTheme.typography.labelMedium
                         )
 
                         Text(
                             stringResource(id = R.string.redeemed),
                             modifier = Modifier.weight(1f),
-                            color = TextMuted,
+                            color = AppTheme.textMuted,
                             style = MaterialTheme.typography.labelMedium
                         )
 
                         Text(
                             stringResource(id = R.string.expires),
                             modifier = Modifier.weight(1f),
-                            color = TextMuted,
+                            color = AppTheme.textMuted,
                             style = MaterialTheme.typography.labelMedium
                         )
                     }

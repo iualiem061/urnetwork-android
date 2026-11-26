@@ -100,10 +100,10 @@ import com.bringyour.network.ui.components.URTextInputLabel
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.components.URDialog
 import com.bringyour.network.ui.components.URInlineErrorText
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueLight
 import com.bringyour.network.ui.theme.TextDanger
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.R
@@ -152,6 +152,7 @@ import com.bringyour.network.location.MockLocationTarget
 import com.bringyour.network.ui.connect.providerlocations.MockLocationViewModel
 import com.bringyour.network.ui.login.SeedphraseDisplayScreen
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Stateful root composable for the Settings screen, observing view model states
@@ -229,7 +230,6 @@ fun SettingsScreen(
     }
 
     val scope = rememberCoroutineScope()
-
 
     val solanaUri = Uri.parse("https://ur.io")
     val iconUri = Uri.parse("favicon.ico")
@@ -340,7 +340,7 @@ fun SettingsScreen(
                 Text(
                     stringResource(id = R.string.device_name_label),
                     style = MaterialTheme.typography.headlineSmall,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 URTextInput(
@@ -417,7 +417,7 @@ fun SettingsScreen(
             Text(
                 stringResource(id = R.string.remove_this_sign_in_method),
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -426,7 +426,7 @@ fun SettingsScreen(
                     pendingRemoveMethod?.let { methodDisplayName(it) } ?: "",
                 ),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             if (removeAuthError != null) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -468,7 +468,7 @@ fun SettingsScreen(
                     id = if (isRegenerate) R.string.regenerate_seedphrase_title else R.string.generate_a_recovery_seedphrase
                 ),
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -480,7 +480,7 @@ fun SettingsScreen(
                     }
                 ),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             if (seedphraseActionError != null) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -587,13 +587,17 @@ private fun SettingsScreen(
     // outlives the delete dialog, which closes before the failure snackbar shows
     val deleteAccountScope = rememberCoroutineScope()
 
-
     val depinHubStr = "DePIN Hub"
     val depinHubLink = "https://depinhub.io/projects/urnetwork"
 
     // the app language: "system" follows the device, a tag pins one app-wide
     var languageSheetPresented by rememberSaveable { mutableStateOf(false) }
     var selectedLanguageTag by rememberSaveable { mutableStateOf(currentAppLanguageTag()) }
+
+    // the app appearance: light, dark or the device's setting, pinned in the
+    // app's preferences and observed by both activities
+    var themeSheetPresented by rememberSaveable { mutableStateOf(false) }
+    val selectedThemeMode by ThemePreferences.mode.collectAsState()
 
     Scaffold(
         snackbarHost = {
@@ -613,7 +617,7 @@ private fun SettingsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
                 actions = {},
             )
@@ -659,19 +663,18 @@ private fun SettingsScreen(
                 Text(
                     clientId,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
 
                 Icon(
                     painter = painterResource(id = R.drawable.content_copy),
                     contentDescription = stringResource(id = R.string.copy),
-                    tint = TextMuted,
+                    tint = AppTheme.textMuted,
                     modifier = Modifier.width(16.dp)
                 )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
-
 
             /**
              * Auth code
@@ -686,7 +689,7 @@ private fun SettingsScreen(
                 Text(
                     stringResource(id = R.string.auth_code),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
 
                 TextButton(onClick = {
@@ -702,11 +705,10 @@ private fun SettingsScreen(
             Text(
                 stringResource(id = R.string.auth_code_expires),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.height(18.dp))
-
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -725,7 +727,7 @@ private fun SettingsScreen(
                 Text(
                     stringResource(id = if (hasSeedphrase) R.string.regenerate_seedphrase else R.string.generate_seedphrase),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -748,7 +750,7 @@ private fun SettingsScreen(
             Text(
                 stringResource(id = R.string.a_seedphrase_lets_you_recover_your_account),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -769,7 +771,7 @@ private fun SettingsScreen(
                     Text(
                         methodDisplayName(method),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
 
                     // removing the last method would permanently lock the
@@ -815,7 +817,7 @@ private fun SettingsScreen(
                 Text(
                     stringResource(id = R.string.ignore_battery_optimizations),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
 
                 BatteryOptimizationToggle()
@@ -832,7 +834,7 @@ private fun SettingsScreen(
                         }
                     ),
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
 
@@ -854,19 +856,19 @@ private fun SettingsScreen(
                 Text(
                     stringResource(id = R.string.device_name_label),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         deviceName.ifEmpty { "—" },
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         Icons.Filled.Edit,
                         contentDescription = stringResource(id = R.string.edit_device_name),
-                        tint = TextMuted,
+                        tint = AppTheme.textMuted,
                         modifier = Modifier.size(16.dp)
                     )
                 }
@@ -883,14 +885,14 @@ private fun SettingsScreen(
                 Text(
                     stringResource(id = R.string.device_spec_label),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 // the spec string can be very long; keep it to one ellipsized line
                 Text(
                     deviceSpec.ifEmpty { "—" },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.End,
@@ -922,7 +924,7 @@ private fun SettingsScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = TextMuted
+                    tint = AppTheme.textMuted
                 )
             }
 
@@ -976,7 +978,7 @@ private fun SettingsScreen(
                     Text(
                         stringResource(id = R.string.kill_switch),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
 
                     InfoIconWithOverlay(
@@ -989,7 +991,7 @@ private fun SettingsScreen(
                                 stringResource(id = R.string.kill_switch_exception),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Color.White
+                                color = AppTheme.textPrimary
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             // the tunnel captures ::/0 like 0.0.0.0/0 (VpnRoutes.kt),
@@ -1040,7 +1042,7 @@ private fun SettingsScreen(
                         Text(
                             stringResource(id = R.string.mock_location_settings_row),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
+                            color = AppTheme.textPrimary
                         )
 
                         Spacer(modifier = Modifier.width(4.dp))
@@ -1048,7 +1050,7 @@ private fun SettingsScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                             contentDescription = null,
-                            tint = TextMuted
+                            tint = AppTheme.textMuted
                         )
                     }
 
@@ -1090,7 +1092,7 @@ private fun SettingsScreen(
                         color = if (statusIsError)
                             MaterialTheme.colorScheme.error
                         else
-                            TextMuted
+                            AppTheme.textMuted
                     )
                 }
             }
@@ -1116,7 +1118,7 @@ private fun SettingsScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = TextMuted
+                    tint = AppTheme.textMuted
                 )
             }
 
@@ -1142,7 +1144,7 @@ private fun SettingsScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = TextMuted
+                    tint = AppTheme.textMuted
                 )
             }
 
@@ -1166,7 +1168,7 @@ private fun SettingsScreen(
                         Text(
                             stringResource(id = R.string.use_wireguard_socks_https_proxy),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White,
+                            color = AppTheme.textPrimary,
                             modifier = Modifier.testTag("acceptance.cloud_proxy_entry")
                         )
 
@@ -1174,20 +1176,62 @@ private fun SettingsScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.Outbound,
                             contentDescription = null,
-                            tint = TextMuted
+                            tint = AppTheme.textMuted
                         )
                     }
 
                     Text(
                         stringResource(id = R.string.use_wireguard_socks_https_proxy_note),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            /**
+             * Appearance
+             */
+            URTextInputLabel(text = stringResource(id = R.string.appearance))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { themeSheetPresented = true }
+                    .padding(vertical = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    themeModeDisplayName(selectedThemeMode),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = AppTheme.textPrimary
+                )
+
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = AppTheme.textMuted
+                )
+            }
+            Text(
+                stringResource(id = R.string.appearance_note),
+                style = MaterialTheme.typography.bodySmall,
+                color = AppTheme.textMuted
+            )
+
+            if (themeSheetPresented) {
+                ThemeModePickerSheet(
+                    selectedMode = selectedThemeMode,
+                    onSelected = { mode ->
+                        ThemePreferences.set(context, mode)
+                        themeSheetPresented = false
+                    },
+                    onDismiss = { themeSheetPresented = false },
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -1206,19 +1250,19 @@ private fun SettingsScreen(
                 Text(
                     languageDisplayName(selectedLanguageTag),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
 
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = TextMuted
+                    tint = AppTheme.textMuted
                 )
             }
             Text(
                 stringResource(id = R.string.language_note),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             if (languageSheetPresented) {
@@ -1244,7 +1288,7 @@ private fun SettingsScreen(
                 Text(
                     stringResource(id = R.string.receive_notifications),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
 
                 URSwitch(
@@ -1259,7 +1303,7 @@ private fun SettingsScreen(
             Text(
                 if (notificationsPermanentlyDenied || notificationsAllowed) stringResource(id = R.string.update_notification_settings) else "",
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -1277,7 +1321,7 @@ private fun SettingsScreen(
                 Text(
                     stringResource(id = R.string.send_product_updates),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
 
                 URSwitch(
@@ -1318,7 +1362,7 @@ private fun SettingsScreen(
                                 }
                             ),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
+                            color = AppTheme.textPrimary
                         )
                         Spacer(modifier = Modifier.width(3.dp))
                         Text(
@@ -1339,7 +1383,7 @@ private fun SettingsScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.Outbound,
                             contentDescription = link.text,
-                            tint = TextMuted,
+                            tint = AppTheme.textMuted,
                         )
                     }
                 }
@@ -1379,7 +1423,7 @@ private fun SettingsScreen(
                             }
                         },
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
 
                 }
@@ -1394,7 +1438,7 @@ private fun SettingsScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.Outbound,
                         contentDescription = depinHubStr,
-                        tint = TextMuted,
+                        tint = AppTheme.textMuted,
                     )
                 }
             }
@@ -1458,7 +1502,7 @@ private fun SettingsScreen(
                     Text(
                         displayVersion(version),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
                 }
                 if (onOpenReleaseNotes != null) {
@@ -1554,7 +1598,6 @@ private fun SettingsScreen(
                 ) {
 
                     Column(modifier = Modifier.padding(16.dp)) {
-
 
                         Row {
                             Text(
@@ -1961,5 +2004,4 @@ private fun SettingsScreenDeleteAccountDialogPreview() {
 }
 
 private enum class SeedphraseAction { GENERATE, REGENERATE }
-
 

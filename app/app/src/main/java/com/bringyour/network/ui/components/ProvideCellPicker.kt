@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.bringyour.network.R
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun ProvideCellPicker(
@@ -26,7 +27,7 @@ fun ProvideCellPicker(
         Text(
             stringResource(id = R.string.allow_providing_cell),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White
+            color = AppTheme.textPrimary
         )
 
         URSwitch(

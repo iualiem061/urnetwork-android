@@ -2,7 +2,6 @@ package com.bringyour.network.ui.connect
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.Snapshot
@@ -21,9 +20,6 @@ import com.bringyour.sdk.ConnectLocationList
 import com.bringyour.sdk.DeviceLocal
 import com.bringyour.sdk.LocationsViewController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -69,66 +65,6 @@ class LocationsListViewModel @Inject constructor(
 
     // when searching, items with matchDistance of 0
     val bestSearchMatches = mutableStateListOf<ConnectLocation>()
-
-    /**
-     * The ping test (LocationPing): one result per country code, shared by
-     * every row of that country. `null` means no test has run for the code.
-     */
-    val locationPings = mutableStateMapOf<String, LocationPing>()
-
-    var pingTestRunning by mutableStateOf(false)
-        private set
-
-    /**
-     * Measures every listed country's ingress round trip: marks each row's
-     * country as Testing, then resolves them in parallel and fills in the
-     * results. Rows without a test endpoint read Unavailable.
-     */
-    fun testLocationPings() {
-        if (pingTestRunning) {
-            return
-        }
-        val countryCodes = listOf(bestSearchMatches, connectCountries, regions, cities, devices)
-            .asSequence()
-            .flatten()
-            .mapNotNull { location -> location.countryCode?.takeIf { it.isNotEmpty() } }
-            .distinct()
-            .toList()
-        if (countryCodes.isEmpty()) {
-            return
-        }
-        pingTestRunning = true
-        viewModelScope.launch {
-            try {
-                Snapshot.withMutableSnapshot {
-                    countryCodes.forEach { code ->
-                        if (LocationPingTest.hasEndpoint(code)) {
-                            locationPings[code] = LocationPing.Testing
-                        }
-                    }
-                }
-                val results = countryCodes
-                    .filter { LocationPingTest.hasEndpoint(it) }
-                    .map { code ->
-                        async(Dispatchers.IO) { code to LocationPingTest.measure(code) }
-                    }
-                    .awaitAll()
-                Snapshot.withMutableSnapshot {
-                    results.forEach { (code, ping) ->
-                        locationPings[code] = ping
-                    }
-                }
-            } finally {
-                pingTestRunning = false
-            }
-        }
-    }
-
-    /** The measured ping of a row's country, or null while untested. */
-    fun pingFor(location: ConnectLocation): LocationPing? {
-        val code = location.countryCode?.takeIf { it.isNotEmpty() } ?: return null
-        return locationPings[code]
-    }
 
     val refreshLocations: () -> Unit = {
         locationsVc?.filterLocations(currentSearchQuery)

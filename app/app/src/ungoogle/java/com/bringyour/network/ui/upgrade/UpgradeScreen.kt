@@ -25,8 +25,9 @@ import com.bringyour.network.ui.components.UpgradeScreenHeader
 import com.bringyour.network.ui.components.tabletReadableColumn
 import com.bringyour.network.ui.shared.viewmodels.PlanViewModel
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.sdk.Sdk
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Get Pro: the title and the same plan picker the onboarding plan step shows
@@ -53,7 +54,7 @@ fun UpgradeScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Black),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = AppTheme.bg),
             )
         }
     ) { padding ->

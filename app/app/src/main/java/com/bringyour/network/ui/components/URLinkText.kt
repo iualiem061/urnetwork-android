@@ -26,8 +26,9 @@ import androidx.compose.ui.unit.sp
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Pink
 import androidx.compose.ui.text.TextLinkStyles
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun URLinkText(
@@ -66,7 +67,7 @@ fun URLearnMoreText(
     text: String,
     linkText: String,
     url: String,
-    color: Color = TextMuted,
+    color: Color = AppTheme.textMuted,
     fontSize: TextUnit = 14.sp
 ) {
     val iconId = "external-link"

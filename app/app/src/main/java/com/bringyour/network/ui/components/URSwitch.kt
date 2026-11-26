@@ -26,11 +26,12 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Blue300
 import com.bringyour.network.ui.theme.Blue400
-import com.bringyour.network.ui.theme.TextFaint
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 // credit to https://stackoverflow.com/a/70567213/3703043
 /**
@@ -69,7 +70,7 @@ fun URSwitch(
 
     val targetBackgroundColor = when {
         checked && enabled -> Blue400
-        checked && !enabled -> TextFaint
+        checked && !enabled -> AppTheme.textFaint
         else -> Color.Transparent
     }
 
@@ -81,8 +82,8 @@ fun URSwitch(
     val isHighlighted = enabled && (isFocused || isHovered)
 
     val thumbColor = when {
-        checked -> Black
-        !checked && !enabled -> TextFaint
+        checked -> AppTheme.bg
+        !checked && !enabled -> AppTheme.textFaint
         !checked && isHighlighted -> Blue300
         else -> Blue400
     }
@@ -117,7 +118,7 @@ fun URSwitch(
 
             // Track
             drawRoundRect(
-                color = if (enabled) Blue400 else TextFaint,
+                color = if (enabled) Blue400 else AppTheme.textFaint,
                 cornerRadius = CornerRadius(x = 10.dp.toPx(), y = 10.dp.toPx()),
                 style = Stroke(width = strokeWidth.toPx()),
             )

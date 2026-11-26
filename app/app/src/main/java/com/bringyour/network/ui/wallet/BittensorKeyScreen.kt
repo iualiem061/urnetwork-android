@@ -80,19 +80,19 @@ import com.bringyour.network.ui.components.FoldSafeDialog
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.tabletReadableColumn
 import com.bringyour.network.ui.theme.Amber
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Red
 import com.bringyour.network.ui.theme.ReferralGold
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.sdk.Sdk
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.math.ceil
+import com.bringyour.network.ui.theme.AppTheme
 
 /*
  * The Key screen, the same for both flows (apple/BTEASY.md, and the approved
@@ -183,11 +183,11 @@ fun BittensorKeyScreenDialog(
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Black
+                        containerColor = AppTheme.bg
                     ),
                 )
             },
-            containerColor = Black,
+            containerColor = AppTheme.bg,
         ) { innerPadding ->
             Column(
                 modifier = Modifier
@@ -259,7 +259,7 @@ private fun BittensorKeyMainContent(
         Text(
             stringResource(id = R.string.bittensor_key_words_label, shortSs58(screen.address)),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -297,7 +297,7 @@ private fun BittensorKeyMainContent(
         Text(
             stringResource(id = R.string.bittensor_key_copy_warning_2),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
     } else {
         BittensorKeyRevealCover(
@@ -323,7 +323,7 @@ private fun BittensorKeyMainContent(
     Text(
         stringResource(id = R.string.bittensor_key_not_seed_2),
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted,
+        color = AppTheme.textMuted,
     )
 
     if (!screen.offersRetry) {
@@ -331,7 +331,7 @@ private fun BittensorKeyMainContent(
         Text(
             stringResource(id = R.string.bittensor_key_saved_question),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (screen.offersKeep) {
@@ -392,7 +392,7 @@ private fun BittensorKeyScreenBanner(model: BittensorKeyModel, screen: Bittensor
                     Text(
                         stringResource(id = R.string.bittensor_key_save_now_retry),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted,
+                        color = AppTheme.textMuted,
                     )
                 }
             }
@@ -426,8 +426,8 @@ private fun BittensorKeyRevealCover(
             .fillMaxWidth()
             .heightIn(min = 180.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(MainTintedBackgroundBase)
-            .border(1.dp, TextMuted.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
+            .background(AppTheme.bgTinted)
+            .border(1.dp, AppTheme.textMuted.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
             .clickable(enabled = enabled, onClick = onReveal)
             .testTag(EARNINGS_KEY_REVEAL_TAG),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -436,7 +436,7 @@ private fun BittensorKeyRevealCover(
         Icon(
             if (needsAuthentication) authenticationIcon else Icons.Filled.VisibilityOff,
             contentDescription = null,
-            tint = TextMuted,
+            tint = AppTheme.textMuted,
             modifier = Modifier.size(28.dp),
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -453,7 +453,7 @@ private fun BittensorKeyWordGrid(words: List<String>) {
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, TextMuted.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
+            .border(1.dp, AppTheme.textMuted.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
             .padding(12.dp)
             .testTag(EARNINGS_KEY_WORDS_TAG)
     ) {
@@ -465,7 +465,7 @@ private fun BittensorKeyWordGrid(words: List<String>) {
                         Row(
                             modifier = Modifier
                                 .weight(1f)
-                                .background(MainTintedBackgroundBase, RoundedCornerShape(6.dp))
+                                .background(AppTheme.bgTinted, RoundedCornerShape(6.dp))
                                 .padding(horizontal = 8.dp, vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
@@ -473,7 +473,7 @@ private fun BittensorKeyWordGrid(words: List<String>) {
                                 "${index + 1}.",
                                 modifier = Modifier.width(28.dp),
                                 style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
-                                color = TextMuted,
+                                color = AppTheme.textMuted,
                             )
                             Text(
                                 word,
@@ -512,7 +512,7 @@ private fun BittensorKeyHideCountdown(untilMillis: Long) {
             String.format(Locale.ROOT, "%d:%02d", seconds / 60, seconds % 60),
         ),
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted,
+        color = AppTheme.textMuted,
     )
 }
 
@@ -691,7 +691,7 @@ private fun BittensorKeyWordEntry(
     testTag: String,
 ) {
     val label = stringResource(id = R.string.bittensor_key_word_number, position)
-    Text(label, style = MaterialTheme.typography.bodySmall, color = TextMuted)
+    Text(label, style = MaterialTheme.typography.bodySmall, color = AppTheme.textMuted)
     Spacer(modifier = Modifier.height(4.dp))
     BittensorKeyWordField(label = label, value = value, onValueChange = onValueChange, testTag = testTag)
     if (state == Sdk.BittensorLocalKeyWordWrong) {
@@ -721,6 +721,10 @@ private fun BittensorKeyWordField(
 ) {
     val currentOnValueChange by rememberUpdatedState(onValueChange)
     val density = LocalDensity.current
+    // read in composition (the view factory lambda cannot) for the field's colors
+    val fieldHintColor = AppTheme.textMuted
+    val fieldBackgroundColor = AppTheme.bgTinted
+    val fieldStrokeColor = AppTheme.textFaint
     val radius = with(density) { 8.dp.toPx() }
     val stroke = with(density) { 1.dp.toPx() }.toInt().coerceAtLeast(1)
     val padding = with(density) { 12.dp.toPx() }.toInt()
@@ -741,13 +745,13 @@ private fun BittensorKeyWordField(
                 maxLines = 1
                 typeface = Typeface.MONOSPACE
                 setTextColor(Color.White.toArgb())
-                setHintTextColor(TextMuted.toArgb())
+                setHintTextColor(fieldHintColor.toArgb())
                 hint = label
                 contentDescription = label
                 background = GradientDrawable().apply {
                     cornerRadius = radius
-                    setColor(MainTintedBackgroundBase.toArgb())
-                    setStroke(stroke, TextFaint.toArgb())
+                    setColor(fieldBackgroundColor.toArgb())
+                    setStroke(stroke, fieldStrokeColor.toArgb())
                 }
                 setPadding(padding, padding, padding, padding)
                 doAfterTextChanged { currentOnValueChange(it?.toString().orEmpty()) }
@@ -798,8 +802,8 @@ private fun BittensorKeyNotice(
         if (progress) {
             CircularProgressIndicator(
                 modifier = Modifier.size(18.dp),
-                color = TextMuted,
-                trackColor = TextFaint,
+                color = AppTheme.textMuted,
+                trackColor = AppTheme.textFaint,
                 strokeWidth = 2.dp,
             )
         } else if (icon != null) {
@@ -822,7 +826,7 @@ private fun BittensorKeyTextAction(text: String, enabled: Boolean, onClick: () -
             .clickable(enabled = enabled, onClick = onClick)
             .padding(vertical = 12.dp),
         style = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
-        color = TextMuted,
+        color = AppTheme.textMuted,
     )
 }
 

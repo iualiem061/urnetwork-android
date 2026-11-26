@@ -51,12 +51,11 @@ import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.focusRing
 import com.bringyour.network.ui.components.keyboardScrollFor
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.Sdk
 import java.text.NumberFormat
 import kotlin.math.roundToLong
+import com.bringyour.network.ui.theme.AppTheme
 
 /** The drag label of a position indicator: the rank ("#1,240") and its tier ("Top 5%"), or no tier. */
 data class RankedListLabel(
@@ -161,7 +160,7 @@ internal fun RankedListPositionIndicator(
                 .align(Alignment.Center)
                 .fillMaxHeight()
                 .width(2.dp)
-                .background(TextFaint, RoundedCornerShape(1.dp))
+                .background(AppTheme.textFaint, RoundedCornerShape(1.dp))
         )
 
         // the thumb: the full 24dp width is the hit target, the pill inside
@@ -271,7 +270,7 @@ internal fun RankedListPositionIndicator(
         ) {
             Column(
                 modifier = Modifier
-                    .background(MainTintedBackgroundBase, RoundedCornerShape(8.dp))
+                    .background(AppTheme.bgTinted, RoundedCornerShape(8.dp))
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 horizontalAlignment = Alignment.End,
             ) {
@@ -286,7 +285,7 @@ internal fun RankedListPositionIndicator(
                     Text(
                         shownLabel.tierText,
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted,
+                        color = AppTheme.textMuted,
                         maxLines = 1,
                     )
                 }

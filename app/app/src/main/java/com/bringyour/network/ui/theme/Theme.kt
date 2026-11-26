@@ -1,12 +1,15 @@
 package com.bringyour.network.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RippleConfiguration
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
     primary = BlueMedium,
@@ -15,6 +18,21 @@ private val DarkColorScheme = darkColorScheme(
     background = Black,
     onBackground = OffWhite,
     onPrimary = OffWhite,
+)
+
+/** The light counterpart: the same brand hues on the light palette's neutrals. */
+private val LightColorScheme = lightColorScheme(
+    primary = Blue500,
+    secondary = Blue300,
+    tertiary = Pink500,
+    background = LightAppColors.bg,
+    onBackground = LightAppColors.textPrimary,
+    surface = LightAppColors.bgElevated,
+    onSurface = LightAppColors.textPrimary,
+    onPrimary = Color.White,
+    surfaceVariant = LightAppColors.bgTinted,
+    onSurfaceVariant = LightAppColors.textMuted,
+    outlineVariant = LightAppColors.border,
 )
 
 /**
@@ -33,15 +51,26 @@ private val URRippleConfiguration = RippleConfiguration(
     ),
 )
 
+/**
+ * The app's theme. [darkTheme] picks the palette: the device's setting by
+ * default, or the user's choice from Settings -> Appearance (ThemePreferences)
+ * when the app pins one.
+ */
 @Composable
 fun URNetworkTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val appColors = if (darkTheme) DarkAppColors else LightAppColors
+    val typography = if (darkTheme) DarkTypography else LightTypography
+
     MaterialTheme(
-        colorScheme = DarkColorScheme,
-        typography = Typography,
+        colorScheme = colorScheme,
+        typography = typography,
     ) {
         CompositionLocalProvider(
+            LocalAppColors provides appColors,
             LocalRippleConfiguration provides URRippleConfiguration,
             content = content,
         )

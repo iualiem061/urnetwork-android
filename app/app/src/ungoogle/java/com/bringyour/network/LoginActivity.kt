@@ -11,12 +11,17 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import com.bringyour.sdk.WalletAuthArgs
 import com.bringyour.network.ui.LoginNavHost
+import com.bringyour.network.ui.settings.SystemBarsAppearanceEffect
+import com.bringyour.network.ui.settings.ThemeMode
+import com.bringyour.network.ui.settings.ThemePreferences
 import com.bringyour.network.ui.login.BITTENSOR_SIGN_PURPOSE_CONNECT
 import com.bringyour.network.ui.login.BITTENSOR_SIGN_PURPOSE_CREATE
 import com.bringyour.network.ui.login.bittensorFailureUri
@@ -210,7 +215,16 @@ class LoginActivity : AppCompatActivity() {
         // fixme use a custom view to show up/down statistics and hot linpath spark
 
         setContent {
-            URNetworkTheme {
+            // the appearance the user chose, resolved like MainActivity's
+            val themeMode by ThemePreferences.mode.collectAsState()
+            val darkTheme = when (themeMode) {
+                ThemeMode.SYSTEM -> isSystemInDarkTheme()
+                ThemeMode.LIGHT -> false
+                ThemeMode.DARK -> true
+            }
+            SystemBarsAppearanceEffect(darkTheme = darkTheme, activity = this)
+
+            URNetworkTheme(darkTheme = darkTheme) {
                 LoginNavHost(
                     loginViewModel,
                     promptAccountSwitch = promptAccountSwitch,

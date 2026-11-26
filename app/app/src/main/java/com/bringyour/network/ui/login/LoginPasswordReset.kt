@@ -61,12 +61,12 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URInlineErrorText
 import com.bringyour.network.ui.components.URTextInput
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -159,7 +159,7 @@ fun LoginPasswordReset(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
                 actions = {},
             )
@@ -212,12 +212,11 @@ fun LoginPasswordReset(
                         enabled = !inProgress
                     )
 
-
                     Text(
                         stringResource(id = R.string.check_junk_mail),
                         style = TextStyle(
                             fontSize = 12.sp,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     )
 

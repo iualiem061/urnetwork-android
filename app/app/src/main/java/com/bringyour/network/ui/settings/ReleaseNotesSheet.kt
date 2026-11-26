@@ -47,12 +47,12 @@ import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.FoldSafeModalBottomSheet
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.rememberFoldSafeSheetState
-import com.bringyour.network.ui.theme.SheetBlack
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Locale
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The bundled release note (ReleaseNotes), opened from the version row in
@@ -78,7 +78,7 @@ fun ReleaseNotesSheet(
     FoldSafeModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = SheetBlack,
+        containerColor = AppTheme.sheet,
     ) {
         ReleaseNotesContent(
             notes = notes,
@@ -141,7 +141,7 @@ private fun ReleaseNotesContent(
                 Text(
                     note.title,
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = Color.White,
+                    color = AppTheme.textPrimary,
                     modifier = Modifier.semantics { heading() },
                 )
 
@@ -150,12 +150,12 @@ private fun ReleaseNotesContent(
                 Text(
                     versionLine,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                 )
 
                 note.intro?.let { intro ->
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text(intro, style = bodyStyle, color = Color.White)
+                    Text(intro, style = bodyStyle, color = AppTheme.textPrimary)
                 }
 
                 for (section in note.sections) {
@@ -165,7 +165,7 @@ private fun ReleaseNotesContent(
                         Text(
                             text,
                             style = bodyStyle.copy(fontWeight = FontWeight.SemiBold),
-                            color = Color.White,
+                            color = AppTheme.textPrimary,
                             modifier = Modifier.semantics { heading() },
                         )
                         if (section.items.isNotEmpty()) {
@@ -235,7 +235,7 @@ private fun ReleaseNoteBullet(
             modifier = Modifier
                 .alignBy { it.measuredHeight / 2 + lift }
                 .size(5.dp)
-                .background(TextMuted, CircleShape)
+                .background(AppTheme.textMuted, CircleShape)
         )
 
         Spacer(modifier = Modifier.width(10.dp))
@@ -243,7 +243,7 @@ private fun ReleaseNoteBullet(
         Text(
             text,
             style = style,
-            color = Color.White,
+            color = AppTheme.textPrimary,
             modifier = Modifier
                 .weight(1f)
                 .alignByBaseline(),
@@ -276,7 +276,7 @@ private fun ReleaseNotesContentPreview() {
         ),
     )
     URNetworkTheme {
-        Column(modifier = Modifier.background(SheetBlack)) {
+        Column(modifier = Modifier.background(AppTheme.sheet)) {
             ReleaseNotesContent(
                 notes = ReleaseNotes(version = "2026.11", date = LocalDate.of(2026, 11, 19), notes = mapOf("en" to note)),
                 note = note,
@@ -297,7 +297,7 @@ private fun ReleaseNotesContentIntroOnlyPreview() {
         sections = listOf(),
     )
     URNetworkTheme {
-        Column(modifier = Modifier.background(SheetBlack)) {
+        Column(modifier = Modifier.background(AppTheme.sheet)) {
             ReleaseNotesContent(
                 notes = ReleaseNotes(version = "2026.11", date = LocalDate.of(2026, 11, 19), notes = mapOf("en" to note)),
                 note = note,

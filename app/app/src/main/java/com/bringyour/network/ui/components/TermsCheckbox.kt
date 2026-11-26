@@ -28,8 +28,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun TermsCheckbox(
@@ -87,7 +88,7 @@ fun TermsCheckbox(
         Checkbox(
             modifier = baseCheckboxModifier.then(checkboxModifier).then(
                 if (isFocused) {
-                    Modifier.background(TextMuted.copy(alpha = 0.3f), CircleShape) // Focused border color
+                    Modifier.background(AppTheme.textMuted.copy(alpha = 0.3f), CircleShape) // Focused border color
                 } else {
                     Modifier
                 }
@@ -105,7 +106,7 @@ fun TermsCheckbox(
 
         Text(
             text = checkboxStr,
-            style = MaterialTheme.typography.bodyMedium.copy(color = TextMuted),
+            style = MaterialTheme.typography.bodyMedium.copy(color = AppTheme.textMuted),
         )
     }
 

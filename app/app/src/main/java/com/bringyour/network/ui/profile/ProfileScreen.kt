@@ -67,16 +67,16 @@ import com.bringyour.network.ui.settings.passwordSignIns
 import com.bringyour.network.ui.shared.viewmodels.ResetPasswordFunction
 import com.bringyour.network.utils.sdkStringListToList
 import com.bringyour.network.ui.shared.viewmodels.ResetPasswordViewModel
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.TextMuted
+
 import androidx.compose.ui.unit.sp
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.theme.URNetworkTheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun ProfileScreen(
@@ -213,7 +213,7 @@ fun ProfileScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
                 actions = {},
             )
@@ -319,12 +319,12 @@ fun ProfileScreen(
                     Text(
                         networkName,
                         style = MaterialTheme.typography.bodyLarge,
-                        color = androidx.compose.ui.graphics.Color.White
+                        color = AppTheme.textPrimary
                     )
                     Icon(
                         Icons.Filled.Edit,
                         contentDescription = stringResource(id = R.string.edit_network_name),
-                        tint = TextMuted,
+                        tint = AppTheme.textMuted,
                         modifier = Modifier.size(16.dp)
                     )
                 }
@@ -336,7 +336,7 @@ fun ProfileScreen(
                         stringResource(id = R.string.change_network_name_hint)
                     },
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
 
@@ -388,7 +388,7 @@ fun ProfileScreen(
                         }
                     ,
                     style = TextStyle(
-                        color = if (resendBtnEnabled) BlueMedium else TextMuted
+                        color = if (resendBtnEnabled) BlueMedium else AppTheme.textMuted
                     )
                 )
 
@@ -397,7 +397,7 @@ fun ProfileScreen(
                         resetCooldownText,
                         style = TextStyle(
                             fontSize = 12.sp,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     )
                 }

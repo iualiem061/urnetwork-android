@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
@@ -41,12 +39,11 @@ import com.bringyour.sdk.ConnectLocation
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.URSearchInput
 import com.bringyour.network.ui.components.tabletReadableColumn
-import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun BrowseLocations(
@@ -72,11 +69,6 @@ fun BrowseLocations(
     // it is on (LocationsList)
     connectRequested: Boolean = false,
     disconnect: () -> Unit = {},
-    // the ping test's results by country code and its runner; each row shows
-    // its country's measured ingress round trip
-    locationPings: Map<String, LocationPing> = emptyMap(),
-    onTestPings: () -> Unit = {},
-    pingTestRunning: Boolean = false,
 ) {
 
     val scope = rememberCoroutineScope()
@@ -137,40 +129,6 @@ fun BrowseLocations(
         // the search field keeps 6 dp of its own below
         Spacer(modifier = Modifier.height(18.dp))
 
-        // the ping test: measures each country's ingress round trip, shown on
-        // its rows; a country without a test endpoint reads "-"
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            if (pingTestRunning) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(16.dp),
-                    color = TextMuted,
-                    trackColor = TextFaint,
-                    strokeWidth = 2.dp,
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    stringResource(id = R.string.ping_testing),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
-                )
-            } else {
-                TextButton(onClick = onTestPings) {
-                    Text(
-                        stringResource(id = R.string.test_ping),
-                        color = BlueMedium,
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(6.dp))
-
-
         if (fetchLocationsState == FilterLocationsState.Error) {
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp)
@@ -203,7 +161,6 @@ fun BrowseLocations(
                 onConnectPeer = onConnectPeer,
                 connectRequested = connectRequested,
                 onDisconnect = disconnect,
-                locationPings = locationPings,
             )
         }
     }

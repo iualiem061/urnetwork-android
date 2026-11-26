@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- the circular country flags resolve by name at runtime
+     (ui/components/CountryFlags.kt getIdentifier), so the resource shrinker
+     must keep every flag_* drawable -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/flag_*" />

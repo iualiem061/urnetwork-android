@@ -59,10 +59,9 @@ import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.components.expandableRow
 import com.bringyour.network.ui.components.tabletReadableColumn
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The Extenders section of the account screen (EXTENDER.md K6): the three
@@ -145,11 +144,11 @@ fun ExtendersScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         Column(
@@ -255,7 +254,7 @@ fun ExtendersScreen(
                         Icons.Filled.KeyboardArrowDown
                     },
                     contentDescription = null,
-                    tint = TextMuted,
+                    tint = AppTheme.textMuted,
                 )
             }
 
@@ -271,7 +270,7 @@ fun ExtendersScreen(
                 Text(
                     stringResource(id = R.string.private_extender_hint),
                     style = TextStyle(fontSize = 12.sp),
-                    color = TextFaint,
+                    color = AppTheme.textFaint,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -480,13 +479,13 @@ private fun ExtenderActionRow(
     ) {
         Text(
             text,
-            color = if (enabled) Color.Unspecified else TextFaint,
+            color = if (enabled) Color.Unspecified else AppTheme.textFaint,
         )
         Spacer(modifier = Modifier.width(16.dp))
         Icon(
             Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
-            tint = TextMuted,
+            tint = AppTheme.textMuted,
         )
     }
 }

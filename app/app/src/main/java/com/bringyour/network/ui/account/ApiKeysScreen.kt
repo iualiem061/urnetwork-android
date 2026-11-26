@@ -93,16 +93,15 @@ import com.bringyour.network.ui.components.URInlineErrorText
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.components.apiKeyRemoveControls
 import com.bringyour.network.ui.components.tabletReadableColumn
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.theme.Yellow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Account -> API keys: the network's keys, newest first, each with its name,
@@ -204,11 +203,11 @@ private fun ApiKeysContent(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         PullToRefreshBox(
@@ -230,7 +229,7 @@ private fun ApiKeysContent(
                         Text(
                             stringResource(id = R.string.api_keys_intro),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                         // under the explanation, the api reference in the
                         // browser, as a full-size target
@@ -299,8 +298,8 @@ private fun ApiKeysContent(
                             contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator(
-                                color = TextMuted,
-                                trackColor = TextFaint,
+                                color = AppTheme.textMuted,
+                                trackColor = AppTheme.textFaint,
                             )
                         }
                     }
@@ -386,12 +385,12 @@ private fun ApiKeyRow(
         ) {
             CircleImage(
                 size = 40.dp,
-                backgroundColor = MainTintedBackgroundBase,
+                backgroundColor = AppTheme.bgTinted,
             ) {
                 Icon(
                     Icons.Filled.Key,
                     contentDescription = null,
-                    tint = TextMuted,
+                    tint = AppTheme.textMuted,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -407,21 +406,21 @@ private fun ApiKeyRow(
                 Text(
                     rowText.name,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
                 rowText.created?.let { created ->
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         created,
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     rowText.id,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 if (row.deleteFailed) {
                     Spacer(modifier = Modifier.height(6.dp))
@@ -442,8 +441,8 @@ private fun ApiKeyRow(
                         // the delete runs: progress, and no control
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
-                            color = TextMuted,
-                            trackColor = TextFaint,
+                            color = AppTheme.textMuted,
+                            trackColor = AppTheme.textFaint,
                             strokeWidth = 2.dp
                         )
                     } else {
@@ -451,7 +450,7 @@ private fun ApiKeyRow(
                             Icon(
                                 Icons.Outlined.Delete,
                                 contentDescription = deleteLabel,
-                                tint = TextMuted
+                                tint = AppTheme.textMuted
                             )
                         }
                     }
@@ -490,7 +489,7 @@ private fun ApiKeysBodyMessage(
             Text(
                 stringResource(id = messageRes),
                 style = MaterialTheme.typography.bodyLarge,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             action()
         }
@@ -677,7 +676,7 @@ private fun ApiKeysCreatedDialog(
                 Text(
                     created.name,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -685,12 +684,12 @@ private fun ApiKeysCreatedDialog(
                 Text(
                     created.apiKey,
                     style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Monospace),
-                    color = Color.White,
+                    color = AppTheme.textPrimary,
                     modifier = Modifier
                         .fillMaxWidth()
                         .border(
                             width = 1.dp,
-                            color = TextMuted.copy(alpha = 0.3f),
+                            color = AppTheme.textMuted.copy(alpha = 0.3f),
                             shape = RoundedCornerShape(8.dp)
                         )
                         .padding(12.dp)

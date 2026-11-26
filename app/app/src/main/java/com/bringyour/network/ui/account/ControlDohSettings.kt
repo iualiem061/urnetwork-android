@@ -46,10 +46,9 @@ import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URInlineErrorText
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.components.tabletReadableColumn
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The bootstrap DNS-over-HTTPS servers block (ControlDohSettingsViewModel):
@@ -107,7 +106,7 @@ fun ControlDohSettingsBlock(
         Text(
             stringResource(id = R.string.control_doh_urls_description),
             style = TextStyle(fontSize = 12.sp),
-            color = TextFaint,
+            color = AppTheme.textFaint,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -132,7 +131,7 @@ fun ControlDohSettingsBlock(
         Text(
             stringResource(id = R.string.control_doh_urls_hint),
             style = TextStyle(fontSize = 12.sp),
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
 
         if (errorId.isNotEmpty()) {
@@ -155,7 +154,7 @@ fun ControlDohSettingsBlock(
         Text(
             stringResource(id = R.string.control_doh_use_china_hint),
             style = TextStyle(fontSize = 12.sp),
-            color = TextFaint,
+            color = AppTheme.textFaint,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -221,11 +220,11 @@ fun ControlDohSettingsDialog(
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Black
+                        containerColor = AppTheme.bg
                     ),
                 )
             },
-            containerColor = Black
+            containerColor = AppTheme.bg
         ) { innerPadding ->
             Column(
                 modifier = Modifier

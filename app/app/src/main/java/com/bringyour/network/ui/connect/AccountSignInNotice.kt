@@ -26,11 +26,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.MainApplication
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.Sdk
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import com.bringyour.network.ui.theme.AppTheme
 
 /*
  * The account's sign-in ended while this device stays signed in (server
@@ -136,7 +137,7 @@ fun AccountSignInNotice() {
                 Icon(
                     Icons.Filled.Close,
                     contentDescription = stringResource(id = R.string.close),
-                    tint = TextMuted,
+                    tint = AppTheme.textMuted,
                     modifier = Modifier.size(18.dp)
                 )
             }

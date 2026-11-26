@@ -18,8 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun AuthCodeLoadingScreen() {
@@ -36,7 +37,7 @@ fun AuthCodeLoadingScreen() {
                     .width(24.dp)
                     .height(24.dp),
                 color = MaterialTheme.colorScheme.secondary,
-                trackColor = TextMuted,
+                trackColor = AppTheme.textMuted,
             )
             Spacer(modifier = Modifier.height(32.dp))
             Text(

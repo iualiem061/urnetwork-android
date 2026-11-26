@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun CopyReferralCode(
@@ -48,13 +48,13 @@ fun CopyReferralCode(
         Text(
             bonusReferralCode,
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Icon(
             painter = painterResource(id = R.drawable.content_copy),
             contentDescription = stringResource(id = R.string.copy),
-            tint = TextMuted,
+            tint = AppTheme.textMuted,
             modifier = Modifier.width(16.dp)
         )
     }

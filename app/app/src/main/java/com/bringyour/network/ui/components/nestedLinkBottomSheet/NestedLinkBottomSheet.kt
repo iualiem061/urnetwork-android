@@ -38,16 +38,14 @@ import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.connect.ConnectViewModel
 import com.bringyour.network.ui.connect.FilterLocationsState
 import com.bringyour.network.ui.shared.models.ConnectStatus
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.MainBorderBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import kotlinx.coroutines.launch
 import kotlin.text.isLowerCase
 import kotlin.text.replaceFirstChar
 import kotlin.text.split
 import kotlin.text.titlecase
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,8 +100,8 @@ fun NestedLinkBottomSheet(
         sheetShape = RoundedCornerShape(
             0.dp,
         ),
-        sheetContainerColor = Black,
-        sheetContentColor = Black,
+        sheetContainerColor = AppTheme.bg,
+        sheetContentColor = AppTheme.bg,
         sheetPeekHeight = 0.dp,
         sheetDragHandle = {},
         sheetContent = {
@@ -161,7 +159,6 @@ private fun NestedLinkSheetContent(
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
-
     val titlecasedLocation = defaultLocation?.split(" ")
         ?.joinToString(" ") { it.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() } }
 
@@ -178,7 +175,7 @@ private fun NestedLinkSheetContent(
             .offset(y = 1.dp)
             .border(
                 1.dp,
-                MainBorderBase,
+                AppTheme.border,
                 shape = RoundedCornerShape(
                     topStart = 12.dp,
                     topEnd = 12.dp,
@@ -199,7 +196,7 @@ private fun NestedLinkSheetContent(
             horizontalArrangement = Arrangement.Center
         ) {
             Surface(
-                color = TextFaint,
+                color = AppTheme.textFaint,
                 shape = MaterialTheme.shapes.extraLarge
             ) {
                 Box(
@@ -217,7 +214,7 @@ private fun NestedLinkSheetContent(
         Text(
             headerText,
             style = MaterialTheme.typography.titleLarge,
-            color = Color.White
+            color = AppTheme.textPrimary
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -229,7 +226,7 @@ private fun NestedLinkSheetContent(
                 targetLink ?: "",
             ),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(

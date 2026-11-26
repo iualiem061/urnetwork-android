@@ -92,17 +92,17 @@ import com.bringyour.network.ui.components.URInlineErrorText
 import com.bringyour.network.ui.components.expandableRow
 import com.bringyour.network.ui.components.focusRing
 import com.bringyour.network.ui.components.tabletReadableColumn
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.wallet.BittensorKeySignOut
 import com.bringyour.network.utils.relativeTime
 import com.bringyour.sdk.Sdk
 import java.text.NumberFormat
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Account -> Sessions (server/session/REVOKE-UI-FINAL.md): the account's
@@ -215,11 +215,11 @@ private fun SessionsContent(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         PullToRefreshBox(
@@ -255,8 +255,8 @@ private fun SessionsContent(
                             contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator(
-                                color = TextMuted,
-                                trackColor = TextFaint,
+                                color = AppTheme.textMuted,
+                                trackColor = AppTheme.textFaint,
                             )
                         }
                     }
@@ -436,7 +436,7 @@ private fun SessionGroupHeader(
             Text(
                 sessionGroupHeader(group, text),
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White,
+                color = AppTheme.textPrimary,
                 modifier = Modifier.weight(1f),
             )
             Icon(
@@ -446,7 +446,7 @@ private fun SessionGroupHeader(
                     Icons.Filled.KeyboardArrowDown
                 },
                 contentDescription = null,
-                tint = TextMuted,
+                tint = AppTheme.textMuted,
             )
         }
         HorizontalDivider()
@@ -567,28 +567,28 @@ private fun SessionRow(
                 Text(
                     rowText.use,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     rowText.signIn,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 if (row.signingOut) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(12.dp),
-                            color = TextMuted,
-                            trackColor = TextFaint,
+                            color = AppTheme.textMuted,
+                            trackColor = AppTheme.textFaint,
                             strokeWidth = 2.dp
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             signingOutLabel,
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
                 }
@@ -617,7 +617,7 @@ private fun SessionDeviceLine(device: String, current: Boolean) {
         Text(
             device,
             style = MaterialTheme.typography.bodyLarge,
-            color = Color.White
+            color = AppTheme.textPrimary
         )
         if (current) {
             Text(
@@ -661,7 +661,7 @@ private fun SessionsMessage(
         Text(
             message,
             style = MaterialTheme.typography.bodyLarge,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
         action()
     }
@@ -670,7 +670,7 @@ private fun SessionsMessage(
 @Composable
 private fun SessionsNote(
     note: String,
-    color: Color = TextMuted,
+    color: Color = AppTheme.textMuted,
 ) {
     Text(
         note,

@@ -10,14 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 /** Shown in place of a section's spinner when its fetch failed. */
 @Composable
 fun SectionLoadError(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
-    color: Color = TextMuted,
+    color: Color = AppTheme.textMuted,
 ) {
     Row(
         modifier = modifier,

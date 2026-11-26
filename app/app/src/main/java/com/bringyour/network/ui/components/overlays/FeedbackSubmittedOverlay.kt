@@ -15,9 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.URButton
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun FeedbackSubmittedOverlay(
@@ -35,13 +36,13 @@ fun FeedbackSubmittedOverlay(
             Text(
                 stringResource(id = R.string.feedback_submitted),
                 style = MaterialTheme.typography.headlineMedium,
-                color = Black
+                color = AppTheme.bg
             )
 
             Text(
                 stringResource(id = R.string.thanks_for_the_feedback),
                 style = MaterialTheme.typography.headlineLarge,
-                color = Black
+                color = AppTheme.bg
             )
             Spacer(modifier = Modifier.height(128.dp))
             URButton(
@@ -49,7 +50,7 @@ fun FeedbackSubmittedOverlay(
                     onDismiss()
                 },
                 style = ButtonStyle.OUTLINE,
-                borderColor = Black
+                borderColor = AppTheme.bg
             ) { buttonTextStyle ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -58,7 +59,7 @@ fun FeedbackSubmittedOverlay(
                     Text(
                         stringResource(id = R.string.close),
                         style = buttonTextStyle,
-                        color = Black
+                        color = AppTheme.bg
                     )
                 }
             }

@@ -2,12 +2,10 @@ package com.bringyour.network.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.bringyour.network.R
@@ -28,24 +26,24 @@ val ppNeueBitBold = FontFamily(
     Font(R.font.pp_neue_bit_bold, FontWeight.Bold),
 )
 
-// Set of Material typography styles to start with
-val Typography = Typography(
+/**
+ * The shared Material typography, with the theme's text color on the styles
+ * that carried a fixed white. One instance per theme; `Typography` keeps
+ * naming the dark one for the previews and any legacy reader.
+ */
+private fun appTypography(textColor: Color): Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = ppNeueMontreal,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        color = MainTextBase
+        color = textColor
     ),
 
     bodyMedium = TextStyle(
         fontFamily = ppNeueMontreal,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        // color = TextMuted
-        // fontSize = 16.sp,
-        // lineHeight = 24.sp,
-        // letterSpacing = 0.5.sp
     ),
 
     bodySmall = TextStyle(
@@ -60,7 +58,7 @@ val Typography = Typography(
         fontSize = 32.sp,
         lineHeight = 36.sp,
         letterSpacing = 0.sp,
-        color = Color.White
+        color = textColor
     ),
 
     headlineMedium = TextStyle(
@@ -69,7 +67,7 @@ val Typography = Typography(
         fontSize = 32.sp,
         lineHeight = 32.sp,
         letterSpacing = 0.sp,
-        color = Color.White
+        color = textColor
     ),
 
     headlineSmall = TextStyle(
@@ -78,36 +76,27 @@ val Typography = Typography(
         fontSize = 24.sp,
         lineHeight = 32.sp,
         letterSpacing = 0.sp,
-        color = Color.White
+        color = textColor
     ),
-
-
-
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
 )
 
-// todo - rename NeueBitMediumTextStyle
+/** The dark theme's typography (white text), as the app always shipped. */
+val DarkTypography = appTypography(MainTextBase)
+
+/** The light theme's typography (ink text). */
+val LightTypography = appTypography(LightAppColors.textPrimary)
+
+/** Legacy alias of [DarkTypography]. */
+val Typography = DarkTypography
+
+// The standalone display styles carry no color: text that uses them inherits
+// the ambient content color, which the theme already sets per mode.
 val TopBarTitleTextStyle = TextStyle(
     fontSize = 24.sp,
     lineHeight = 24.sp,
     fontFamily = ppNeueBitBold,
     fontWeight = FontWeight(700),
-    color = Color.White,
+    color = Color.Unspecified,
     textAlign = TextAlign.Center,
 )
 
@@ -116,7 +105,7 @@ val NeueBitLargeTextStyle = TextStyle(
 //    lineHeight = 24.sp,
     fontFamily = ppNeueBitBold,
     fontWeight = FontWeight(700),
-    color = Color.White,
+    color = Color.Unspecified,
     textAlign = TextAlign.Center,
 )
 
@@ -125,7 +114,7 @@ val NeueBitSmallTextStyle = TextStyle(
 //    lineHeight = 24.sp,
     fontFamily = ppNeueBitBold,
     fontWeight = FontWeight(700),
-    color = Color.White,
+    color = Color.Unspecified,
     textAlign = TextAlign.Center,
 )
 

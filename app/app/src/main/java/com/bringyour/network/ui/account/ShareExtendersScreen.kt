@@ -53,12 +53,11 @@ import com.bringyour.network.ui.components.ShareButton
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.components.tabletReadableColumn
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.bringyour.network.ui.theme.AppTheme
 
 // the drawn side of the share code
 private val QR_SIZE = 240.dp
@@ -117,11 +116,11 @@ fun ShareExtendersScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         Column(
@@ -159,7 +158,7 @@ fun ShareExtendersScreen(
             Text(
                 stringResource(id = R.string.share_extenders_hint),
                 style = TextStyle(fontSize = 12.sp),
-                color = TextMuted,
+                color = AppTheme.textMuted,
             )
 
             // the switch's 48 dp touch target fills the rest, above and below
@@ -190,7 +189,7 @@ fun ShareExtendersScreen(
             Text(
                 share.text,
                 style = TextStyle(fontSize = 11.sp, fontFamily = FontFamily.Monospace),
-                color = TextFaint,
+                color = AppTheme.textFaint,
                 modifier = Modifier.fillMaxWidth(),
             )
 

@@ -20,10 +20,11 @@ import com.bringyour.network.ui.components.BestValuePill
 import com.bringyour.network.ui.components.PlanOptionContainer
 import com.bringyour.network.ui.shared.enums.PlanType
 import com.bringyour.network.ui.theme.ProGoldLight
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import java.text.DateFormat
 import java.util.Date
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The two plan cards every plan surface renders (mmm/onboarding/PLAN.md "PRICE
@@ -156,7 +157,7 @@ private fun MonthlyCardLines(
             Text(
                 stringResource(id = R.string.offer_then_regular_monthly_price, winback.regularMonthPrice),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Text(
                 stringResource(id = R.string.offer_percent_off_first_month, winback.percentOff),
@@ -167,7 +168,7 @@ private fun MonthlyCardLines(
                 Text(
                     stringResource(id = R.string.offer_available_until, formatOfferDeadline(winback.expiresAtMillis)),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
         } else {
@@ -178,7 +179,7 @@ private fun MonthlyCardLines(
             Text(
                 monthlyNote ?: stringResource(id = R.string.plan_billed_monthly_cancel_anytime),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
     }
@@ -204,7 +205,7 @@ private fun YearlyCardLines(
                 Text(
                     stringResource(id = R.string.offer_then_regular_price, offer.regularYearPrice),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
         } else {
@@ -217,13 +218,13 @@ private fun YearlyCardLines(
                 Text(
                     stringResource(id = R.string.plan_monthly_equivalent_line, equivalent),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             } else if (presentation.isRegional && countryName != null) {
                 Text(
                     stringResource(id = R.string.plan_billed_yearly_price_for_country, countryName),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
         }
@@ -238,7 +239,7 @@ private fun YearlyCardLines(
             Text(
                 stringResource(id = R.string.offer_available_until, formatOfferDeadline(offer.expiresAtMillis)),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         } else if (offer == null && 0 < presentation.savingPercent) {
             Text(
@@ -294,7 +295,7 @@ fun PlanFinePrintLine(text: String) {
     Text(
         text,
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted,
+        color = AppTheme.textMuted,
         modifier = Modifier.fillMaxWidth()
     )
 }

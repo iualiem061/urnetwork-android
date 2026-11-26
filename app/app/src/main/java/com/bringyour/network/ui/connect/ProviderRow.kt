@@ -41,14 +41,15 @@ import com.bringyour.network.ui.components.CircleImage
 import com.bringyour.network.ui.components.ContextMenuBox
 import com.bringyour.network.ui.components.ContextMenuItem
 import com.bringyour.network.ui.components.focusRing
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueDark
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Green
 import com.bringyour.network.ui.theme.Red400
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.Yellow
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable()
 fun ProviderRow(
@@ -62,11 +63,6 @@ fun ProviderRow(
     isStable: Boolean,
     isStrongPrivacy: Boolean,
     displayIcons: Boolean = true,
-    // the location's measured ingress round trip (LocationPing), or null when
-    // no test has run
-    ping: LocationPing? = null,
-    // the best-available row shows "auto" instead of a measured ping
-    pingAuto: Boolean = false,
     // what a right click or the context menu key offers on the row
     contextMenuItems: List<ContextMenuItem> = listOf(),
 ) {
@@ -139,7 +135,7 @@ fun ProviderRow(
                                     providerCount,
                                 ),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = TextMuted
+                                color = AppTheme.textMuted
                             )
                         }
                     }
@@ -149,21 +145,6 @@ fun ProviderRow(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                // the measured ping, right-aligned before the row's marks
-                if (pingAuto) {
-                    Text(
-                        stringResource(id = R.string.ping_auto),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TextMuted,
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                } else {
-                    ping?.let { rowPing ->
-                        PingText(ping = rowPing)
-                        Spacer(modifier = Modifier.width(8.dp))
-                    }
-                }
 
                 if (displayIcons) {
 
@@ -194,38 +175,12 @@ fun ProviderRow(
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = null,
-                    tint = if (isSelected) BlueMedium else Black
+                    tint = if (isSelected) BlueMedium else AppTheme.bg
                 )
 
             }
 
         }
-    }
-}
-
-@Composable
-private fun PingText(ping: LocationPing) {
-    when (ping) {
-        is LocationPing.Measured -> Text(
-            stringResource(id = R.string.ping_ms, ping.millis),
-            style = MaterialTheme.typography.bodyMedium,
-            // the buckets read at a glance: fast, ok, slow
-            color = when {
-                ping.millis < 120 -> Green
-                ping.millis < 200 -> Yellow
-                else -> Red400
-            },
-        )
-        LocationPing.Testing -> Text(
-            stringResource(id = R.string.ping_testing),
-            style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted,
-        )
-        LocationPing.Unavailable, LocationPing.Failed -> Text(
-            stringResource(id = R.string.ping_unavailable),
-            style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted,
-        )
     }
 }
 

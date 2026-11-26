@@ -39,8 +39,9 @@ import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.components.CircleImage
 import com.bringyour.network.ui.components.rememberCountryFlag
 import com.bringyour.network.ui.components.URSearchInput
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.sdk.ConnectLocation
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +76,7 @@ fun AddBlockedLocationSheet(
                     .asPaddingValues()
                     .calculateTopPadding()
             ),
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) {
 
         LazyColumn(
@@ -120,7 +121,6 @@ fun AddBlockedLocationSheet(
                 }
 
             }
-
 
             itemsIndexed(
                 filteredCountries,

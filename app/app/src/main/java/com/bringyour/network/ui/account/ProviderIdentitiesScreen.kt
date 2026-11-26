@@ -50,10 +50,10 @@ import com.bringyour.network.ui.components.Identicon
 import com.bringyour.network.ui.shared.viewmodels.PostQuantumIdentityViewModel
 import com.bringyour.network.ui.shared.viewmodels.ProviderIdentityRowUi
 import com.bringyour.network.ui.shared.viewmodels.formatIdentityKeyHashForDisplay
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextFaint
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.components.tabletReadableColumn
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Provider Identities: a live list with one row per provider with an
@@ -88,11 +88,11 @@ fun ProviderIdentitiesScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         LazyColumn(
@@ -181,7 +181,7 @@ private fun ProviderIdentityRowView(
                     fontWeight = FontWeight.Medium,
                     fontFamily = FontFamily.Monospace
                 ),
-                color = Color.White,
+                color = AppTheme.textPrimary,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
@@ -199,7 +199,7 @@ private fun ProviderIdentityRowView(
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace
                 ),
-                color = TextFaint,
+                color = AppTheme.textFaint,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {

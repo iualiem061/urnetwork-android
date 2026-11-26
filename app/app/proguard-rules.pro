@@ -43,3 +43,17 @@
 -keepclasseswithmembers class com.bringyour.network.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
+
+# --- custom community build -------------------------------------------------
+# Shrink-only: tree shaking removes unused code (the unused
+# material-icons-extended glyphs among it) while names and bytecode stay as
+# compiled, keeping the Go SDK's JNI bridge and reflection-based helpers safe.
+-dontobfuscate
+-dontoptimize
+
+# the Go SDK's gobind bridge: native code calls into these classes
+-keep class com.bringyour.sdk.** { *; }
+-keep class go.** { *; }
+
+# crash stack traces stay readable with names kept
+-keepattributes SourceFile,LineNumberTable

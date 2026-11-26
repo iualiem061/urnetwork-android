@@ -52,14 +52,23 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StackedLineChart
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -91,6 +100,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -136,8 +148,7 @@ import com.bringyour.network.ui.shared.viewmodels.OverlayViewModel
 import com.bringyour.network.ui.shared.viewmodels.PlanViewModel
 import com.bringyour.network.ui.shared.viewmodels.ReferralCelebration
 import com.bringyour.network.ui.shared.viewmodels.ReferralCodeViewModel
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.MainBorderBase
+
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
@@ -190,6 +201,7 @@ import com.bringyour.network.ui.upgrade.UpgradeScreen
 import com.bringyour.sdk.ReliabilityWindow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -297,9 +309,9 @@ private fun MainNavHostContent(
     )
 
     val customColors = NavigationSuiteDefaults.colors(
-        navigationRailContainerColor = Black,
-        navigationBarContentColor = Black,
-        navigationBarContainerColor = Black,
+        navigationRailContainerColor = AppTheme.bg,
+        navigationBarContentColor = AppTheme.bg,
+        navigationBarContainerColor = AppTheme.bg,
     )
 
     val windowLayout = LocalWindowLayout.current
@@ -468,50 +480,13 @@ private fun MainNavHostContent(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Black)
-                    // .padding(top = 36.dp)
-                    // .systemBarsPadding()
-                    // .windowInsetsPadding(WindowInsets.systemBars)
+                        .background(AppTheme.bg)
                 ) {
 
-                    NavigationSuiteScaffold(
-                        containerColor = Black,
-                        // the content's color on the black container, as a
-                        // Scaffold gives every other screen: the connect
-                        // screen's ripples, hover and focus layers draw in it
-                        contentColor = MaterialTheme.colorScheme.onBackground,
-                        navigationSuiteColors = customColors,
-                        layoutType = navSuiteLayoutType,
-
-                        navigationSuiteItems = {
-                            TopLevelScaffoldRoutes.entries.forEach { screen ->
-                                item(
-                                    icon = {
-
-                                        val iconRes = if (screen == currentTopLevelRoute) {
-                                            screen.selectedIcon
-                                        } else {
-                                            screen.unselectedIcon
-                                        }
-
-                                        Icon(
-                                            painter = painterResource(id = iconRes),
-                                            contentDescription = stringResource(id = screen.descriptionId),
-                                            modifier = Modifier.testTag(screen.testTag)
-                                        )
-
-                                    },
-                                    selected = screen == currentTopLevelRoute,
-                                    onClick = { selectTopLevelRoute(screen) },
-                                    colors = navItemColors,
-                                )
-                            }
-                        }
-                    ) {
-
-                        // one container in every layout, so the screens keep
-                        // their state when the bar becomes a rail: a hairline
-                        // beside the rail, a gap above the bar
+                    // one container in every layout, so the screens keep their
+                    // state when the bar becomes a rail: a hairline beside the
+                    // rail, a gap above the bar
+                    val appContent: @Composable () -> Unit = {
                         Row(
                             modifier = Modifier.padding(
                                 bottom = if (navigationLayout == NavigationLayout.BottomBar) 1.dp else 0.dp
@@ -522,7 +497,7 @@ private fun MainNavHostContent(
                                     modifier = Modifier
                                         .width(1.dp)
                                         .fillMaxHeight(),
-                                    color = MainBorderBase
+                                    color = AppTheme.border
                                 )
                             }
 
@@ -542,6 +517,70 @@ private fun MainNavHostContent(
                             )
                         }
                     }
+
+                    if (navSuiteLayoutType == NavigationSuiteType.NavigationBar) {
+                        // the phone layout: a floating, rounded, translucent
+                        // glass bar inset over the screen's foot, in place of
+                        // the full-width navigation suite
+                        Scaffold(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onBackground,
+                            contentWindowInsets = WindowInsets(
+                                left = 0.dp, top = 0.dp, right = 0.dp, bottom = 0.dp
+                            ),
+                            bottomBar = {
+                                FloatingGlassNavBar(
+                                    currentTopLevelRoute = currentTopLevelRoute,
+                                    selectTopLevelRoute = selectTopLevelRoute,
+                                )
+                            },
+                        ) { innerPadding ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(bottom = innerPadding.calculateBottomPadding())
+                            ) {
+                                appContent()
+                            }
+                        }
+                    } else {
+                        NavigationSuiteScaffold(
+                            containerColor = Color.Transparent,
+                            // the content's color on the black container, as a
+                            // Scaffold gives every other screen: the connect
+                            // screen's ripples, hover and focus layers draw in it
+                            contentColor = MaterialTheme.colorScheme.onBackground,
+                            navigationSuiteColors = customColors,
+                            layoutType = navSuiteLayoutType,
+
+                            navigationSuiteItems = {
+                                TopLevelScaffoldRoutes.entries.forEach { screen ->
+                                    item(
+                                        icon = {
+
+                                            val iconRes = if (screen == currentTopLevelRoute) {
+                                                screen.selectedIcon
+                                            } else {
+                                                screen.unselectedIcon
+                                            }
+
+                                            Icon(
+                                                painter = painterResource(id = iconRes),
+                                                contentDescription = stringResource(id = screen.descriptionId),
+                                                modifier = Modifier.testTag(screen.testTag)
+                                            )
+
+                                        },
+                                        selected = screen == currentTopLevelRoute,
+                                        onClick = { selectTopLevelRoute(screen) },
+                                        colors = navItemColors,
+                                    )
+                                }
+                            }
+                        ) {
+                            appContent()
+                        }
+                    }
                 }
             }
 
@@ -556,6 +595,94 @@ private fun MainNavHostContent(
         planAccountName = planAccountName,
     )
 
+}
+
+/**
+ * The phone layout's bottom navigation: a floating, rounded, translucent
+ * glass bar. The pill is inset from the screen's edges with a hairline
+ * border, a soft shadow and a top-lit sheen, so content shows through it
+ * faintly and the bar reads as glass; inside, the suite's own item
+ * semantics, indicator pill and labels (a NavigationBar with its own
+ * insets off, so the pill floats clear of the gesture area).
+ */
+@Composable
+private fun FloatingGlassNavBar(
+    currentTopLevelRoute: TopLevelScaffoldRoutes,
+    selectTopLevelRoute: (TopLevelScaffoldRoutes) -> Unit,
+) {
+    val barShape = RoundedCornerShape(28.dp)
+    // read in composition (the draw lambda cannot) for the glass sheen
+    val glassSheen = AppTheme.glassSheen
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            // float above the gesture navigation area, clear of the edges
+            .navigationBarsPadding()
+            .padding(start = 16.dp, end = 16.dp, bottom = 10.dp)
+    ) {
+        Surface(
+            shape = barShape,
+            color = AppTheme.navGlass,
+            border = BorderStroke(1.dp, AppTheme.border),
+            shadowElevation = 12.dp,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            NavigationBar(
+                containerColor = Color.Transparent,
+                contentColor = AppTheme.textPrimary,
+                tonalElevation = 0.dp,
+                windowInsets = WindowInsets(
+                    left = 0.dp, top = 0.dp, right = 0.dp, bottom = 0.dp
+                ),
+                modifier = Modifier
+                    .clip(barShape)
+                    // a faint top-lit gradient over the translucent fill reads
+                    // as glass
+                    .drawBehind {
+                        drawRect(
+                            brush = Brush.verticalGradient(
+                                listOf(glassSheen, Color.Transparent)
+                            )
+                        )
+                    }
+            ) {
+                TopLevelScaffoldRoutes.entries.forEach { screen ->
+                    val selected = screen == currentTopLevelRoute
+                    NavigationBarItem(
+                        selected = selected,
+                        onClick = { selectTopLevelRoute(screen) },
+                        icon = {
+                            val iconRes = if (selected) {
+                                screen.selectedIcon
+                            } else {
+                                screen.unselectedIcon
+                            }
+                            Icon(
+                                painter = painterResource(id = iconRes),
+                                contentDescription = stringResource(id = screen.descriptionId),
+                                modifier = Modifier
+                                    .testTag(screen.testTag)
+                                    .size(26.dp)
+                            )
+                        },
+                        label = {
+                            Text(
+                                stringResource(id = screen.descriptionId),
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = Pink.copy(alpha = 0.14f),
+                            selectedIconColor = Pink,
+                            unselectedIconColor = AppTheme.textMuted,
+                            selectedTextColor = Pink,
+                            unselectedTextColor = AppTheme.textMuted,
+                        ),
+                    )
+                }
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -586,7 +713,6 @@ fun MainNavContent(
     val localDensityCurrent = LocalDensity.current
     val canvasSizePx =
         with(localDensityCurrent) { connectViewModel.canvasSize.times(0.4f).toPx() }
-
 
     LaunchedEffect(Unit) {
         connectViewModel.initSuccessPoints(canvasSizePx)
@@ -670,7 +796,7 @@ fun MainNavContent(
                 modifier = Modifier
                     .width(1.dp)
                     .fillMaxHeight(),
-                color = MainBorderBase
+                color = AppTheme.border
             )
         }
 

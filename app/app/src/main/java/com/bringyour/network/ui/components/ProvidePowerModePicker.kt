@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.bringyour.network.R
 import com.bringyour.network.ui.shared.models.ProvidePowerMode
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * When this device provides while it runs on battery: keep providing, pause
@@ -32,7 +33,7 @@ fun ProvidePowerModePicker(
         Text(
             stringResource(id = R.string.provide_power_mode),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White
+            color = AppTheme.textPrimary
         )
 
         ProvidePowerMode.entries.forEach { mode ->

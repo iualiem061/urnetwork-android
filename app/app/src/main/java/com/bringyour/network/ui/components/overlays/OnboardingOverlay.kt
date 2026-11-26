@@ -25,9 +25,10 @@ import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.URButton
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.theme.Yellow
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun OnboardingOverlay() {
@@ -59,7 +60,7 @@ fun OnboardingOverlay() {
                 Text(
                     stringResource(id = R.string.nicely_done),
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Black
+                    color = AppTheme.bg
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -67,7 +68,7 @@ fun OnboardingOverlay() {
                 Text(
                     stringResource(id = R.string.step_in),
                     style = MaterialTheme.typography.headlineLarge,
-                    color = Black
+                    color = AppTheme.bg
                 )
 
                 Spacer(modifier = Modifier.height(128.dp))
@@ -78,7 +79,7 @@ fun OnboardingOverlay() {
                         // todo - animate out
                     },
                     style = ButtonStyle.OUTLINE,
-                    borderColor = Black
+                    borderColor = AppTheme.bg
                 ) { buttonTextStyle ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -87,7 +88,7 @@ fun OnboardingOverlay() {
                         Text(
                             stringResource(id = R.string.enter),
                             style = buttonTextStyle,
-                            color = Black
+                            color = AppTheme.bg
                         )
                     }
                 }
@@ -95,7 +96,6 @@ fun OnboardingOverlay() {
         }
     }
 }
-
 
 @Preview
 @Composable

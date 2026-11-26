@@ -29,10 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.MainTextBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.ppNeueBitBold
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The address families of the window's providers, as one row of three
@@ -225,9 +224,9 @@ fun IpFamilyColumn.tagResId(): Int = when (this) {
 }
 
 private fun IpFamilyTier.color(): Color = when (this) {
-    IpFamilyTier.BEST -> MainTextBase
-    IpFamilyTier.ACTIVE -> TextMuted
-    IpFamilyTier.UNAVAILABLE -> TextFaint
+    IpFamilyTier.BEST -> AppTheme.textPrimary
+    IpFamilyTier.ACTIVE -> AppTheme.textMuted
+    IpFamilyTier.UNAVAILABLE -> AppTheme.textFaint
 }
 
 @Composable

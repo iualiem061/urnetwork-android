@@ -36,7 +36,7 @@ import com.bringyour.network.ui.Route
 import com.bringyour.network.ui.components.InfoIconWithOverlay
 import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The Android-only "sync device location with provider" control at the top of
@@ -87,7 +87,7 @@ fun MockLocationSection(
                 Text(
                     stringResource(id = R.string.sync_device_location_with_provider),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White,
+                    color = AppTheme.textPrimary,
                 )
 
                 InfoIconWithOverlay {
@@ -154,7 +154,7 @@ fun MockLocationSection(
             color = if (state.status == MockLocationStatus.ORPHANED)
                 MaterialTheme.colorScheme.error
             else
-                TextMuted,
+                AppTheme.textMuted,
         )
 
         if (state.status == MockLocationStatus.ORPHANED) {

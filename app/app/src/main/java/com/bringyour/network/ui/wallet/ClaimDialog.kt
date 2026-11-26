@@ -50,13 +50,13 @@ import com.bringyour.network.ui.components.URDialog
 import com.bringyour.network.ui.theme.Amber
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
+
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.theme.gravityCondensedFamily
 import kotlinx.coroutines.delay
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The claim dialog. The SDK builds, signs and sends the claim from the device's gas
@@ -99,8 +99,8 @@ fun ClaimDialog(
                     ) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
-                            color = TextMuted,
-                            trackColor = TextFaint,
+                            color = AppTheme.textMuted,
+                            trackColor = AppTheme.textFaint,
                             strokeWidth = 2.dp
                         )
                     }
@@ -109,7 +109,7 @@ fun ClaimDialog(
                     Text(
                         stringResource(id = R.string.connect_wallet_first),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     DialogButtons(primary = stringResource(id = R.string.close), onPrimary = onDismiss)
@@ -177,7 +177,7 @@ private fun ReadyContent(
             Text(
                 stringResource(id = R.string.claims_open_after_finalization),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Spacer(modifier = Modifier.height(16.dp))
             DialogButtons(primary = stringResource(id = R.string.close), onPrimary = onDismiss)
@@ -196,7 +196,7 @@ private fun ReadyContent(
         Text(
             stringResource(id = R.string.claim_across_epochs, state.claims.size),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -211,7 +211,7 @@ private fun ReadyContent(
                 Text(
                     stringResource(id = R.string.epoch_row_title, claim.epoch),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 Text(
                     formatAlpha(claim.amountRao),
@@ -221,7 +221,7 @@ private fun ReadyContent(
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-        HorizontalDivider(color = TextFaint)
+        HorizontalDivider(color = AppTheme.textFaint)
         Spacer(modifier = Modifier.height(12.dp))
 
         state.gasKey?.let { gasKey ->
@@ -232,7 +232,7 @@ private fun ReadyContent(
                 Text(
                     stringResource(id = R.string.gas_key),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 Text(
                     listOfNotNull(
@@ -248,7 +248,7 @@ private fun ReadyContent(
         Text(
             stringResource(id = R.string.claim_sends_from_device),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -304,7 +304,7 @@ internal fun NeedsGasContent(
             Text(
                 stringResource(id = R.string.gas_key),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Text(
                 stringResource(id = R.string.tao_amount_linux, EarningsFormat.tao(state.gasTao)),
@@ -321,7 +321,7 @@ internal fun NeedsGasContent(
                 Text(
                     stringResource(id = R.string.unclaimed),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 Text(
                     formatAlpha(state.totalRao),
@@ -335,7 +335,7 @@ internal fun NeedsGasContent(
         Text(
             stringResource(id = R.string.claim_sends_from_device),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -390,7 +390,7 @@ private fun ProgressContent(
                     Text(
                         formatAlpha(p.amountRao),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                     if (p.status == ClaimProgressStatus.FAILED && !p.message.isNullOrBlank()) {
                         Text(
@@ -407,7 +407,7 @@ private fun ProgressContent(
 
         if (finished) {
             Spacer(modifier = Modifier.height(8.dp))
-            HorizontalDivider(color = TextFaint)
+            HorizontalDivider(color = AppTheme.textFaint)
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -416,7 +416,7 @@ private fun ProgressContent(
                 Text(
                     stringResource(id = R.string.claim_confirmed),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 Text(
                     formatAlpha(confirmedRao),
@@ -448,8 +448,8 @@ internal fun ClaimStatusTrailing(
         when (status) {
             ClaimProgressStatus.PENDING -> CircularProgressIndicator(
                 modifier = Modifier.size(16.dp),
-                color = TextMuted,
-                trackColor = TextFaint,
+                color = AppTheme.textMuted,
+                trackColor = AppTheme.textFaint,
                 strokeWidth = 2.dp
             )
             ClaimProgressStatus.SENT -> {
@@ -462,7 +462,7 @@ internal fun ClaimStatusTrailing(
                 CircularProgressIndicator(
                     modifier = Modifier.size(14.dp),
                     color = BlueMedium,
-                    trackColor = TextFaint,
+                    trackColor = AppTheme.textFaint,
                     strokeWidth = 2.dp
                 )
             }
@@ -490,7 +490,7 @@ internal fun ClaimStatusTrailing(
             Icon(
                 Icons.Filled.OpenInNew,
                 contentDescription = txHash,
-                tint = TextMuted,
+                tint = AppTheme.textMuted,
                 modifier = Modifier
                     .size(16.dp)
                     .clickable {
@@ -533,7 +533,7 @@ private fun CopyRow(value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MainTintedBackgroundBase, RoundedCornerShape(8.dp))
+            .background(AppTheme.bgTinted, RoundedCornerShape(8.dp))
             .clickable {
                 clipboard.setText(AnnotatedString(value))
                 copied = true

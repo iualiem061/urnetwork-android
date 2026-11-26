@@ -54,7 +54,7 @@ import com.bringyour.network.ui.login.solanaWalletFailureText
 import com.bringyour.network.ui.login.ssoJwtPayload
 import com.bringyour.network.ui.login.ssoOAuthAttempts
 import com.bringyour.network.ui.login.toVerifySendError
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.wallet.BittensorProofFlow
 import com.bringyour.network.ui.wallet.BittensorProofSheets
 import com.bringyour.network.ui.wallet.BittensorWallets
@@ -68,6 +68,7 @@ import com.bringyour.sdk.WalletAuthArgs
 import com.solana.mobilewalletadapter.clientlib.ActivityResultSender
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 private const val verifyCodeLength = 6
 
@@ -376,7 +377,7 @@ fun AddAuthMethodSheet(
                 Text(
                     stringResource(id = R.string.link_another_way_to_sign_in_to),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -438,7 +439,7 @@ fun AddAuthMethodSheet(
                         Text(
                             stringResource(id = R.string.sign_in_with_your_apple_id_to),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         URButton(
@@ -460,13 +461,13 @@ fun AddAuthMethodSheet(
                         Text(
                             stringResource(id = R.string.connect_solana_wallet_to_add_sign_in_method),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             stringResource(id = R.string.connect_bittensor_wallet_to_add_sign_in_method),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Row(
@@ -547,7 +548,7 @@ fun AddAuthMethodSheet(
                         Text(
                             stringResource(id = R.string.password_support_txt),
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
                 }
@@ -614,7 +615,7 @@ private fun AddedSignInVerifyStep(
         Text(
             stringResource(id = R.string.login_verify_details),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
         Spacer(modifier = Modifier.height(16.dp))
     }

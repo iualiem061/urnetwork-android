@@ -46,11 +46,10 @@ import com.bringyour.network.ui.components.expandableRow
 import com.bringyour.network.ui.theme.Amber
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Green
-import com.bringyour.network.ui.theme.MainBorderBase
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+
 import kotlin.math.max
 import kotlin.math.min
+import com.bringyour.network.ui.theme.AppTheme
 
 private val DEMAND_CHART_HEIGHT = 64.dp
 
@@ -77,7 +76,7 @@ fun ProviderStatusLineRow(
                 is ProviderStatusLine.Text -> line.text
             },
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
             modifier = Modifier.weight(1f)
         )
 
@@ -123,7 +122,7 @@ fun ProviderDemandChart(
             Text(
                 stringResource(id = R.string.provider_status_demand),
                 style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -137,7 +136,7 @@ fun ProviderDemandChart(
                         total,
                     ),
                     style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Medium),
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
         }
@@ -145,7 +144,7 @@ fun ProviderDemandChart(
         Text(
             caption,
             style = TextStyle(fontSize = 10.sp),
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.height(6.dp))
@@ -197,13 +196,13 @@ fun ProviderDemandChart(
                 Text(
                     stringResource(id = R.string.provider_status_histogram_start),
                     style = TextStyle(fontSize = 10.sp),
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     stringResource(id = R.string.provider_status_histogram_end),
                     style = TextStyle(fontSize = 10.sp),
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
         }
@@ -223,7 +222,7 @@ private fun DemandChartNote(text: String) {
     Text(
         text,
         style = MaterialTheme.typography.bodySmall,
-        color = TextMuted,
+        color = AppTheme.textMuted,
         textAlign = TextAlign.Center
     )
 }
@@ -237,7 +236,7 @@ private fun DrawScope.drawDemandBars(histogram: ProviderDemandHistogram) {
     val baselineWidth = 1.dp.toPx()
     val baselineY = size.height - baselineWidth / 2f
     drawLine(
-        color = MainBorderBase,
+        color = AppTheme.border,
         start = Offset(0f, baselineY),
         end = Offset(size.width, baselineY),
         strokeWidth = baselineWidth
@@ -307,7 +306,7 @@ private fun ProviderStatusWhy(rows: List<ProviderStatusRow>) {
             Text(
                 stringResource(id = R.string.provider_status_why),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
             Spacer(modifier = Modifier.width(4.dp))
             Icon(
@@ -317,7 +316,7 @@ private fun ProviderStatusWhy(rows: List<ProviderStatusRow>) {
                     Icons.Filled.KeyboardArrowDown
                 },
                 contentDescription = null,
-                tint = TextFaint,
+                tint = AppTheme.textFaint,
                 modifier = Modifier.size(16.dp)
             )
         }
@@ -350,7 +349,7 @@ private fun ProviderStatusWhy(rows: List<ProviderStatusRow>) {
                     Text(
                         stringResource(id = row.helpResourceId),
                         style = TextStyle(fontSize = 11.sp),
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                     // why the network checks downgraded this device: what it
                     // is offered for, in the reader's language

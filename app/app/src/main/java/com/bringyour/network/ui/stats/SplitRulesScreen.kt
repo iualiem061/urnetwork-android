@@ -73,20 +73,18 @@ import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.utils.SplitRuleHostError
 import com.bringyour.network.utils.SplitRuleHostInput
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueLight
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Green
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.SheetBlack
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.theme.Yellow400
 import com.bringyour.network.utils.formatByteCountCompact
 import com.bringyour.network.utils.relativeTime
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 internal data class RuleEditorTarget(
     val candidates: List<String>,
@@ -215,11 +213,11 @@ fun SplitRulesScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         Box(
@@ -265,7 +263,7 @@ fun SplitRulesScreen(
                         Text(
                             stringResource(id = R.string.split_rules_host_hint),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextFaint,
+                            color = AppTheme.textFaint,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                         )
                     }
@@ -313,7 +311,7 @@ fun SplitRulesScreen(
                                     blockActionsViewModel.blockedCount
                                 ),
                                 style = TextStyle(fontSize = 11.sp),
-                                color = TextFaint
+                                color = AppTheme.textFaint
                             )
                         }
                     }
@@ -324,7 +322,7 @@ fun SplitRulesScreen(
                         Text(
                             stringResource(id = R.string.split_rules_activity_hint),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextFaint,
+                            color = AppTheme.textFaint,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                         )
                     }
@@ -371,7 +369,7 @@ fun SplitRulesScreen(
                             pendingCount,
                         ),
                         style = TextStyle(fontSize = 12.sp),
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
                 }
             }
@@ -386,7 +384,7 @@ fun SplitRulesScreen(
         FoldSafeModalBottomSheet(
             onDismissRequest = { editorTarget = null },
             sheetState = editorSheetState,
-            containerColor = SheetBlack
+            containerColor = AppTheme.sheet
         ) {
             SplitRuleEditor(
                 target = target,
@@ -412,7 +410,7 @@ private fun SectionHeader(text: String) {
     Text(
         text,
         style = MaterialTheme.typography.bodyMedium,
-        color = TextMuted,
+        color = AppTheme.textMuted,
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
     )
 }
@@ -428,7 +426,7 @@ private fun SplitRulesInfoCard() {
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .background(
-                MainTintedBackgroundBase,
+                AppTheme.bgTinted,
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(16.dp)
@@ -436,7 +434,7 @@ private fun SplitRulesInfoCard() {
         Text(
             stringResource(id = R.string.split_rules_info_note),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
     }
 }
@@ -534,14 +532,14 @@ internal fun BlockActionRow(
                 Text(
                     relativeTime(action.timeMillis),
                     style = TextStyle(fontSize = 11.sp),
-                    color = TextFaint
+                    color = AppTheme.textFaint
                 )
                 if (0 < action.byteCount) {
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         formatByteCountCompact(action.byteCount),
                         style = TextStyle(fontSize = 11.sp),
-                        color = TextFaint
+                        color = AppTheme.textFaint
                     )
                 }
                 // which exit(s) carry this cluster right now. One id is the
@@ -573,7 +571,7 @@ internal fun BlockActionRow(
         Column(horizontalAlignment = Alignment.End) {
             StateChip(
                 text = stringResource(id = if (action.block) R.string.blocked else R.string.allowed),
-                color = if (action.block) Red else TextMuted,
+                color = if (action.block) Red else AppTheme.textMuted,
                 highlighted = action.hasBlockOverride
             )
 
@@ -581,7 +579,7 @@ internal fun BlockActionRow(
 
             StateChip(
                 text = stringResource(id = if (action.local) R.string.local else R.string.remote),
-                color = if (action.local) Green else TextMuted,
+                color = if (action.local) Green else AppTheme.textMuted,
                 highlighted = action.hasRouteOverride
             )
         }
@@ -611,7 +609,7 @@ private fun SafetyRuleLine(
                     stringResource(id = R.string.safety_rule),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -650,7 +648,7 @@ private fun RuleChip(text: String, matched: Boolean) {
         modifier = Modifier
             .border(
                 width = 1.dp,
-                color = if (matched) Green else Color.White.copy(alpha = 0.3f),
+                color = if (matched) Green else AppTheme.textPrimary.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(6.dp)
             )
             .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -663,11 +661,11 @@ private fun IpsPill(count: Int) {
     Text(
         pluralStringResource(id = R.plurals.ip_count, count = count, count),
         style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium),
-        color = TextMuted,
+        color = AppTheme.textMuted,
         modifier = Modifier
             .border(
                 width = 1.dp,
-                color = Color.White.copy(alpha = 0.3f),
+                color = AppTheme.textPrimary.copy(alpha = 0.3f),
                 shape = CircleShape
             )
             .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -683,7 +681,7 @@ fun StateChip(
     Text(
         text,
         style = TextStyle(fontSize = 10.sp),
-        color = if (highlighted) Black else color,
+        color = if (highlighted) AppTheme.bg else color,
         modifier = Modifier
             .background(
                 color = if (highlighted) color else color.copy(alpha = 0.14f),
@@ -735,7 +733,7 @@ private fun SplitRuleEditor(
         Text(
             stringResource(id = if (isEditing) R.string.edit_split_rule else R.string.new_split_rule),
             style = MaterialTheme.typography.headlineSmall,
-            color = Color.White
+            color = AppTheme.textPrimary
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -743,7 +741,7 @@ private fun SplitRuleEditor(
         Text(
             stringResource(id = R.string.split_rule_description),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -772,7 +770,7 @@ private fun SplitRuleEditor(
             Icon(
                 Icons.Filled.Add,
                 contentDescription = stringResource(id = R.string.add),
-                tint = if (validation.isAccepted) Green else TextFaint,
+                tint = if (validation.isAccepted) Green else AppTheme.textFaint,
                 modifier = Modifier
                     .size(24.dp)
                     .clickable(enabled = validation.isAccepted) {
@@ -792,7 +790,7 @@ private fun SplitRuleEditor(
             Text(
                 stringResource(id = R.string.saved_as, validation.note),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextMuted,
+                color = AppTheme.textMuted,
                 modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
             )
         } else {
@@ -829,7 +827,7 @@ private fun SplitRuleEditor(
                     Text(
                         host,
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
                 }
             }
@@ -892,14 +890,14 @@ private fun AddRuleRow(
         Icon(
             imageVector = Icons.Filled.Add,
             contentDescription = null,
-            tint = if (enabled) Green else TextFaint,
+            tint = if (enabled) Green else AppTheme.textFaint,
             modifier = Modifier.size(20.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = stringResource(id = R.string.add_a_rule),
             style = MaterialTheme.typography.bodyMedium,
-            color = if (enabled) Green else TextFaint
+            color = if (enabled) Green else AppTheme.textFaint
         )
     }
 }

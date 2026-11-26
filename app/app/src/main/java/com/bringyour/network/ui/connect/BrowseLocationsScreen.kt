@@ -25,9 +25,10 @@ import androidx.navigation.NavController
 import com.bringyour.network.R
 import com.bringyour.network.ui.shared.models.ConnectStatus
 import com.bringyour.network.ui.stats.NetworkPeersViewModel
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,12 +63,12 @@ fun BrowseLocationsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
                 actions = {},
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
         Box(modifier = Modifier
             .padding(innerPadding)
@@ -114,9 +115,6 @@ fun BrowseLocationsScreen(
                     connectViewModel.disconnect()
                     navController.popBackStack()
                 },
-                locationPings = locationsListViewModel.locationPings.toMap(),
-                onTestPings = { locationsListViewModel.testLocationPings() },
-                pingTestRunning = locationsListViewModel.pingTestRunning,
             )
         }
     }

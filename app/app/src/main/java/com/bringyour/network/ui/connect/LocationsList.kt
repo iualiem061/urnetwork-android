@@ -66,9 +66,6 @@ fun LocationsList(
     // connect screen's Disconnect: the menu of the row it is on offers it
     connectRequested: Boolean = false,
     onDisconnect: () -> Unit = {},
-    // the ping test's results by country code, shared by every row of that
-    // country; empty until a test runs
-    locationPings: Map<String, LocationPing> = emptyMap(),
 ) {
 
     // a row's context menu (Context_Menus): Connect, as its click, or
@@ -168,7 +165,6 @@ fun LocationsList(
                             onFocusChanged = onFocusChanged,
                             isStable = location.stable,
                             isStrongPrivacy = location.strongPrivacy,
-                            ping = location.countryCode?.takeIf { it.isNotEmpty() }?.let { locationPings[it] },
                         )
                     }
                 }
@@ -202,7 +198,6 @@ fun LocationsList(
                             isStable = true,
                             isStrongPrivacy = false,
                             displayIcons = false,
-                            pingAuto = true,
                         )
                     }
 
@@ -241,7 +236,6 @@ fun LocationsList(
                             onFocusChanged = onFocusChanged,
                             isStable = location.stable,
                             isStrongPrivacy = location.strongPrivacy,
-                            ping = location.countryCode?.takeIf { it.isNotEmpty() }?.let { locationPings[it] },
                         )
                     }
                 }
@@ -313,7 +307,6 @@ fun LocationsList(
                             onFocusChanged = onFocusChanged,
                             isStable = location.stable,
                             isStrongPrivacy = location.strongPrivacy,
-                            ping = location.countryCode?.takeIf { it.isNotEmpty() }?.let { locationPings[it] },
                         )
                     }
                 }

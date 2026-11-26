@@ -23,9 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.SectionLoadError
-import com.bringyour.network.ui.theme.Black
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The upgrade route while the guest status is not known
@@ -60,7 +58,7 @@ fun UpgradeGuestStatusPending(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         }
@@ -78,8 +76,8 @@ fun UpgradeGuestStatusPending(
                     modifier = Modifier
                         .width(24.dp)
                         .height(24.dp),
-                    color = TextMuted,
-                    trackColor = TextFaint,
+                    color = AppTheme.textMuted,
+                    trackColor = AppTheme.textFaint,
                     strokeWidth = 2.dp
                 )
             }

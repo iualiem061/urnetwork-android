@@ -35,13 +35,13 @@ import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.SheetBlack
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.Api
 import com.bringyour.sdk.BittensorWalletSession
 import com.bringyour.sdk.Sdk
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+import com.bringyour.network.ui.theme.AppTheme
 
 private const val TAG = "BittensorProof"
 
@@ -237,7 +237,7 @@ fun BittensorProofSheets(
             FoldSafeModalBottomSheet(
                 onDismissRequest = { flow.dismiss() },
                 sheetState = sheetState,
-                containerColor = SheetBlack,
+                containerColor = AppTheme.sheet,
             ) {
                 Column(
                     modifier = Modifier
@@ -267,7 +267,7 @@ fun BittensorProofSheets(
                             Text(
                                 stringResource(id = subtitleRes),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TextMuted,
+                                color = AppTheme.textMuted,
                                 modifier = Modifier.padding(top = 4.dp, start = 4.dp)
                             )
                         }
@@ -289,7 +289,7 @@ fun BittensorProofSheets(
             FoldSafeModalBottomSheet(
                 onDismissRequest = { flow.dismiss() },
                 sheetState = sheetState,
-                containerColor = SheetBlack,
+                containerColor = AppTheme.sheet,
             ) {
                 Column(
                     modifier = Modifier
@@ -319,7 +319,7 @@ fun BittensorProofSheets(
             FoldSafeModalBottomSheet(
                 onDismissRequest = { flow.dismiss() },
                 sheetState = sheetState,
-                containerColor = SheetBlack,
+                containerColor = AppTheme.sheet,
             ) {
                 // the payout consent is about 2 KB of JSON, taller than a phone: the sheet
                 // scrolls, or Copy, the fields and Continue below it are out of reach
@@ -344,13 +344,13 @@ fun BittensorProofSheets(
                     Text(
                         stringResource(id = R.string.bittensor_manual_phone_route),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         stringResource(id = R.string.bittensor_message_to_sign),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     SelectionContainer {

@@ -19,23 +19,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun NoLocationsFound() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MainTintedBackgroundBase, shape = RoundedCornerShape(12.dp))
+            .background(AppTheme.bgTinted, shape = RoundedCornerShape(12.dp))
             .padding(24.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = Icons.Filled.Search,
             contentDescription = null,
-            tint = TextMuted
+            tint = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.width(16.dp))

@@ -58,14 +58,13 @@ import com.bringyour.network.ui.components.SwipeToRevealRow
 import com.bringyour.network.ui.components.URDialog
 import com.bringyour.network.ui.components.URButton
 import com.bringyour.network.ui.components.URSearchInput
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Green
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
+import com.bringyour.network.ui.theme.AppTheme
 
 private data class AppRuleEditorTarget(
     val packageName: String,
@@ -146,11 +145,11 @@ fun AppSplitRulesScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black
+        containerColor = AppTheme.bg
     ) { innerPadding ->
 
         Box(
@@ -167,7 +166,7 @@ fun AppSplitRulesScreen(
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
 
@@ -220,7 +219,7 @@ fun AppSplitRulesScreen(
                                 Text(
                                     stringResource(id = R.string.rules),
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = TextMuted,
+                                    color = AppTheme.textMuted,
                                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                                 )
                             }
@@ -265,7 +264,7 @@ fun AppSplitRulesScreen(
                                                         AppRuleMode.PINNED -> BlueMedium
                                                     }
                                                 } else {
-                                                    TextMuted
+                                                    AppTheme.textMuted
                                                 },
                                                 highlighted = ruleActive
                                             )
@@ -291,7 +290,7 @@ fun AppSplitRulesScreen(
                                 Text(
                                     stringResource(id = R.string.apps),
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = TextMuted,
+                                    color = AppTheme.textMuted,
                                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                                 )
                             }
@@ -330,7 +329,7 @@ fun AppSplitRulesScreen(
                                     Text(
                                         text = stringResource(id = R.string.no_apps_found),
                                         style = MaterialTheme.typography.bodyMedium,
-                                        color = TextMuted
+                                        color = AppTheme.textMuted
                                     )
                                 }
                             }
@@ -397,7 +396,7 @@ private fun AppSplitSummary(
     val statusColor = when {
         includeMode -> BlueMedium
         excludeMode -> Green
-        else -> TextMuted
+        else -> AppTheme.textMuted
     }
     val statusText = stringResource(
         id = when {
@@ -412,7 +411,7 @@ private fun AppSplitSummary(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .background(
-                MainTintedBackgroundBase,
+                AppTheme.bgTinted,
                 shape = RoundedCornerShape(12.dp)
             )
             .padding(16.dp)
@@ -430,7 +429,7 @@ private fun AppSplitSummary(
             Text(
                 statusText,
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
         }
 
@@ -439,7 +438,7 @@ private fun AppSplitSummary(
         Text(
             stringResource(id = R.string.app_split_precedence_note),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
     }
 }
@@ -478,12 +477,12 @@ private fun AppRow(
             Text(
                 label,
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             Text(
                 packageName,
                 style = TextStyle(fontSize = 11.sp),
-                color = TextFaint
+                color = AppTheme.textFaint
             )
         }
 
@@ -520,7 +519,7 @@ private fun AppRuleDialog(
             Text(
                 target.label,
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
 
             Spacer(modifier = Modifier.padding(4.dp))
@@ -528,7 +527,7 @@ private fun AppRuleDialog(
             Text(
                 target.packageName,
                 style = TextStyle(fontSize = 11.sp),
-                color = TextFaint
+                color = AppTheme.textFaint
             )
 
             Spacer(modifier = Modifier.padding(8.dp))
@@ -547,12 +546,12 @@ private fun AppRuleDialog(
                     Text(
                         stringResource(id = R.string.exclude_app),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
                     Text(
                         stringResource(id = R.string.exclude_app_description),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
             }
@@ -575,12 +574,12 @@ private fun AppRuleDialog(
                     Text(
                         stringResource(id = R.string.pin_app),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
                     Text(
                         stringResource(id = R.string.pin_app_description),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
             }
@@ -601,12 +600,12 @@ private fun AppRuleDialog(
                     Text(
                         stringResource(id = R.string.include_app),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
                     Text(
                         stringResource(id = R.string.include_app_description),
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                 }
             }

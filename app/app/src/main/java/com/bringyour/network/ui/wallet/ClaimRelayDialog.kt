@@ -45,13 +45,14 @@ import com.bringyour.network.ui.components.URDialog
 import com.bringyour.network.ui.theme.BlueMedium
 import com.bringyour.network.ui.theme.Green
 import com.bringyour.network.ui.theme.Red
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.gravityCondensedFamily
 import com.bringyour.sdk.Sdk
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import com.bringyour.network.ui.theme.AppTheme
 
 /*
  * The claim relay on Earnings (the mocks' flow 4): under the Settlement v2
@@ -119,7 +120,7 @@ fun SnClaimRelaySection(
                     Icon(
                         Icons.Filled.Schedule,
                         contentDescription = null,
-                        tint = TextMuted,
+                        tint = AppTheme.textMuted,
                         modifier = Modifier.size(16.dp),
                     )
                 } else {
@@ -276,14 +277,14 @@ private fun SnClaimRelayNote(text: String, centered: Boolean = false) {
             text,
             modifier = Modifier.fillMaxWidth(),
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
             textAlign = TextAlign.Center,
         )
     } else {
         Text(
             text,
             style = MaterialTheme.typography.bodySmall,
-            color = TextMuted,
+            color = AppTheme.textMuted,
         )
     }
 }
@@ -302,20 +303,20 @@ private fun SnClaimRelayReasonDetail(text: String) {
     Text(
         text,
         style = MaterialTheme.typography.bodyMedium,
-        color = TextMuted,
+        color = AppTheme.textMuted,
     )
 }
 
 // Pending in grey, Claimed in blue, as the mocks' pills
 @Composable
-internal fun SnClaimRelayPill(text: String, color: Color = TextMuted) {
+internal fun SnClaimRelayPill(text: String, color: Color = AppTheme.textMuted) {
     Text(
         text,
         modifier = Modifier
             .background(color.copy(alpha = 0.2f), RoundedCornerShape(50))
             .padding(horizontal = 8.dp, vertical = 2.dp),
         style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
-        color = if (color == TextMuted) Color.Unspecified else color,
+        color = if (color == AppTheme.textMuted) Color.Unspecified else color,
     )
 }
 
@@ -476,7 +477,7 @@ private fun SnClaimRelayRows(
                 Text(
                     stringResource(id = R.string.sn_ledger_pool_unavailable),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                 )
             }
         }
@@ -549,7 +550,7 @@ fun ClaimRelayDialog(
             Text(
                 stringResource(id = R.string.sn_ledger_title),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -560,7 +561,7 @@ fun ClaimRelayDialog(
                     Text(
                         stringResource(id = R.string.sn_ledger_claimable),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
                     Text(
                         formatAlpha(status.claimableRao),

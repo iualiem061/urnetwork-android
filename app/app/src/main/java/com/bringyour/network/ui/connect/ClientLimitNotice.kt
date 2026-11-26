@@ -25,8 +25,9 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.Route
 import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.URButton
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.Sdk
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The device's client limit hold, as the app shows it: the platform closed
@@ -87,7 +88,7 @@ fun ClientLimitNotice(navController: NavController) {
         Text(
             stringResource(id = R.string.client_limit_remove_client_message),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted,
+            color = AppTheme.textMuted,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 4.dp)

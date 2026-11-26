@@ -24,8 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.shared.models.ProvideControlMode
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The live provide tier indicator: a dot, with an outer ring for the public
@@ -80,7 +79,7 @@ fun ProvideModeRow(
         Text(
             stringResource(id = R.string.provide_mode),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White
+            color = AppTheme.textPrimary
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -88,7 +87,7 @@ fun ProvideModeRow(
         Text(
             stringResource(id = ProvideControlMode.toStringResourceId(mode)),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.width(4.dp))
@@ -96,7 +95,7 @@ fun ProvideModeRow(
         Icon(
             Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
-            tint = TextFaint,
+            tint = AppTheme.textFaint,
             modifier = Modifier.size(16.dp)
         )
     }

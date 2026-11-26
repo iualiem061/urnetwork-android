@@ -39,9 +39,7 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.Identicon
 import com.bringyour.network.ui.shared.viewmodels.PostQuantumIdentityViewModel
 import com.bringyour.network.ui.shared.viewmodels.formatIdentityKeyHashForDisplay
-import com.bringyour.network.ui.theme.OffBlack
-import com.bringyour.network.ui.theme.TextFaint
-import com.bringyour.network.ui.theme.TextMuted
+import com.bringyour.network.ui.theme.AppTheme
 
 // at most this many provider identicons in the deck; the peer count
 // label carries the total
@@ -82,7 +80,7 @@ fun PostQuantumIdentityPanel(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .background(
-                OffBlack,
+                AppTheme.bgElevated,
                 RoundedCornerShape(12.dp)
             )
             .fillMaxWidth()
@@ -95,7 +93,7 @@ fun PostQuantumIdentityPanel(
             Text(
                 stringResource(id = R.string.post_quantum_identity),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -126,7 +124,7 @@ fun PostQuantumIdentityPanel(
                         fontWeight = FontWeight.Medium,
                         fontFamily = FontFamily.Monospace
                     ),
-                    color = Color.White,
+                    color = AppTheme.textPrimary,
                     modifier = Modifier.clickable {
                         clipboardManager.setText(AnnotatedString(ownIdentity.publicKeyHash))
                         Toast.makeText(context, R.string.identity_key_hash_copied, Toast.LENGTH_SHORT).show()
@@ -142,7 +140,7 @@ fun PostQuantumIdentityPanel(
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace
                     ),
-                    color = TextFaint,
+                    color = AppTheme.textFaint,
                     modifier = Modifier.clickable {
                         clipboardManager.setText(AnnotatedString(ownIdentity.clientId))
                         Toast.makeText(context, R.string.client_id_copied, Toast.LENGTH_SHORT).show()
@@ -178,7 +176,7 @@ fun PostQuantumIdentityPanel(
                                 size = deckIdenticonSize,
                                 modifier = Modifier.border(
                                     2.dp,
-                                    OffBlack,
+                                    AppTheme.bgElevated,
                                     RoundedCornerShape(deckIdenticonSize / 6)
                                 )
                             )
@@ -196,7 +194,7 @@ fun PostQuantumIdentityPanel(
                         stringResource(id = R.string.peer_count_other, peers.size)
                     },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
 
@@ -205,7 +203,7 @@ fun PostQuantumIdentityPanel(
             Text(
                 stringResource(id = R.string.post_quantum_identity_explanation),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextMuted
+                color = AppTheme.textMuted
             )
         }
     }

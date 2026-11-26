@@ -30,8 +30,9 @@ import androidx.compose.ui.window.DialogProperties
 import com.bringyour.network.ui.components.CONNECT_GRAPHIC_FULL_DP
 import com.bringyour.network.ui.components.PaneSplit
 import com.bringyour.network.ui.components.connectGraphicSize
-import com.bringyour.network.ui.theme.SheetBlack
+
 import kotlin.math.roundToInt
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * The two panes of the connect screen's pane arrangements (AdaptiveLayout.kt):
@@ -189,7 +190,7 @@ internal fun LocationPickerDialog(
                         // a tap on the card stays in the card
                         .pointerInput(Unit) { detectTapGestures { } },
                     shape = RoundedCornerShape(16.dp),
-                    color = SheetBlack,
+                    color = AppTheme.sheet,
                 ) {
                     content()
                 }

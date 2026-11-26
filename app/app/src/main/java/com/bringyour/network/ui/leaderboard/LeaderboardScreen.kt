@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import com.bringyour.network.ui.components.LocalWindowLayout
 import com.bringyour.network.ui.components.sideBySideSplit
 import com.bringyour.network.ui.components.sidePaneWidth
-import com.bringyour.network.ui.theme.MainBorderBase
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -67,10 +67,10 @@ import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.components.keyboardScrollable
 import com.bringyour.network.ui.theme.Green500
 import com.bringyour.network.ui.theme.HeadingLargeCondensed
-import com.bringyour.network.ui.theme.MainTintedBackgroundBase
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.sdk.LeaderboardEarner
 import kotlinx.coroutines.launch
+import com.bringyour.network.ui.theme.AppTheme
 
 /** the Data tab: the last-4-payments data leaderboard */
 private const val LEADERBOARD_TAB_DATA = 0
@@ -311,7 +311,7 @@ fun LeaderboardScreen(
                     modifier = Modifier
                         .width(1.dp)
                         .fillMaxHeight(),
-                    color = MainBorderBase
+                    color = AppTheme.border
                 )
 
                 YourNetworkPane(
@@ -369,7 +369,7 @@ private fun YourNetworkPane(
         Text(
             stringResource(id = R.string.your_network),
             style = MaterialTheme.typography.labelLarge,
-            color = TextMuted,
+            color = AppTheme.textMuted,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
@@ -464,7 +464,7 @@ private fun LeaderboardHeader(
         Box(
             modifier = Modifier
                 .background(
-                    color = MainTintedBackgroundBase,
+                    color = AppTheme.bgTinted,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(
@@ -480,7 +480,7 @@ private fun LeaderboardHeader(
                 Text(
                     stringResource(id = R.string.current_ranking),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
                 Row(
                     verticalAlignment = Alignment.Bottom
@@ -500,7 +500,7 @@ private fun LeaderboardHeader(
                 Text(
                     stringResource(id = R.string.net_provided),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
 
                 Row(
@@ -524,7 +524,7 @@ private fun LeaderboardHeader(
                     Text(
                         stringResource(id = labelId),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextMuted
+                        color = AppTheme.textMuted
                     )
 
                     Text(
@@ -570,7 +570,7 @@ private fun LeaderboardHeader(
         Text(
             stringResource(id = R.string.leaderboard_description),
             style = MaterialTheme.typography.bodyMedium,
-            color = TextMuted
+            color = AppTheme.textMuted
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -624,7 +624,7 @@ private fun LeaderboardEntry(
                 "#${rank}",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = if (isNetworkRow) FontWeight.ExtraBold else FontWeight.Normal,
-                color = if (isNetworkRow) Green500 else TextMuted,
+                color = if (isNetworkRow) Green500 else AppTheme.textMuted,
                 modifier = Modifier.width(42.dp),
                 textAlign = TextAlign.Start
             )
@@ -637,7 +637,7 @@ private fun LeaderboardEntry(
                 fontWeight = if (isNetworkRow) FontWeight.ExtraBold else FontWeight.Normal,
                 color = when {
                     isNetworkRow -> Green500
-                    isPrivate -> TextMuted
+                    isPrivate -> AppTheme.textMuted
                     else -> Color.White
                 }
             )

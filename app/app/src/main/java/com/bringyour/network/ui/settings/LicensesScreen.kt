@@ -57,12 +57,12 @@ import com.bringyour.network.ui.Route
 import com.bringyour.network.ui.components.URTextInputLabel
 import com.bringyour.network.ui.components.tabletReadableColumn
 import com.bringyour.network.ui.indexedLazyListKey
-import com.bringyour.network.ui.theme.Black
+
 import com.bringyour.network.ui.theme.BlueMedium
-import com.bringyour.network.ui.theme.MainBorderBase
-import com.bringyour.network.ui.theme.TextMuted
+
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.AppTheme
 
 /**
  * Account -> Settings -> Licenses: the data attributions and open source
@@ -124,11 +124,11 @@ private fun LicensesScaffold(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Black
+                    containerColor = AppTheme.bg
                 ),
             )
         },
-        containerColor = Black,
+        containerColor = AppTheme.bg,
         content = content,
     )
 }
@@ -150,7 +150,7 @@ private fun LicensesScreen(
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = TextMuted)
+                CircularProgressIndicator(color = AppTheme.textMuted)
             }
             return@LicensesScaffold
         }
@@ -172,7 +172,7 @@ private fun LicensesScreen(
                 Text(
                     stringResource(id = R.string.licenses_intro),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TextMuted,
+                    color = AppTheme.textMuted,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
             }
@@ -186,7 +186,7 @@ private fun LicensesScreen(
                     key = { i, entry -> indexedLazyListKey("license-data", i, entry.value.name) }
                 ) { _, entry ->
                     LicenseRow(entry.value, onClick = { onOpen(entry.index) })
-                    HorizontalDivider(color = MainBorderBase)
+                    HorizontalDivider(color = AppTheme.border)
                 }
                 item(key = "data-spacer") {
                     Spacer(modifier = Modifier.height(32.dp))
@@ -202,7 +202,7 @@ private fun LicensesScreen(
                     key = { i, entry -> indexedLazyListKey("license-software", i, entry.value.name) }
                 ) { _, entry ->
                     LicenseRow(entry.value, onClick = { onOpen(entry.index) })
-                    HorizontalDivider(color = MainBorderBase)
+                    HorizontalDivider(color = AppTheme.border)
                 }
             }
 
@@ -231,7 +231,7 @@ private fun LicenseRow(
             Text(
                 license.name,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
+                color = AppTheme.textPrimary
             )
             val subtitle = license.subtitle
             if (subtitle.isNotEmpty()) {
@@ -239,7 +239,7 @@ private fun LicenseRow(
                 Text(
                     subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
+                    color = AppTheme.textMuted
                 )
             }
             // a required attribution notice is shown in the list itself
@@ -248,7 +248,7 @@ private fun LicenseRow(
                 Text(
                     license.notice,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.White
+                    color = AppTheme.textPrimary
                 )
             }
         }
@@ -256,7 +256,7 @@ private fun LicenseRow(
         Icon(
             Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
-            tint = TextMuted
+            tint = AppTheme.textMuted
         )
     }
 }
@@ -279,7 +279,7 @@ private fun LicenseDetailScreen(
                 contentAlignment = Alignment.Center
             ) {
                 if (loading) {
-                    CircularProgressIndicator(color = TextMuted)
+                    CircularProgressIndicator(color = AppTheme.textMuted)
                 }
             }
             return@LicensesScaffold
@@ -300,7 +300,7 @@ private fun LicenseDetailScreen(
                     Text(
                         license.name,
                         style = MaterialTheme.typography.headlineSmall,
-                        color = Color.White
+                        color = AppTheme.textPrimary
                     )
                     val subtitle = license.subtitle
                     if (subtitle.isNotEmpty()) {
@@ -308,7 +308,7 @@ private fun LicenseDetailScreen(
                         Text(
                             subtitle,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
 
@@ -317,11 +317,11 @@ private fun LicenseDetailScreen(
                         Text(
                             license.notice,
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                            color = Color.White,
+                            color = AppTheme.textPrimary,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(MainBorderBase)
+                                .background(AppTheme.border)
                                 .padding(12.dp)
                         )
                     }
@@ -331,7 +331,7 @@ private fun LicenseDetailScreen(
                         Text(
                             license.copyright,
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextMuted
+                            color = AppTheme.textMuted
                         )
                     }
                 }
@@ -366,7 +366,7 @@ private fun LicenseDetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(12.dp))
-                        .background(MainBorderBase)
+                        .background(AppTheme.border)
                 ) {
                     Text(
                         license.text,
@@ -375,7 +375,7 @@ private fun LicenseDetailScreen(
                             fontSize = 11.sp,
                             lineHeight = 15.sp,
                         ),
-                        color = Color.White,
+                        color = AppTheme.textPrimary,
                         softWrap = false,
                         modifier = Modifier
                             .horizontalScroll(rememberScrollState())

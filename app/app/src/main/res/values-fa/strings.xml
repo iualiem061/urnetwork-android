@@ -1281,9 +1281,13 @@
     <string name="language">زبان</string>
     <string name="language_note">فارسی و همه زبان‌های برنامه</string>
     <string name="system_default_language">طبق تنظیمات دستگاه</string>
-    <string name="test_ping">تست پینگ</string>
-    <string name="ping_ms">%1$d میلی‌ثانیه</string>
-    <string name="ping_testing">…</string>
-    <string name="ping_unavailable">–</string>
-    <string name="ping_auto">خودکار</string>
+    <!-- ظاهر برنامه (نسخه سفارشی) -->
+    <string name="appearance">ظاهر</string>
+    <string name="appearance_note">روشن، تاریک یا هماهنگ با دستگاه</string>
+    <string name="theme_system">سیستمی</string>
+    <string name="theme_light">روشن</string>
+    <string name="theme_dark">تاریک</string>
+    <!-- شبکه‌های اجتماعی (نسخه سفارشی) -->
+    <string name="social_telegram">تلگرام</string>
+    <string name="social_instagram">اینستاگرام</string>
 </resources>

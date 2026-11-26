@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
-import com.bringyour.network.ui.theme.Black
+import com.bringyour.network.ui.theme.AppTheme
 
 @Composable
 fun OverlayContent(
@@ -49,7 +49,7 @@ fun OverlayContent(
             Icon(
                 painter = painterResource(id = R.drawable.globe_filled),
                 contentDescription = null,
-                tint = Black
+                tint = AppTheme.bg
             )
 
             Spacer(modifier = Modifier.height(24.dp))
