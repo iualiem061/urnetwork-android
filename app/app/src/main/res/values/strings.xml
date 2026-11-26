@@ -1798,6 +1798,23 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <!-- Social channels (custom build) -->
+    <!-- Navigation styles + IP check (custom build) -->
+    <string name="nav_style">Navigation style</string>
+    <string name="nav_style_note">The look of the app\'s bottom bar</string>
+    <string name="nav_style_picker_title">Choose navigation style</string>
+    <string name="nav_style_classic">Classic</string>
+    <string name="nav_style_morphing">Morphing</string>
+    <string name="nav_style_capsule">Capsule</string>
+    <string name="nav_style_side_dock">Vertical Side Dock</string>
+    <string name="ip_check">IP check</string>
+    <string name="ip_check_connection_state">Connection state</string>
+    <string name="ip_check_public_ip">Public IP</string>
+    <string name="ip_check_location">Location</string>
+    <string name="ip_check_isp">ISP</string>
+    <string name="ip_check_refresh">Check again</string>
+    <string name="ip_check_loading">Checking your IP…</string>
+    <string name="ip_check_unavailable">Couldn\'t read your IP</string>
+    <string name="ip_check_note">While connected, this is the exit node\'s IP.</string>
     <string name="social_telegram">Telegram</string>
     <string name="social_instagram">Instagram</string>
 </resources>

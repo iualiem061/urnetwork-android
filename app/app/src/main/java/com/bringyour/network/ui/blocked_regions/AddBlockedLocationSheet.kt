@@ -37,7 +37,8 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.FoldSafeModalBottomSheet
 import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.components.CircleImage
-import com.bringyour.network.ui.components.rememberCountryFlag
+import com.bringyour.network.ui.components.RoundedFlag
+import com.bringyour.network.ui.components.rememberRoundedCountryFlag
 import com.bringyour.network.ui.components.URSearchInput
 
 import com.bringyour.sdk.ConnectLocation
@@ -148,11 +149,19 @@ fun AddBlockedLocationSheet(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
 
-                        CircleImage(
-                            size = 40.dp,
-                            imageResourceId = rememberCountryFlag(location.countryCode),
-                            backgroundColor = getLocationColor(location.countryCode),
-                        )
+                        val flagResourceId = rememberRoundedCountryFlag(location.countryCode)
+                        if (flagResourceId != null) {
+                            // the country's full flag, rounded rectangle, true proportions
+                            RoundedFlag(
+                                imageResourceId = flagResourceId,
+                                height = 28.dp,
+                            )
+                        } else {
+                            CircleImage(
+                                size = 40.dp,
+                                backgroundColor = getLocationColor(location.countryCode),
+                            )
+                        }
                         Spacer(modifier = Modifier.width(16.dp))
 
                         Text(

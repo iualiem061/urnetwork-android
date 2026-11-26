@@ -25,6 +25,7 @@ import com.bringyour.network.ui.shared.models.BundleStore
 import com.bringyour.network.ui.shared.viewmodels.OverlayViewModel
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.ProvideRtlLayoutDirection
 import com.bringyour.network.ui.settings.SystemBarsAppearanceEffect
 import com.solana.mobilewalletadapter.clientlib.ActivityResultSender
 import dagger.hilt.android.AndroidEntryPoint
@@ -116,17 +117,20 @@ class MainActivity: AppCompatActivity() {
             SystemBarsAppearanceEffect(activity = this)
 
             URNetworkTheme {
-                MainNavHost(
-                    settingsViewModel = settingsViewModel,
-                    subscriptionBalanceViewModel = subscriptionBalanceViewModel,
-                    overlayViewModel = overlayViewModel,
-                    animateIn = animateIn,
-                    targetLink = targetUrl,
-                    defaultLocation = defaultLocation,
-                    activityResultSender = activityResultSender,
-                    bundleStore = bundleStore,
-                    isPro = isPro
-                )
+                // a right-to-left language (fa, ar, ...): the whole tree lays out RTL
+                ProvideRtlLayoutDirection {
+                    MainNavHost(
+                        settingsViewModel = settingsViewModel,
+                        subscriptionBalanceViewModel = subscriptionBalanceViewModel,
+                        overlayViewModel = overlayViewModel,
+                        animateIn = animateIn,
+                        targetLink = targetUrl,
+                        defaultLocation = defaultLocation,
+                        activityResultSender = activityResultSender,
+                        bundleStore = bundleStore,
+                        isPro = isPro
+                    )
+                }
             }
         }
 

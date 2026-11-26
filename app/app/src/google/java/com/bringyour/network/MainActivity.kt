@@ -35,6 +35,7 @@ import com.bringyour.network.ui.shared.models.BundleStore
 import com.bringyour.network.ui.shared.viewmodels.OverlayViewModel
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.ProvideRtlLayoutDirection
 import com.solana.mobilewalletadapter.clientlib.ActivityResultSender
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -125,20 +126,23 @@ class MainActivity: AppCompatActivity() {
             // claim stays Free after a purchase (support inbox 8259)
             val isPro by jwtManager.isPro.collectAsState()
 
-            URNetworkTheme {
-                MainNavHost(
-                    earningsViewModel,
-                    settingsViewModel,
-                    planViewModel,
-                    subscriptionBalanceViewModel,
-                    overlayViewModel,
-                    animateIn,
-                    targetUrl,
-                    defaultLocation,
-                    activityResultSender,
-                    bundleStore,
-                    isPro = isPro
-                )
+            // a right-to-left language (fa, ar, ...): the whole tree lays out RTL
+            ProvideRtlLayoutDirection {
+                URNetworkTheme {
+                    MainNavHost(
+                        earningsViewModel,
+                        settingsViewModel,
+                        planViewModel,
+                        subscriptionBalanceViewModel,
+                        overlayViewModel,
+                        animateIn,
+                        targetUrl,
+                        defaultLocation,
+                        activityResultSender,
+                        bundleStore,
+                        isPro = isPro
+                    )
+                }
             }
         }
 

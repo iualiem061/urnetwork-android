@@ -47,10 +47,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.bringyour.network.R
 import com.bringyour.network.ShownPlan
-import com.bringyour.network.ui.components.CircleImage
+import com.bringyour.network.ui.components.RoundedFlag
 import com.bringyour.network.ui.components.ShownPlanName
 import com.bringyour.network.ui.components.PlanAccountNameLine
-import com.bringyour.network.ui.components.rememberCountryFlag
+import com.bringyour.network.ui.components.rememberRoundedCountryFlag
 import com.bringyour.network.ui.Route
 import com.bringyour.network.ui.components.ButtonStyle
 import com.bringyour.network.ui.components.outOfBalanceKindText
@@ -945,7 +945,7 @@ fun OpenProviderListButton(
     // a selected country shows its circular flag, like the location list's
     // rows; everything else (best available, a peer, a client id) keeps the
     // globe
-    val countryFlagResourceId = rememberCountryFlag(
+    val countryFlagResourceId = rememberRoundedCountryFlag(
         selectedLocation?.countryCode?.takeIf { it.isNotEmpty() }
     )?.takeIf {
         selectedPeerName == null &&
@@ -973,10 +973,11 @@ fun OpenProviderListButton(
         ) {
 
             if (countryFlagResourceId != null) {
-                CircleImage(
-                    size = 36.dp,
+                // the selected country's full flag, rounded rectangle, true
+                // proportions; the globe stays beside it for every other pick
+                RoundedFlag(
                     imageResourceId = countryFlagResourceId,
-                    backgroundColor = Color.Transparent,
+                    height = 24.dp,
                 )
             } else {
                 Icon(

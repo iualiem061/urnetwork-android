@@ -61,6 +61,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StackedLineChart
@@ -93,6 +94,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -151,12 +153,15 @@ import com.bringyour.network.ui.account.UpgradeEntry
 import com.bringyour.network.ui.components.nestedLinkBottomSheet.NestedLinkBottomSheet
 import com.bringyour.network.ui.connect.BrowseLocationsScreen
 import com.bringyour.network.ui.connect.LocationsListViewModel
+import com.bringyour.network.ui.connect.IpCheckScreen
 import com.bringyour.network.ui.leaderboard.LeaderboardScreen
 import com.bringyour.network.ui.referrals.ReferralsScreen
 import com.bringyour.network.ui.widgets.WidgetsScreen
 import com.bringyour.network.ui.profile.ProfileScreen
 import com.bringyour.network.ui.profile.ProfileViewModel
 import com.bringyour.network.ui.settings.SettingsScreen
+import com.bringyour.network.ui.settings.NavStyle
+import com.bringyour.network.ui.settings.currentNavStyle
 import com.bringyour.network.ui.settings.VlessSettingsScreen
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
 import com.bringyour.network.ui.wallet.BittensorKeyScreenRequests
@@ -187,6 +192,10 @@ import com.bringyour.network.ui.stats.TransportSettingsKind
 import com.bringyour.network.ui.stats.TransportSettingsScreen
 import com.bringyour.network.ui.stats.SplitRulesScreen
 import com.bringyour.network.ui.theme.Pink
+import com.bringyour.network.ui.components.CustomNavItem
+import com.bringyour.network.ui.components.MorphingNavBar
+import com.bringyour.network.ui.components.CapsuleNavBar
+import com.bringyour.network.ui.components.SideDockNav
 import com.bringyour.network.ui.upgrade.UpgradeGuestStatusPending
 import com.bringyour.network.ui.upgrade.UpgradeScreen
 import com.bringyour.sdk.ReliabilityWindow
@@ -345,6 +354,10 @@ private fun MainNavHostContent(
                 mainNavViewModel.setCurrentTopLevelRoute(TopLevelScaffoldRoutes.ACCOUNT_CONTAINER)
             }
 
+            if (route == Route.IpCheck && currentTopLevelRoute != TopLevelScaffoldRoutes.IP_CHECK) {
+                mainNavViewModel.setCurrentTopLevelRoute(TopLevelScaffoldRoutes.IP_CHECK)
+            }
+
             mainNavViewModel.setCurrentRoute(Route.fromString(destination.route ?: ""))
         }
 
@@ -468,6 +481,25 @@ private fun MainNavHostContent(
         defaultLocation = defaultLocation,
         connectViewModel = connectViewModel
     ) {
+                // the navigation style the user chose in Settings: classic keeps
+                // the adaptive suite (the full bar on phones, the rail on wider
+                // windows); the three floating styles replace the phone bar
+                val navStyle = currentNavStyle()
+                val customNavStyle = navStyle != NavStyle.CLASSIC &&
+                        navSuiteLayoutType == NavigationSuiteType.NavigationBar
+
+                // the custom bars reserve their own room over the content: the
+                // floating bars sit above the bottom edge, the dock on the right
+                // edge (the start edge in the RTL layout)
+                val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+                val dockInset = if (customNavStyle && navStyle == NavStyle.SIDE_DOCK) 76.dp else 0.dp
+                val barInset = when {
+                    customNavStyle && navStyle == NavStyle.SIDE_DOCK -> 0.dp
+                    customNavStyle -> 96.dp
+                    navigationLayout == NavigationLayout.BottomBar -> 1.dp
+                    else -> 0.dp
+                }
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -480,7 +512,9 @@ private fun MainNavHostContent(
                     val appContent: @Composable () -> Unit = {
                         Row(
                             modifier = Modifier.padding(
-                                bottom = if (navigationLayout == NavigationLayout.BottomBar) 1.dp else 0.dp
+                                bottom = barInset,
+                                start = if (rtl) dockInset else 0.dp,
+                                end = if (rtl) 0.dp else dockInset,
                             )
                         ) {
                             if (navigationLayout == NavigationLayout.Rail) {
@@ -509,41 +543,94 @@ private fun MainNavHostContent(
                         }
                     }
 
-                    NavigationSuiteScaffold(
-                        containerColor = AppTheme.bg,
-                        // the content's color on the black container, as a
-                        // Scaffold gives every other screen: the connect
-                        // screen's ripples, hover and focus layers draw in it
-                        contentColor = MaterialTheme.colorScheme.onBackground,
-                        navigationSuiteColors = customColors,
-                        layoutType = navSuiteLayoutType,
-
-                        navigationSuiteItems = {
-                            TopLevelScaffoldRoutes.entries.forEach { screen ->
-                                item(
-                                    icon = {
-
-                                        val iconRes = if (screen == currentTopLevelRoute) {
-                                            screen.selectedIcon
-                                        } else {
-                                            screen.unselectedIcon
-                                        }
-
-                                        Icon(
-                                            painter = painterResource(id = iconRes),
-                                            contentDescription = stringResource(id = screen.descriptionId),
-                                            modifier = Modifier.testTag(screen.testTag)
-                                        )
-
-                                    },
-                                    selected = screen == currentTopLevelRoute,
-                                    onClick = { selectTopLevelRoute(screen) },
-                                    colors = navItemColors,
-                                )
-                            }
-                        }
-                    ) {
+                    if (customNavStyle) {
+                        // the content under the floating bar or the side dock
                         appContent()
+
+                        // the tabs every custom bar shows: the same items,
+                        // icons and selection the classic bar has
+                        val navBarItems: List<Pair<CustomNavItem, Boolean>> =
+                            TopLevelScaffoldRoutes.entries.map { screen ->
+                                CustomNavItem(
+                                    iconRes = screen.unselectedIcon,
+                                    selectedIconRes = screen.selectedIcon,
+                                    label = stringResource(id = screen.descriptionId),
+                                    testTag = screen.testTag,
+                                ) to (screen == currentTopLevelRoute)
+                            }
+                        val onTab: (Int) -> Unit = { index ->
+                            selectTopLevelRoute(TopLevelScaffoldRoutes.entries[index])
+                        }
+
+                        when (navStyle) {
+                            NavStyle.MORPHING -> MorphingNavBar(
+                                items = navBarItems,
+                                onTab = onTab,
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .navigationBarsPadding()
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                                    .fillMaxWidth(),
+                            )
+
+                            NavStyle.CAPSULE -> CapsuleNavBar(
+                                items = navBarItems,
+                                onTab = onTab,
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .navigationBarsPadding()
+                                    .padding(vertical = 12.dp),
+                            )
+
+                            NavStyle.SIDE_DOCK -> SideDockNav(
+                                items = navBarItems,
+                                onTab = onTab,
+                                modifier = Modifier
+                                    .align(
+                                        if (rtl) Alignment.CenterStart else Alignment.CenterEnd
+                                    )
+                                    .padding(horizontal = 12.dp),
+                            )
+
+                            NavStyle.CLASSIC -> Unit
+                        }
+                    } else {
+                        NavigationSuiteScaffold(
+                            containerColor = AppTheme.bg,
+                            // the content's color on the black container, as a
+                            // Scaffold gives every other screen: the connect
+                            // screen's ripples, hover and focus layers draw in it
+                            contentColor = MaterialTheme.colorScheme.onBackground,
+                            navigationSuiteColors = customColors,
+                            layoutType = navSuiteLayoutType,
+
+                            navigationSuiteItems = {
+                                TopLevelScaffoldRoutes.entries.forEach { screen ->
+                                    item(
+                                        icon = {
+
+                                            val iconRes = if (screen == currentTopLevelRoute) {
+                                                screen.selectedIcon
+                                            } else {
+                                                screen.unselectedIcon
+                                            }
+
+                                            Icon(
+                                                painter = painterResource(id = iconRes),
+                                                contentDescription = stringResource(id = screen.descriptionId),
+                                                modifier = Modifier.testTag(screen.testTag)
+                                            )
+
+                                        },
+                                        selected = screen == currentTopLevelRoute,
+                                        onClick = { selectTopLevelRoute(screen) },
+                                        colors = navItemColors,
+                                    )
+                                }
+                            }
+                        ) {
+                            appContent()
+                        }
                     }
                 }
             }
@@ -844,6 +931,14 @@ fun MainNavContent(
                 popExitTransition = NavigationAnimations.popExitTransition()
             ) {
                 ManageDevicesScreen(navController = navController)
+            }
+
+            // the ip check tab: one top-level leaf screen, so the tab's state
+            // (the last read) is kept like the other tabs' screens
+            composable<Route.IpCheck> {
+                IpCheckScreen(
+                    connectViewModel = connectViewModel,
+                )
             }
 
             navigation<Route.AccountContainer>(

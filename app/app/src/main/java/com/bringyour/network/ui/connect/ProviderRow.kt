@@ -40,6 +40,7 @@ import com.bringyour.network.R
 import com.bringyour.network.ui.components.CircleImage
 import com.bringyour.network.ui.components.ContextMenuBox
 import com.bringyour.network.ui.components.ContextMenuItem
+import com.bringyour.network.ui.components.RoundedFlag
 import com.bringyour.network.ui.components.focusRing
 
 import com.bringyour.network.ui.theme.BlueDark
@@ -63,6 +64,9 @@ fun ProviderRow(
     isStable: Boolean,
     isStrongPrivacy: Boolean,
     displayIcons: Boolean = true,
+    // the image is a country flag: render it as the full flag in a rounded
+    // rectangle at its true aspect ratio, instead of the colored circle
+    rectFlag: Boolean = false,
     // what a right click or the context menu key offers on the row
     contextMenuItems: List<ContextMenuItem> = listOf(),
 ) {
@@ -102,11 +106,20 @@ fun ProviderRow(
                     modifier = Modifier
                         .size(40.dp),
                 ) {
-                    CircleImage(
-                        size = 40.dp,
-                        imageResourceId = imageResourceId,
-                        backgroundColor = color,
-                    )
+                    if (rectFlag && imageResourceId != null) {
+                        // the country's own flag, full art, true proportions
+                        RoundedFlag(
+                            imageResourceId = imageResourceId,
+                            height = 28.dp,
+                            modifier = Modifier.align(Alignment.CenterStart),
+                        )
+                    } else {
+                        CircleImage(
+                            size = 40.dp,
+                            imageResourceId = imageResourceId,
+                            backgroundColor = color,
+                        )
+                    }
 
                 }
 

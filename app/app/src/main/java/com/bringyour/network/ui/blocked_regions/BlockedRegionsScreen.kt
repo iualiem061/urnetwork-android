@@ -49,7 +49,8 @@ import androidx.navigation.NavController
 import com.bringyour.network.R
 import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.components.CircleImage
-import com.bringyour.network.ui.components.rememberCountryFlag
+import com.bringyour.network.ui.components.RoundedFlag
+import com.bringyour.network.ui.components.rememberRoundedCountryFlag
 import com.bringyour.network.ui.components.RowRemoveControl
 import com.bringyour.network.ui.components.blockedLocationRemoveControls
 import com.bringyour.network.ui.components.SwipeToRevealRow
@@ -251,11 +252,19 @@ fun BlockedRegionListItem(
                     .padding(start = 16.dp, end = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CircleImage(
-                    size = 40.dp,
-                    imageResourceId = rememberCountryFlag(blockedLocation.countryCode),
-                    backgroundColor = getLocationColor(blockedLocation.countryCode),
-                )
+                val flagResourceId = rememberRoundedCountryFlag(blockedLocation.countryCode)
+                if (flagResourceId != null) {
+                    // the country's full flag, rounded rectangle, true proportions
+                    RoundedFlag(
+                        imageResourceId = flagResourceId,
+                        height = 28.dp,
+                    )
+                } else {
+                    CircleImage(
+                        size = 40.dp,
+                        backgroundColor = getLocationColor(blockedLocation.countryCode),
+                    )
+                }
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     blockedLocation.locationName,

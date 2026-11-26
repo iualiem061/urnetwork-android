@@ -53,6 +53,7 @@ import com.bringyour.network.ui.wallet.SnWalletConnectExtras
 import com.bringyour.network.ui.wallet.Top200Bindings
 import com.bringyour.network.ui.wallet.forwardTop200SignLink
 import com.bringyour.network.ui.theme.URNetworkTheme
+import com.bringyour.network.ui.theme.ProvideRtlLayoutDirection
 import com.bringyour.sdk.AuthCodeLoginArgs
 import com.bringyour.sdk.AuthLoginArgs
 import com.solana.mobilewalletadapter.clientlib.ActivityResultSender
@@ -235,21 +236,24 @@ class LoginActivity : AppCompatActivity() {
         // fixme use a custom view to show up/down statistics and hot linpath spark
 
         setContent {
-            URNetworkTheme {
-                LoginNavHost(
-                    loginViewModel,
-                    promptAccountSwitch = promptAccountSwitch,
-                    targetJwt = targetJwt,
-                    targetLoginRequest = targetLoginRequest,
-                    currentNetworkName = currentNetworkName,
-                    startInstantCreate = startInstantCreate,
-                    isLoadingAuthCode = isLoadingAuthCode,
-                    welcomeOverlayVisible = welcomeOverlayVisible,
-                    referralCode = referralCode,
-                    activityResultSender = activityResultSender,
-                    walletCreateNetworkParams = walletCreateNetworkParams,
-                    jwtCreateNetworkParams = jwtCreateNetworkParams
-                )
+            // a right-to-left language (fa, ar, ...): the whole tree lays out RTL
+            ProvideRtlLayoutDirection {
+                URNetworkTheme {
+                    LoginNavHost(
+                        loginViewModel,
+                        promptAccountSwitch = promptAccountSwitch,
+                        targetJwt = targetJwt,
+                        targetLoginRequest = targetLoginRequest,
+                        currentNetworkName = currentNetworkName,
+                        startInstantCreate = startInstantCreate,
+                        isLoadingAuthCode = isLoadingAuthCode,
+                        welcomeOverlayVisible = welcomeOverlayVisible,
+                        referralCode = referralCode,
+                        activityResultSender = activityResultSender,
+                        walletCreateNetworkParams = walletCreateNetworkParams,
+                        jwtCreateNetworkParams = jwtCreateNetworkParams
+                    )
+                }
             }
         }
     }

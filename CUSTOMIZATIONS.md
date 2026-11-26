@@ -14,21 +14,25 @@ The changes below were applied on top of upstream `main` (2026-11-24).
    upgrade route and screens, plan cards, Get Pro/Get Plus banners, gift
    and redeem-code UI, purchase dialogs and the onboarding sales funnel.
    Data still refreshes with the daily free grant.
-3. **Two tabs** — the bottom bar is Connect and Account, the standard
-   full-width navigation suite (bar on phones, rail on wide windows; the
-   floating glass bar shipped in v2026.11.26-2 was reverted at the owner's
-   request). Leaderboard, Earnings/Top 200, Referrals, Support/Feedback
-   and Balance codes screens and their entries were removed.
-4. **Locations** — country rows show circular flags rendered from the
-   **standard flag art** (the Wikimedia-based designs flagcdn.com serves,
-   as center-square-cropped WebP drawables so the true aspect, emblems and
-   colors are exact — `res/drawable/flag_*.webp`, 252 of 265 codes; the
-   residual non-ISO/retired codes keep the old circle-flags vector). Best
-   available shows a globe, and the connect screen's location card shows
-   the **selected country's flag** instead of the globe. The per-country
-   ping test was **removed**: the sdk names a regional resolver endpoint
-   for only a handful of countries (cn/ru/ir/kz), so a pre-connection
-   "real latency" test cannot cover the list's countries.
+3. **Three tabs + navigation styles** — the bottom bar is Connect, Account
+   and **IP check** (v2026.11.26-4), with four selectable styles in
+   **Settings → Navigation style** (سبک ناوبری): the classic full-width
+   suite (default; bar on phones, rail on wide windows), a floating
+   **Morphing** pill bar whose selection springs between tabs, an icon-only
+   floating **Capsule**, and a vertical **Side Dock** on the right edge.
+   Leaderboard, Earnings/Top 200, Referrals, Support/Feedback and Balance
+   codes screens and their entries were removed.
+4. **Locations** — country rows show the **full flag** (the standard
+   flagcdn art at its true aspect ratio, kept un-cropped) in a **rounded
+   rectangle** (28dp tall, 6dp corners, hairline border — v2026.11.26-4;
+   the v3 center-square-crop circles were replaced at the owner's request):
+   `res/drawable/flag_*.webp`, 252 of 265 codes; the residual
+   non-ISO/retired codes keep the colored circle. Best available shows a
+   globe, and the connect screen's location card shows the **selected
+   country's flag** instead of the globe. The per-country ping test was
+   **removed**: the sdk names a regional resolver endpoint for only a
+   handful of countries (cn/ru/ir/kz), so a pre-connection "real latency"
+   test cannot cover the list's countries.
 5. **Persian (فارسی) + language picker** — full fa translation
    (res/values-fa), per-app language selection (Settings → Language) with
    **System default** and every shipped language, applied through
@@ -51,6 +55,23 @@ The changes below were applied on top of upstream `main` (2026-11-24).
    limits left are the ones the URnetwork **servers** enforce (bandwidth
    balance, device count), which the app cannot and does not try to
    bypass.
+10. **Right-to-left layout (v2026.11.26-4)** — when the running locale is
+    an RTL language (fa, ar, …), the whole app lays out right-to-left: rows
+    mirror (labels at the right, chevrons and values at the left), lists
+    scroll from the right, and Persian text aligns right. Technical strings
+    — the social handles, the post-quantum identity key hash and client
+    id, and the public IP — pin themselves as clean left-to-right runs
+    (`TextDirection.Ltr`), so their characters never reorder.
+11. **IP check tab (v2026.11.26-4)** — a third tab showing the app's own
+    connection state (connected / connecting / disconnected, with the
+    selected location and its flag) and the **public IP** with the location
+    and ISP the internet reads it from (ipwho.is, api.ipify.org as the
+    IP-only fallback; the read travels the tunnel while connected, so it
+    names the exit node), with a re-read button.
+12. **Settings trimmed (v2026.11.26-4)** — the **stay-in-touch** section
+    (product-updates email preference, support email, Discord, DePIN Hub)
+    was removed at the owner's request; the social channels stay in the
+    Account tab.
 
 ## Build
 

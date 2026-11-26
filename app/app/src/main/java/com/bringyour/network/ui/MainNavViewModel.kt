@@ -54,6 +54,8 @@ sealed class Route {
     @Serializable object Connect : Route()
     @Serializable object BrowseLocations : Route()
     @Serializable object AccountContainer : Route()
+    // the ip check tab: the public IP and where the internet reads the device from
+    @Serializable object IpCheck : Route()
 
     // a legacy guest adds a sign-in method to its network (GuestConversionSheet)
     @Serializable object GuestConversion: Route()
@@ -111,5 +113,13 @@ enum class TopLevelScaffoldRoutes(
         R.string.account,
         "acceptance.nav.account",
         route = Route.AccountContainer
+    ),
+    // the ip check tab, third in the bar
+    IP_CHECK(
+        R.drawable.main_nav_ip_filled,
+        R.drawable.main_nav_ip,
+        R.string.ip_check,
+        "acceptance.nav.ip_check",
+        route = Route.IpCheck
     )
 }

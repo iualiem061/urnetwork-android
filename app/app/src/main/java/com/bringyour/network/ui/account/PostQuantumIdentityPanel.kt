@@ -33,6 +33,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bringyour.network.R
@@ -122,7 +123,10 @@ fun PostQuantumIdentityPanel(
                     style = TextStyle(
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
-                        fontFamily = FontFamily.Monospace
+                        fontFamily = FontFamily.Monospace,
+                        // one clean left-to-right run in the RTL layout: the
+                        // code's characters never reorder
+                        textDirection = TextDirection.Ltr,
                     ),
                     color = AppTheme.textPrimary,
                     modifier = Modifier.clickable {
@@ -138,7 +142,8 @@ fun PostQuantumIdentityPanel(
                     ownIdentity.clientId,
                     style = TextStyle(
                         fontSize = 11.sp,
-                        fontFamily = FontFamily.Monospace
+                        fontFamily = FontFamily.Monospace,
+                        textDirection = TextDirection.Ltr,
                     ),
                     color = AppTheme.textFaint,
                     modifier = Modifier.clickable {

@@ -594,6 +594,11 @@ private fun SettingsScreen(
     var languageSheetPresented by rememberSaveable { mutableStateOf(false) }
     var selectedLanguageTag by rememberSaveable { mutableStateOf(currentAppLanguageTag()) }
 
+    // the navigation style: the look of the bottom bar, chosen from a sheet
+    // and applied the moment it is made
+    var navStyleSheetPresented by rememberSaveable { mutableStateOf(false) }
+    var selectedNavStyleName by rememberSaveable { mutableStateOf(currentNavStyle().name) }
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -1227,6 +1232,48 @@ private fun SettingsScreen(
                 )
             }
 
+            /**
+             * Navigation style
+             */
+            URTextInputLabel(text = stringResource(id = R.string.nav_style))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { navStyleSheetPresented = true }
+                    .padding(vertical = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    navStyleDisplayName(NavStyle.valueOf(selectedNavStyleName)),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = AppTheme.textPrimary
+                )
+
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = AppTheme.textMuted
+                )
+            }
+            Text(
+                stringResource(id = R.string.nav_style_note),
+                style = MaterialTheme.typography.bodySmall,
+                color = AppTheme.textMuted
+            )
+
+            if (navStyleSheetPresented) {
+                NavStylePickerSheet(
+                    selected = NavStyle.valueOf(selectedNavStyleName),
+                    onSelected = { style ->
+                        selectedNavStyleName = style.name
+                        NavStylePreferences.set(context, style)
+                        navStyleSheetPresented = false
+                    },
+                    onDismiss = { navStyleSheetPresented = false },
+                )
+            }
+
             // allow notifications
             URTextInputLabel(text = stringResource(id = R.string.notifications_label))
             Row(
@@ -1255,143 +1302,6 @@ private fun SettingsScreen(
                 style = MaterialTheme.typography.bodySmall,
                 color = AppTheme.textMuted
             )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // product updates is an account email preference — it flips a flag
-            // on the network account and collects nothing from the device
-            URTextInputLabel(text = stringResource(id = R.string.stay_in_touch))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    stringResource(id = R.string.send_product_updates),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = AppTheme.textPrimary
-                )
-
-                URSwitch(
-                    checked = allowProductUpdates,
-                    toggle = {
-                        toggleAllowProductUpdates()
-                    },
-                )
-            }
-
-            // the switch's 48 dp touch target fills the rest; 14 dp stays clear
-            // for the touch area of the 20 dp link button below
-            Spacer(modifier = Modifier.height(14.dp))
-
-            // one row per support contact; the email comes first since Discord is unreachable in some regions
-            SupportContact.settingsLinks.forEachIndexed { index, link ->
-
-                if (0 < index) {
-                    Spacer(modifier = Modifier.height(18.dp))
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
-                ) {
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            stringResource(
-                                id = if (link == SupportContact.emailLink) {
-                                    R.string.email_support_at
-                                } else {
-                                    R.string.join_community_discord
-                                }
-                            ),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = AppTheme.textPrimary
-                        )
-                        Spacer(modifier = Modifier.width(3.dp))
-                        Text(
-                            link.text,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = BlueMedium,
-                            modifier = Modifier.clickable {
-                                openSupportUri(context, link.uri)
-                            }
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            openSupportUri(context, link.uri)
-                        },
-                        modifier = Modifier.size(20.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.Outbound,
-                            contentDescription = link.text,
-                            tint = AppTheme.textMuted,
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(18.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Image(
-                        painter = painterResource(id = R.drawable.depin_hub),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        contentScale = ContentScale.Fit
-                    )
-
-                    Spacer(modifier = Modifier.width(2.dp))
-
-                    Text(
-                        text = buildAnnotatedString {
-                            val fullText = stringResource(R.string.verified_project_on,
-                                depinHubStr)
-                            val startIndex = fullText.indexOf(depinHubStr)
-
-                            append(fullText.substring(0, startIndex))
-                            withStyle(style = SpanStyle(color = BlueMedium)) {
-                                append(depinHubStr)
-                            }
-                        },
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = AppTheme.textPrimary
-                    )
-
-                }
-
-                IconButton(
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, depinHubLink.toUri())
-                        context.startActivity(intent)
-                    },
-                    modifier = Modifier.size(20.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.Outbound,
-                        contentDescription = depinHubStr,
-                        tint = AppTheme.textMuted,
-                    )
-                }
-            }
 
             Spacer(modifier = Modifier.height(32.dp))
 

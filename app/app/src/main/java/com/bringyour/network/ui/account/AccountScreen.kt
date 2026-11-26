@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -417,7 +418,11 @@ private fun SocialLinkRow(
                 )
                 Text(
                     handle,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        // a handle stays one clean left-to-right run in the RTL
+                        // layout, its characters never reordered
+                        textDirection = TextDirection.Ltr,
+                    ),
                     color = AppTheme.textMuted
                 )
             }

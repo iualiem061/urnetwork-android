@@ -26,6 +26,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
@@ -101,7 +102,9 @@ fun PostQuantumIdentityShareDialog(
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
-                        fontFamily = FontFamily.Monospace
+                        fontFamily = FontFamily.Monospace,
+                        // one clean left-to-right run in the RTL layout
+                        textDirection = TextDirection.Ltr,
                     ),
                     color = AppTheme.textPrimary,
                     textAlign = TextAlign.Center,
@@ -114,7 +117,8 @@ fun PostQuantumIdentityShareDialog(
                     row.clientId,
                     style = TextStyle(
                         fontSize = 12.sp,
-                        fontFamily = FontFamily.Monospace
+                        fontFamily = FontFamily.Monospace,
+                        textDirection = TextDirection.Ltr,
                     ),
                     color = AppTheme.textMuted,
                     textAlign = TextAlign.Center,

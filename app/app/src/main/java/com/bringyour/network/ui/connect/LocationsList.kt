@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.ContextMenuItem
-import com.bringyour.network.ui.components.rememberCountryFlag
+import com.bringyour.network.ui.components.rememberRoundedCountryFlag
 import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.stats.NetworkPeerUi
 import com.bringyour.network.ui.stats.networkPeersSection
@@ -155,7 +155,8 @@ fun LocationsList(
                         ProviderRow(
                             location = location.name,
                             providerCount = location.providerCount,
-                            imageResourceId = rememberCountryFlag(location.countryCode),
+                            imageResourceId = rememberRoundedCountryFlag(location.countryCode),
+                            rectFlag = true,
                             onClick = {
                                 onLocationSelect(location)
                             },
@@ -226,7 +227,8 @@ fun LocationsList(
                         ProviderRow(
                             location = location.name,
                             providerCount = location.providerCount,
-                            imageResourceId = rememberCountryFlag(location.countryCode),
+                            imageResourceId = rememberRoundedCountryFlag(location.countryCode),
+                            rectFlag = true,
                             onClick = {
                                 onLocationSelect(location)
                             },
@@ -297,7 +299,8 @@ fun LocationsList(
                         ProviderRow(
                             location = location.name,
                             providerCount = location.providerCount,
-                            imageResourceId = rememberCountryFlag(location.countryCode),
+                            imageResourceId = rememberRoundedCountryFlag(location.countryCode),
+                            rectFlag = true,
                             onClick = {
                                 onLocationSelect(location)
                             },

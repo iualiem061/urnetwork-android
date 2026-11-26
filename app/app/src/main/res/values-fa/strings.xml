@@ -1288,6 +1288,23 @@
     <string name="theme_light">روشن</string>
     <string name="theme_dark">تاریک</string>
     <!-- شبکه‌های اجتماعی (نسخه سفارشی) -->
+    <!-- سبک ناوبری و بررسی IP (نسخه سفارشی) -->
+    <string name="nav_style">سبک ناوبری</string>
+    <string name="nav_style_note">شکل نوار پایین برنامه</string>
+    <string name="nav_style_picker_title">انتخاب سبک ناوبری</string>
+    <string name="nav_style_classic">کلاسیک</string>
+    <string name="nav_style_morphing">Morphing</string>
+    <string name="nav_style_capsule">Capsule</string>
+    <string name="nav_style_side_dock">Vertical Side Dock</string>
+    <string name="ip_check">بررسی IP</string>
+    <string name="ip_check_connection_state">وضعیت اتصال</string>
+    <string name="ip_check_public_ip">IP عمومی</string>
+    <string name="ip_check_location">موقعیت</string>
+    <string name="ip_check_isp">شرکت ارائه‌دهندهٔ اینترنت</string>
+    <string name="ip_check_refresh">بررسی دوباره</string>
+    <string name="ip_check_loading">در حال بررسی IP…</string>
+    <string name="ip_check_unavailable">خواندن IP ممکن نشد</string>
+    <string name="ip_check_note">وقتی متصل هستید، این IP نقطهٔ خروج شماست.</string>
     <string name="social_telegram">تلگرام</string>
     <string name="social_instagram">اینستاگرام</string>
 </resources>
