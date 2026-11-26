@@ -36,7 +36,7 @@
 }
 
 # Keep @Serializable classes
--keep,includedescendantclasses class com.bringyour.network.**$$serializer { *; }
+-keep class com.bringyour.network.**$$serializer { *; }
 -keepclassmembers class com.bringyour.network.** {
     *** Companion;
 }
