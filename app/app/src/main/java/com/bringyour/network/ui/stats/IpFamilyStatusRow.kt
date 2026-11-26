@@ -223,6 +223,7 @@ fun IpFamilyColumn.tagResId(): Int = when (this) {
     IpFamilyColumn.V6 -> R.string.ip_family_v6
 }
 
+@Composable
 private fun IpFamilyTier.color(): Color = when (this) {
     IpFamilyTier.BEST -> AppTheme.textPrimary
     IpFamilyTier.ACTIVE -> AppTheme.textMuted

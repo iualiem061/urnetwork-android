@@ -544,7 +544,7 @@ internal fun DnsRecommendationPill(
                 modifier = Modifier
                     .size(8.dp)
                     .background(
-                        color = countryColor(countryCode),
+                        color = countryColor(countryCode, fallback = AppTheme.textMuted),
                         shape = CircleShape
                     )
             )
@@ -562,11 +562,11 @@ internal fun DnsRecommendationPill(
  * The color associated with a country code, falling back to a muted gray when
  * the sdk has no color or the hex is unparseable.
  */
-private fun countryColor(countryCode: String): Color {
+private fun countryColor(countryCode: String, fallback: Color): Color {
     return try {
         Color(android.graphics.Color.parseColor("#${Sdk.getColorHex(countryCode)}"))
     } catch (e: Throwable) {
-        AppTheme.textMuted
+        fallback
     }
 }
 

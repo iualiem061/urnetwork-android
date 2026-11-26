@@ -1161,7 +1161,7 @@ private fun RegionalServerRow(
                     modifier = Modifier
                         .size(10.dp)
                         .background(
-                            color = countryColor(server.countryCode),
+                            color = countryColor(server.countryCode, fallback = AppTheme.textMuted),
                             shape = CircleShape
                         )
                 )
@@ -1201,11 +1201,11 @@ private fun RegionalServerRow(
     }
 }
 
-private fun countryColor(countryCode: String): Color {
+private fun countryColor(countryCode: String, fallback: Color): Color {
     return try {
         Color(android.graphics.Color.parseColor("#${Sdk.getColorHex(countryCode)}"))
     } catch (e: Throwable) {
-        AppTheme.textMuted
+        fallback
     }
 }
 

@@ -167,6 +167,8 @@ fun TransportDistributionBar(
                 .clip(RoundedCornerShape(BAR_HEIGHT / 2))
                 .background(AppTheme.border)
         ) {
+            // read in composition (the draw scope cannot) for the separators
+            val segmentSeparatorColor = AppTheme.bgTinted
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
@@ -178,7 +180,7 @@ fun TransportDistributionBar(
                 drawTransportSegments(
                     boundaries = boundaryTween.current(),
                     colors = colors,
-                    separatorColor = AppTheme.bgTinted,
+                    separatorColor = segmentSeparatorColor,
                 )
             }
         }

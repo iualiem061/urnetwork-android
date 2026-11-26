@@ -147,6 +147,8 @@ fun Modifier.skeletonShimmer(): Modifier {
         ),
         label = "skeletonShimmerPhase",
     )
+    // read in composition (the draw lambda cannot) for the shimmer band
+    val highlightColor = AppTheme.textPrimary
     return this.drawWithContent {
         drawContent()
         val band = size.width * 0.6f
@@ -155,7 +157,7 @@ fun Modifier.skeletonShimmer(): Modifier {
             brush = Brush.linearGradient(
                 colors = listOf(
                     Color.Transparent,
-                    AppTheme.textPrimary.copy(alpha = 0.06f),
+                    highlightColor.copy(alpha = 0.06f),
                     Color.Transparent,
                 ),
                 start = Offset(start, 0f),

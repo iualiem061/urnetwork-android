@@ -173,12 +173,14 @@ fun ProviderDemandChart(
                     }
                 }
                 ProviderDemandState.EMPTY, ProviderDemandState.BARS -> {
+                    // read in composition (the draw scope cannot) for the baseline
+                    val demandBaselineColor = AppTheme.border
                     Canvas(
                         modifier = Modifier
                             .fillMaxSize()
                             .semantics { contentDescription = caption }
                     ) {
-                        drawDemandBars(histogram)
+                        drawDemandBars(histogram, baselineColor = demandBaselineColor)
                     }
                     if (display.demand == ProviderDemandState.EMPTY) {
                         DemandChartNote(stringResource(id = R.string.provider_status_histogram_empty))
@@ -232,11 +234,14 @@ private fun DemandChartNote(text: String) {
  * chart height, over a baseline that a zero leaves bare. The current, partial
  * minute is drawn lighter.
  */
-private fun DrawScope.drawDemandBars(histogram: ProviderDemandHistogram) {
+private fun DrawScope.drawDemandBars(
+    histogram: ProviderDemandHistogram,
+    baselineColor: Color,
+) {
     val baselineWidth = 1.dp.toPx()
     val baselineY = size.height - baselineWidth / 2f
     drawLine(
-        color = AppTheme.border,
+        color = baselineColor,
         start = Offset(0f, baselineY),
         end = Offset(size.width, baselineY),
         strokeWidth = baselineWidth

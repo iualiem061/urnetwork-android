@@ -87,6 +87,8 @@ fun URSwitch(
         !checked && isHighlighted -> Blue300
         else -> Blue400
     }
+    // read in composition (the draw scope cannot) for the track's outline
+    val trackColor = if (enabled) Blue400 else AppTheme.textFaint
 
     Box(
         modifier = Modifier
@@ -118,7 +120,7 @@ fun URSwitch(
 
             // Track
             drawRoundRect(
-                color = if (enabled) Blue400 else AppTheme.textFaint,
+                color = trackColor,
                 cornerRadius = CornerRadius(x = 10.dp.toPx(), y = 10.dp.toPx()),
                 style = Stroke(width = strokeWidth.toPx()),
             )
