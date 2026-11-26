@@ -8,10 +8,9 @@ import androidx.compose.ui.graphics.Color
 
 /**
  * The app's semantic palette: one set of names for the colors the whole UI
- * draws with, resolved per theme. The dark set mirrors the historic constants
- * (Color.kt); the light set is their light-mode counterpart. Screens read the
- * tokens through [AppTheme] (bg, bgElevated, textPrimary, ...), never a
- * raw dark-only constant, so both themes render.
+ * draws with. The set mirrors the historic constants (Color.kt), and the app
+ * resolves it to that single dark palette. Screens read the tokens through
+ * [AppTheme] (bg, bgElevated, textPrimary, ...).
  */
 @Immutable
 data class AppColors(
@@ -32,10 +31,6 @@ data class AppColors(
     val textMuted: Color,
     /** tertiary text (notes, resolver urls) */
     val textFaint: Color,
-    /** the floating navigation bar's translucent glass fill */
-    val navGlass: Color,
-    /** a top gradient's start for the glass sheen */
-    val glassSheen: Color,
 )
 
 val DarkAppColors = AppColors(
@@ -48,22 +43,6 @@ val DarkAppColors = AppColors(
     textPrimary = MainTextBase,
     textMuted = TextMuted,
     textFaint = TextFaint,
-    navGlass = Black.copy(alpha = 0.86f),
-    glassSheen = Color.White.copy(alpha = 0.08f),
-)
-
-val LightAppColors = AppColors(
-    isDark = false,
-    bg = Color(0xFFF4F5F7),
-    bgElevated = Color(0xFFFFFFFF),
-    bgTinted = Color(0xFFECEEF2),
-    sheet = Color(0xFFFFFFFF),
-    border = Color(0x14101418),
-    textPrimary = Color(0xFF191C1F),
-    textMuted = Color(0xFF5B6470),
-    textFaint = Color(0xFF9AA3AE),
-    navGlass = Color.White.copy(alpha = 0.90f),
-    glassSheen = Color.White.copy(alpha = 0.45f),
 )
 
 val LocalAppColors = staticCompositionLocalOf { DarkAppColors }
@@ -100,10 +79,4 @@ object AppTheme {
 
     val textFaint: Color
         @Composable @ReadOnlyComposable get() = LocalAppColors.current.textFaint
-
-    val navGlass: Color
-        @Composable @ReadOnlyComposable get() = LocalAppColors.current.navGlass
-
-    val glassSheen: Color
-        @Composable @ReadOnlyComposable get() = LocalAppColors.current.glassSheen
 }

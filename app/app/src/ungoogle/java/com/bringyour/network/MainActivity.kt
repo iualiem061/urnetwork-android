@@ -11,7 +11,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.content.ContextCompat
@@ -27,8 +26,6 @@ import com.bringyour.network.ui.shared.viewmodels.OverlayViewModel
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
 import com.bringyour.network.ui.theme.URNetworkTheme
 import com.bringyour.network.ui.settings.SystemBarsAppearanceEffect
-import com.bringyour.network.ui.settings.ThemeMode
-import com.bringyour.network.ui.settings.ThemePreferences
 import com.solana.mobilewalletadapter.clientlib.ActivityResultSender
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -115,17 +112,10 @@ class MainActivity: AppCompatActivity() {
             // claim stays Free after a purchase (support inbox 8259)
             val isPro by jwtManager.isPro.collectAsState()
 
-            // the appearance the user chose: the device's setting, or a pinned
-            // light or dark from Settings -> Appearance
-            val themeMode by ThemePreferences.mode.collectAsState()
-            val darkTheme = when (themeMode) {
-                ThemeMode.SYSTEM -> isSystemInDarkTheme()
-                ThemeMode.LIGHT -> false
-                ThemeMode.DARK -> true
-            }
-            SystemBarsAppearanceEffect(darkTheme = darkTheme, activity = this)
+            // the app is dark-only; the effect pins the status bar's icon contrast
+            SystemBarsAppearanceEffect(activity = this)
 
-            URNetworkTheme(darkTheme = darkTheme) {
+            URNetworkTheme {
                 MainNavHost(
                     settingsViewModel = settingsViewModel,
                     subscriptionBalanceViewModel = subscriptionBalanceViewModel,

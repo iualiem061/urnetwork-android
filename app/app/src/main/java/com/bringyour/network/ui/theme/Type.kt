@@ -83,9 +83,6 @@ private fun appTypography(textColor: Color): Typography = Typography(
 /** The dark theme's typography (white text), as the app always shipped. */
 val DarkTypography = appTypography(MainTextBase)
 
-/** The light theme's typography (ink text). */
-val LightTypography = appTypography(LightAppColors.textPrimary)
-
 /** Legacy alias of [DarkTypography]. */
 val Typography = DarkTypography
 

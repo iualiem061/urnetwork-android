@@ -52,23 +52,16 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StackedLineChart
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -101,8 +94,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -518,68 +509,41 @@ private fun MainNavHostContent(
                         }
                     }
 
-                    if (navSuiteLayoutType == NavigationSuiteType.NavigationBar) {
-                        // the phone layout: a floating, rounded, translucent
-                        // glass bar inset over the screen's foot, in place of
-                        // the full-width navigation suite
-                        Scaffold(
-                            containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.onBackground,
-                            contentWindowInsets = WindowInsets(
-                                left = 0.dp, top = 0.dp, right = 0.dp, bottom = 0.dp
-                            ),
-                            bottomBar = {
-                                FloatingGlassNavBar(
-                                    currentTopLevelRoute = currentTopLevelRoute,
-                                    selectTopLevelRoute = selectTopLevelRoute,
+                    NavigationSuiteScaffold(
+                        containerColor = AppTheme.bg,
+                        // the content's color on the black container, as a
+                        // Scaffold gives every other screen: the connect
+                        // screen's ripples, hover and focus layers draw in it
+                        contentColor = MaterialTheme.colorScheme.onBackground,
+                        navigationSuiteColors = customColors,
+                        layoutType = navSuiteLayoutType,
+
+                        navigationSuiteItems = {
+                            TopLevelScaffoldRoutes.entries.forEach { screen ->
+                                item(
+                                    icon = {
+
+                                        val iconRes = if (screen == currentTopLevelRoute) {
+                                            screen.selectedIcon
+                                        } else {
+                                            screen.unselectedIcon
+                                        }
+
+                                        Icon(
+                                            painter = painterResource(id = iconRes),
+                                            contentDescription = stringResource(id = screen.descriptionId),
+                                            modifier = Modifier.testTag(screen.testTag)
+                                        )
+
+                                    },
+                                    selected = screen == currentTopLevelRoute,
+                                    onClick = { selectTopLevelRoute(screen) },
+                                    colors = navItemColors,
                                 )
-                            },
-                        ) { innerPadding ->
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(bottom = innerPadding.calculateBottomPadding())
-                            ) {
-                                appContent()
                             }
                         }
-                    } else {
-                        NavigationSuiteScaffold(
-                            containerColor = Color.Transparent,
-                            // the content's color on the black container, as a
-                            // Scaffold gives every other screen: the connect
-                            // screen's ripples, hover and focus layers draw in it
-                            contentColor = MaterialTheme.colorScheme.onBackground,
-                            navigationSuiteColors = customColors,
-                            layoutType = navSuiteLayoutType,
-
-                            navigationSuiteItems = {
-                                TopLevelScaffoldRoutes.entries.forEach { screen ->
-                                    item(
-                                        icon = {
-
-                                            val iconRes = if (screen == currentTopLevelRoute) {
-                                                screen.selectedIcon
-                                            } else {
-                                                screen.unselectedIcon
-                                            }
-
-                                            Icon(
-                                                painter = painterResource(id = iconRes),
-                                                contentDescription = stringResource(id = screen.descriptionId),
-                                                modifier = Modifier.testTag(screen.testTag)
-                                            )
-
-                                        },
-                                        selected = screen == currentTopLevelRoute,
-                                        onClick = { selectTopLevelRoute(screen) },
-                                        colors = navItemColors,
-                                    )
-                                }
-                            }
-                        ) {
-                            appContent()
-                        }
+                    ) {
+                        appContent()
                     }
                 }
             }
@@ -597,93 +561,6 @@ private fun MainNavHostContent(
 
 }
 
-/**
- * The phone layout's bottom navigation: a floating, rounded, translucent
- * glass bar. The pill is inset from the screen's edges with a hairline
- * border, a soft shadow and a top-lit sheen, so content shows through it
- * faintly and the bar reads as glass; inside, the suite's own item
- * semantics, indicator pill and labels (a NavigationBar with its own
- * insets off, so the pill floats clear of the gesture area).
- */
-@Composable
-private fun FloatingGlassNavBar(
-    currentTopLevelRoute: TopLevelScaffoldRoutes,
-    selectTopLevelRoute: (TopLevelScaffoldRoutes) -> Unit,
-) {
-    val barShape = RoundedCornerShape(28.dp)
-    // read in composition (the draw lambda cannot) for the glass sheen
-    val glassSheen = AppTheme.glassSheen
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            // float above the gesture navigation area, clear of the edges
-            .navigationBarsPadding()
-            .padding(start = 16.dp, end = 16.dp, bottom = 10.dp)
-    ) {
-        Surface(
-            shape = barShape,
-            color = AppTheme.navGlass,
-            border = BorderStroke(1.dp, AppTheme.border),
-            shadowElevation = 12.dp,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            NavigationBar(
-                containerColor = Color.Transparent,
-                contentColor = AppTheme.textPrimary,
-                tonalElevation = 0.dp,
-                windowInsets = WindowInsets(
-                    left = 0.dp, top = 0.dp, right = 0.dp, bottom = 0.dp
-                ),
-                modifier = Modifier
-                    .clip(barShape)
-                    // a faint top-lit gradient over the translucent fill reads
-                    // as glass
-                    .drawBehind {
-                        drawRect(
-                            brush = Brush.verticalGradient(
-                                listOf(glassSheen, Color.Transparent)
-                            )
-                        )
-                    }
-            ) {
-                TopLevelScaffoldRoutes.entries.forEach { screen ->
-                    val selected = screen == currentTopLevelRoute
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = { selectTopLevelRoute(screen) },
-                        icon = {
-                            val iconRes = if (selected) {
-                                screen.selectedIcon
-                            } else {
-                                screen.unselectedIcon
-                            }
-                            Icon(
-                                painter = painterResource(id = iconRes),
-                                contentDescription = stringResource(id = screen.descriptionId),
-                                modifier = Modifier
-                                    .testTag(screen.testTag)
-                                    .size(26.dp)
-                            )
-                        },
-                        label = {
-                            Text(
-                                stringResource(id = screen.descriptionId),
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            indicatorColor = Pink.copy(alpha = 0.14f),
-                            selectedIconColor = Pink,
-                            unselectedIconColor = AppTheme.textMuted,
-                            selectedTextColor = Pink,
-                            unselectedTextColor = AppTheme.textMuted,
-                        ),
-                    )
-                }
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

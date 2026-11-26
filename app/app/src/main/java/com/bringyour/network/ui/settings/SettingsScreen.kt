@@ -594,11 +594,6 @@ private fun SettingsScreen(
     var languageSheetPresented by rememberSaveable { mutableStateOf(false) }
     var selectedLanguageTag by rememberSaveable { mutableStateOf(currentAppLanguageTag()) }
 
-    // the app appearance: light, dark or the device's setting, pinned in the
-    // app's preferences and observed by both activities
-    var themeSheetPresented by rememberSaveable { mutableStateOf(false) }
-    val selectedThemeMode by ThemePreferences.mode.collectAsState()
-
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -1187,51 +1182,6 @@ private fun SettingsScreen(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            /**
-             * Appearance
-             */
-            URTextInputLabel(text = stringResource(id = R.string.appearance))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { themeSheetPresented = true }
-                    .padding(vertical = 6.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    themeModeDisplayName(selectedThemeMode),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = AppTheme.textPrimary
-                )
-
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = null,
-                    tint = AppTheme.textMuted
-                )
-            }
-            Text(
-                stringResource(id = R.string.appearance_note),
-                style = MaterialTheme.typography.bodySmall,
-                color = AppTheme.textMuted
-            )
-
-            if (themeSheetPresented) {
-                ThemeModePickerSheet(
-                    selectedMode = selectedThemeMode,
-                    onSelected = { mode ->
-                        ThemePreferences.set(context, mode)
-                        themeSheetPresented = false
-                    },
-                    onDismiss = { themeSheetPresented = false },
-                )
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
 
             Spacer(modifier = Modifier.height(32.dp))
 
