@@ -26,6 +26,7 @@ import javax.inject.Inject
 data class IpCheckInfo(
     val ip: String,
     val country: String? = null,
+    val countryCode: String? = null,
     val city: String? = null,
     val isp: String? = null,
 )
@@ -76,6 +77,7 @@ class IpCheckViewModel @Inject constructor() : ViewModel() {
         IpCheckInfo(
             ip = parsed.ip,
             country = parsed.country,
+            countryCode = parsed.countryCode,
             city = parsed.city,
             isp = parsed.connection?.isp ?: parsed.connection?.org,
         )
@@ -92,6 +94,8 @@ class IpCheckViewModel @Inject constructor() : ViewModel() {
         val ip: String? = null,
         val success: Boolean? = null,
         val country: String? = null,
+        @kotlinx.serialization.SerialName("country_code")
+        val countryCode: String? = null,
         val city: String? = null,
         val connection: Connection? = null,
     ) {

@@ -50,6 +50,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.PulseDot
 import com.bringyour.network.ui.components.RoundedFlag
+import com.bringyour.network.ui.components.countryDisplayName
 import com.bringyour.network.ui.components.rememberRoundedCountryFlag
 import com.bringyour.network.ui.components.entrance
 import com.bringyour.network.ui.components.pressScale
@@ -188,7 +189,7 @@ fun IpCheckScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                             }
                             Text(
-                                selectedLocation?.name
+                                selectedLocation?.let(::locationDisplayName)
                                     ?: stringResource(id = R.string.best_available_provider),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = AppTheme.textMuted,
@@ -297,8 +298,10 @@ fun IpCheckScreen(
                             current.info.country?.let { country ->
                                 IpInfoRow(
                                     label = stringResource(id = R.string.ip_check_location),
-                                    value = listOfNotNull(current.info.city, country)
-                                        .joinToString(" · "),
+                                    value = listOfNotNull(
+                                        current.info.city,
+                                        countryDisplayName(current.info.countryCode, country),
+                                    ).joinToString(" · "),
                                 )
                             }
 

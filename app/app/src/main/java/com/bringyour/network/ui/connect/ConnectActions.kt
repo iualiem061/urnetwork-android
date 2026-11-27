@@ -927,7 +927,9 @@ fun OpenProviderListButton(
         selectedPeerName != null -> selectedPeerName
         selectedLocation == null || selectedLocation.connectLocationId.bestAvailable ->
             stringResource(id = R.string.best_available_provider)
-        else -> selectedLocation.name
+        // a country reads as the country's name in the app's language, the
+        // same spelling the location list's rows carry
+        else -> locationDisplayName(selectedLocation)
     }.let { label ->
         // a client id label (a direct client connection, or a peer without a device name)
         // is shortened to "abcd…1234" so it does not crowd the Change button

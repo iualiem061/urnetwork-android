@@ -22,14 +22,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.ContextMenuItem
+import com.bringyour.network.ui.components.countryDisplayName
 import com.bringyour.network.ui.components.rememberRoundedCountryFlag
 import com.bringyour.network.ui.indexedLazyListKey
 import com.bringyour.network.ui.stats.NetworkPeerUi
 import com.bringyour.network.ui.stats.networkPeersSection
 import com.bringyour.network.ui.theme.Red400
+import com.bringyour.sdk.Sdk
 
 /** What a location row's context menu offers (adaptive app quality, Context_Menus). */
 enum class LocationMenuAction { Connect, Disconnect }
+
+/**
+ * A row's own display name: a country row shows the country's name in the
+ * app's language («آلمان» for a Persian interface); region and city rows keep
+ * the network's own spelling, since only the countries have a localized name
+ * to read. Shared with the connect card's location row and the ip check's
+ * selected-location line, so the same location reads the same everywhere.
+ */
+fun locationDisplayName(location: ConnectLocation): String =
+    if (location.locationType == Sdk.LocationTypeCountry) {
+        countryDisplayName(location.countryCode, location.name)
+    } else {
+        location.name
+    }
 
 /**
  * A location row's context menu, only the connect screen's own actions:
@@ -154,7 +170,7 @@ fun LocationsList(
                         val selected = selectedLocation?.connectLocationId == location.connectLocationId
                         ProviderRow(
             modifier = Modifier.animateItem(),
-                            location = location.name,
+                            location = locationDisplayName(location),
                             providerCount = location.providerCount,
                             imageResourceId = rememberRoundedCountryFlag(location.countryCode),
                             rectFlag = true,
@@ -228,7 +244,7 @@ fun LocationsList(
                         val selected = selectedLocation?.connectLocationId == location.connectLocationId
                         ProviderRow(
             modifier = Modifier.animateItem(),
-                            location = location.name,
+                            location = locationDisplayName(location),
                             providerCount = location.providerCount,
                             imageResourceId = rememberRoundedCountryFlag(location.countryCode),
                             rectFlag = true,
@@ -266,8 +282,10 @@ fun LocationsList(
                         val selected = selectedLocation?.connectLocationId == location.connectLocationId
                         ProviderRow(
             modifier = Modifier.animateItem(),
-                            location = location.name,
+                            location = locationDisplayName(location),
                             providerCount = location.providerCount,
+                            imageResourceId = rememberRoundedCountryFlag(location.countryCode),
+                            rectFlag = true,
                             onClick = {
                                 onLocationSelect(location)
                             },

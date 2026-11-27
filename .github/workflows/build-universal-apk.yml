@@ -56,6 +56,44 @@ jobs:
           fi
           du -sh ./* | sort -h
 
+      - name: Patch the SDK: every location lists without a search
+        run: |
+          set -e
+          cd "$BRINGYOUR_HOME/sdk"
+          # the custom build's locations list: upstream hides regions and
+          # cities unless a search runs; this build lists every location the
+          # network carries, so nothing needs a search to be seen
+          python3 - <<'PY'
+          import sys
+
+          path = "locations_view_controller.go"
+          src = open(path, encoding="utf-8").read()
+
+          patches = [
+              (
+                  "// only show cities when searching\n"
+                  "\t\t\tif location.LocationType == LocationTypeCity && filter != \"\" {",
+                  "// every city lists, search or not\n"
+                  "\t\t\tif location.LocationType == LocationTypeCity {",
+              ),
+              (
+                  "// only show regions when searching\n"
+                  "\t\t\tif location.LocationType == LocationTypeRegion && filter != \"\" {",
+                  "// every region lists, search or not\n"
+                  "\t\t\tif location.LocationType == LocationTypeRegion {",
+              ),
+          ]
+          for old, new in patches:
+              if src.count(old) != 1:
+                  sys.exit("patch pattern not found exactly once: " + repr(old))
+              src = src.replace(old, new)
+
+          open(path, "w", encoding="utf-8").write(src)
+          print("locations_view_controller.go patched: regions and cities always listed")
+          PY
+          grep -n "every city lists" locations_view_controller.go
+          grep -n "every region lists" locations_view_controller.go
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -91,7 +129,7 @@ jobs:
         run: |
           set -e
           # the version this custom build ships
-          printf 'warp.version=2026.11.27\nwarp.version_code=2026112702\n' \
+          printf 'warp.version=2026.11.28\nwarp.version_code=2026112801\n' \
             > "$BRINGYOUR_HOME/android/app/local.properties"
           cat "$BRINGYOUR_HOME/android/app/local.properties"
 

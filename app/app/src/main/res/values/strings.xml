@@ -1803,6 +1803,17 @@
     <string name="nav_style_classic">Classic</string>
     <string name="nav_style_morphing">Morphing</string>
     <string name="nav_style_capsule">Capsule</string>
+    <string name="nav_style_neon">Neon</string>
+    <string name="nav_style_bubble">Bubble</string>
+    <!-- Proxy mode (custom build) -->
+    <string name="proxy_mode">Proxy mode</string>
+    <string name="proxy_mode_note">Set up and manage your personal proxy server (VLESS)</string>
+    <!-- Locations list (custom build) -->
+    <string name="refresh_servers">Refresh servers</string>
+    <plurals name="locations_count">
+        <item quantity="one">%1$d location</item>
+        <item quantity="other">%1$d locations</item>
+    </plurals>
     <string name="ip_check">IP check</string>
     <string name="ip_check_connection_state">Connection state</string>
     <string name="ip_check_public_ip">Public IP</string>
@@ -1814,11 +1825,11 @@
     <string name="ip_check_note">While connected, this is the exit node\'s IP.</string>
     <string name="social_telegram">Telegram</string>
     <string name="social_instagram">Instagram</string>
-    <!-- VLESS saved relay servers (custom build) -->
-    <string name="vless_servers_title">Relay servers</string>
+    <!-- VLESS saved servers (custom build) -->
+    <string name="vless_servers_title">Saved servers</string>
     <string name="vless_servers_empty">No saved servers yet. Paste a vless:// link below to add your first server.</string>
     <string name="vless_server_active">Active</string>
-    <string name="vless_server_activate_note">Tap a server to make it the active relay.</string>
+    <string name="vless_server_activate_note">Tap a server to make it the active proxy server.</string>
     <string name="vless_server_add_current">Save current server</string>
     <string name="vless_server_activated_toast">Server activated</string>
     <string name="vless_server_added_toast">Server saved</string>

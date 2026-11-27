@@ -76,7 +76,7 @@ sealed class VlessImportResult {
 
 private val vlessUrlRegex = Regex("^https?://\\S+$", RegexOption.IGNORE_CASE)
 
-/** The split every link list uses, shared with the relay network fetch. */
+/** The split every link list uses, shared with the import's reader. */
 internal val whitespaceRegex = Regex("\\s+")
 
 /**

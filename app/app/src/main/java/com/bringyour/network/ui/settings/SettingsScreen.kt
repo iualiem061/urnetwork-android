@@ -1133,21 +1133,21 @@ private fun SettingsScreen(
             Spacer(modifier = Modifier.height(18.dp))
 
             /**
-             * Relays: the shared relay network the app carries and the
-             * personal relays, one general place
+             * Proxy mode: the personal VLESS proxy settings, one general
+             * option of the app
              */
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .bouncyClick {
-                        navController.navigate(Route.Relays)
+                        navController.navigate(Route.Vless)
                     }
                     .padding(vertical = 6.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    stringResource(id = R.string.relays),
+                    stringResource(id = R.string.proxy_mode),
                     style = MaterialTheme.typography.bodyMedium,
                 )
 
@@ -1158,7 +1158,7 @@ private fun SettingsScreen(
                 )
             }
             Text(
-                stringResource(id = R.string.relays_note),
+                stringResource(id = R.string.proxy_mode_note),
                 style = MaterialTheme.typography.bodySmall,
                 color = AppTheme.textMuted
             )

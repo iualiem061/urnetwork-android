@@ -51,3 +51,22 @@ fun rememberRoundedCountryFlag(countryCode: String?): Int? {
     val code = countryCode?.trim()?.lowercase()
     return if (code != null && code in circleVectorFlagCodes) null else flag
 }
+
+/**
+ * The country's name in the language the app runs in: the locale's display
+ * name for the country, so a Persian interface reads «آلمان» where the
+ * network's list says "Germany". [fallback] (the network's own spelling)
+ * shows when the code is empty or says nothing the locale knows.
+ */
+fun countryDisplayName(countryCode: String?, fallback: String): String {
+    val code = countryCode?.trim()?.uppercase() ?: return fallback
+    if (code.length != 2 || !code.all { it in 'A'..'Z' }) {
+        return fallback
+    }
+    return runCatching {
+        val display = java.util.Locale("", code)
+            .getDisplayCountry(java.util.Locale.getDefault())
+        display.takeIf { it.isNotBlank() && !it.equals(code, ignoreCase = true) }
+            ?: fallback
+    }.getOrDefault(fallback)
+}

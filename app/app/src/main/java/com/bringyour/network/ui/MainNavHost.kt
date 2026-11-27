@@ -164,7 +164,6 @@ import com.bringyour.network.ui.profile.ProfileViewModel
 import com.bringyour.network.ui.settings.SettingsScreen
 import com.bringyour.network.ui.settings.NavStyle
 import com.bringyour.network.ui.settings.currentNavStyle
-import com.bringyour.network.ui.settings.RelayHubScreen
 import com.bringyour.network.ui.settings.VlessSettingsScreen
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
 import com.bringyour.network.ui.wallet.BittensorKeyScreenRequests
@@ -198,6 +197,8 @@ import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.components.CustomNavItem
 import com.bringyour.network.ui.components.MorphingNavBar
 import com.bringyour.network.ui.components.CapsuleNavBar
+import com.bringyour.network.ui.components.NeonGlowNavBar
+import com.bringyour.network.ui.components.BubbleNavBar
 import com.bringyour.network.ui.upgrade.UpgradeGuestStatusPending
 import com.bringyour.network.ui.upgrade.UpgradeScreen
 import com.bringyour.sdk.ReliabilityWindow
@@ -485,7 +486,7 @@ private fun MainNavHostContent(
     ) {
                 // the navigation style the user chose in Settings: classic keeps
                 // the adaptive suite (the full bar on phones, the rail on wider
-                // windows); the two floating styles replace the phone bar
+                // windows); the four floating styles replace the phone bar
                 val navStyle = currentNavStyle()
                 val customNavStyle = navStyle != NavStyle.CLASSIC &&
                         navSuiteLayoutType == NavigationSuiteType.NavigationBar
@@ -573,6 +574,26 @@ private fun MainNavHostContent(
                                     .align(Alignment.BottomCenter)
                                     .navigationBarsPadding()
                                     .padding(vertical = 12.dp),
+                            )
+
+                            NavStyle.NEON -> NeonGlowNavBar(
+                                items = navBarItems,
+                                onTab = onTab,
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .navigationBarsPadding()
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                                    .fillMaxWidth(),
+                            )
+
+                            NavStyle.BUBBLE -> BubbleNavBar(
+                                items = navBarItems,
+                                onTab = onTab,
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .navigationBarsPadding()
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                                    .fillMaxWidth(),
                             )
 
                             NavStyle.CLASSIC -> Unit
@@ -995,6 +1016,7 @@ fun MainNavContent(
                     activityResultSender,
                 ) }
 
+                // Settings > Proxy mode: the VLESS proxy settings editor
                 composable<Route.Vless>(
                     enterTransition = NavigationAnimations.enterTransition(rtlLayout),
                     exitTransition = NavigationAnimations.exitTransition(rtlLayout),
@@ -1002,18 +1024,6 @@ fun MainNavContent(
                     popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     VlessSettingsScreen(navController = navController)
-                }
-
-                // the relays hub: the shared relay network beside the
-                // personal relays, a general option of the app rather than a
-                // protocol corner
-                composable<Route.Relays>(
-                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
-                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
-                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
-                ) {
-                    RelayHubScreen(navController = navController)
                 }
 
                 composable<Route.ProviderIdentities>(

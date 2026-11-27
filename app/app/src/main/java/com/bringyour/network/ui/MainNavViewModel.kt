@@ -72,8 +72,6 @@ sealed class Route {
     @Serializable object Widgets : Route()
     @Serializable object BlockedRegions: Route()
     @Serializable object Vless: Route()
-    // Settings > Relays: the shared relay network and the personal relays hub
-    @Serializable object Relays: Route()
     @Serializable object Developer: Route()
     @Serializable object Licenses: Route()
     @Serializable data class LicenseDetail(val index: Int): Route()

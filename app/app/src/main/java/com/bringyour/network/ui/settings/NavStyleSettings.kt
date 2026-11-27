@@ -38,8 +38,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * The app's navigation styles, the look of the main bottom navigation. The
- * classic full-width bar is the default; the other two are floating
- * alternatives the user picks in Settings.
+ * classic full-width bar is the default; the four floating alternatives the
+ * user picks in Settings.
  */
 enum class NavStyle {
     /** the current full-width Material bar */
@@ -48,6 +48,10 @@ enum class NavStyle {
     MORPHING,
     /** a floating icon-only capsule with a circular highlight */
     CAPSULE,
+    /** a floating icon bar whose neon aura of light glides between tabs */
+    NEON,
+    /** a floating bar of round bubbles; the chosen one grows into a named pill */
+    BUBBLE,
 }
 
 /**
@@ -96,6 +100,8 @@ fun navStyleDisplayName(style: NavStyle): String = stringResource(
         NavStyle.CLASSIC -> R.string.nav_style_classic
         NavStyle.MORPHING -> R.string.nav_style_morphing
         NavStyle.CAPSULE -> R.string.nav_style_capsule
+        NavStyle.NEON -> R.string.nav_style_neon
+        NavStyle.BUBBLE -> R.string.nav_style_bubble
     }
 )
 
@@ -112,7 +118,7 @@ fun currentNavStyle(): NavStyle {
 }
 
 /**
- * The navigation style picker: a radio list of the three styles, each named
+ * The navigation style picker: a radio list of the five styles, each named
  * the way the settings row names it, each arriving with the soft cascade and
  * answering a press with the app's bounce. A choice applies immediately and
  * the sheet closes.

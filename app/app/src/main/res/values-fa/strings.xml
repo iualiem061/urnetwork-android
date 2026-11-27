@@ -1291,8 +1291,19 @@
     <string name="nav_style_note">ظاهر نوار ناوبری پایین برنامه</string>
     <string name="nav_style_picker_title">انتخاب سبک ناوبری</string>
     <string name="nav_style_classic">کلاسیک</string>
-    <string name="nav_style_morphing">Morphing</string>
-    <string name="nav_style_capsule">Capsule</string>
+    <string name="nav_style_morphing">مورفینگ</string>
+    <string name="nav_style_capsule">کپسول</string>
+    <string name="nav_style_neon">نئون</string>
+    <string name="nav_style_bubble">حبابی</string>
+    <!-- حالت پروکسی (نسخه سفارشی) -->
+    <string name="proxy_mode">حالت پروکسی</string>
+    <string name="proxy_mode_note">تنظیم و مدیریت سرور پروکسی شخصی (VLESS)</string>
+    <!-- فهرست لوکیشن‌ها (نسخه سفارشی) -->
+    <string name="refresh_servers">به‌روزرسانی سرورها</string>
+    <plurals name="locations_count">
+        <item quantity="one">%1$d لوکیشن</item>
+        <item quantity="other">%1$d لوکیشن</item>
+    </plurals>
     <string name="ip_check">بررسی IP</string>
     <string name="ip_check_connection_state">وضعیت اتصال</string>
     <string name="ip_check_public_ip">IP عمومی</string>
@@ -1305,10 +1316,10 @@
     <string name="social_telegram">تلگرام</string>
     <string name="social_instagram">اینستاگرام</string>
     <!-- سرورهای رلهٔ ذخیره‌شدهٔ VLESS (نسخه سفارشی) -->
-    <string name="vless_servers_title">سرورهای رله</string>
+    <string name="vless_servers_title">سرورهای ذخیره‌شده</string>
     <string name="vless_servers_empty">هنوز سروری ذخیره نشده است. یک پیوند vless:// در پایین وارد کنید تا اولین سرور اضافه شود.</string>
     <string name="vless_server_active">فعال</string>
-    <string name="vless_server_activate_note">روی هر سرور بزنید تا رلهٔ فعال شود.</string>
+    <string name="vless_server_activate_note">روی هر سرور بزنید تا سرور پروکسی فعال شود.</string>
     <string name="vless_server_add_current">ذخیرهٔ سرور فعلی</string>
     <string name="vless_server_activated_toast">سرور فعال شد</string>
     <string name="vless_server_added_toast">سرور ذخیره شد</string>
@@ -1343,4 +1354,163 @@
     <string name="relays_testing">…</string>
     <string name="relays_rtt_failed">—</string>
     <string name="relays_rtt_ms">%1$d ms</string>
+
+    <!-- جمع‌بندی‌های فارسی (نسخه سفارشی): همهٔ جمع‌های پایه را
+         پوشش می‌دهد تا در رابط فارسی متنی به انگلیسی نیفتد -->
+    <plurals name="apps_excluded_count">
+        <item quantity="one">%1$d اپلیکیشن مستثنا شده</item>
+        <item quantity="other">%1$d اپلیکیشن مستثنا شده</item>
+    </plurals>
+    <plurals name="apps_included_count">
+        <item quantity="one">%1$d اپلیکیشن در محدوده</item>
+        <item quantity="other">%1$d اپلیکیشن در محدوده</item>
+    </plurals>
+    <plurals name="connected_provider_count">
+        <item quantity="one">متصل به %1$d ارائه‌دهنده</item>
+        <item quantity="other">متصل به %1$d ارائه‌دهنده</item>
+    </plurals>
+    <plurals name="contract_count">
+        <item quantity="one">%1$d قرارداد</item>
+        <item quantity="other">%1$d قرارداد</item>
+    </plurals>
+    <plurals name="dev_export_summary">
+        <item quantity="one">%1$d فایل گزارش ذخیره شد (%2$s)</item>
+        <item quantity="other">%1$d فایل گزارش ذخیره شد (%2$s)</item>
+    </plurals>
+    <plurals name="dns_blocked_count">
+        <item quantity="one">%1$d درخواست توسط %2$s در این اتصال مسدود شد</item>
+        <item quantity="other">%1$d درخواست توسط %2$s در این اتصال مسدود شد</item>
+    </plurals>
+    <plurals name="feedback_star_count">
+        <item quantity="one">%1$d ستاره</item>
+        <item quantity="other">%1$d ستاره</item>
+    </plurals>
+    <plurals name="gossip_events_per_minute">
+        <item quantity="one">%1$d رویداد در دقیقه</item>
+        <item quantity="other">%1$d رویداد در دقیقه</item>
+    </plurals>
+    <plurals name="host_count">
+        <item quantity="one">%1$d میزبان</item>
+        <item quantity="other">%1$d میزبان</item>
+    </plurals>
+    <plurals name="import_extenders_imported">
+        <item quantity="one">%1$d اکستندر وارد شد</item>
+        <item quantity="other">%1$d اکستندر وارد شد</item>
+    </plurals>
+    <plurals name="ip_count">
+        <item quantity="one">%1$d آدرس IP</item>
+        <item quantity="other">%1$d آدرس IP</item>
+    </plurals>
+    <plurals name="ip_family_connected_count">
+        <item quantity="one">%1$d متصل</item>
+        <item quantity="other">%1$d متصل</item>
+    </plurals>
+    <plurals name="ip_family_connecting_count">
+        <item quantity="one">%1$d در حال اتصال</item>
+        <item quantity="other">%1$d در حال اتصال</item>
+    </plurals>
+    <plurals name="network_peer_count">
+        <item quantity="one">%1$d دستگاه دیگر از شما آنلاین است</item>
+        <item quantity="other">%1$d دستگاه دیگر از شما آنلاین است</item>
+    </plurals>
+    <plurals name="new_items_count">
+        <item quantity="one">%1$d جدید</item>
+        <item quantity="other">%1$d جدید</item>
+    </plurals>
+    <plurals name="offer_cta_start_trial_months_free">
+        <item quantity="one">شروع دورهٔ رایگان با ۱ ماه رایگان</item>
+        <item quantity="other">شروع دورهٔ رایگان با %1$d ماه رایگان</item>
+    </plurals>
+    <plurals name="offer_months_free_headline">
+        <item quantity="one">۱ ماه Pro، رایگان</item>
+        <item quantity="other">%1$d ماه Pro، رایگان</item>
+    </plurals>
+    <plurals name="offer_terms_first_year">
+        <item quantity="one">۱ روز رایگان، سپس %2$s برای سال اول و بعد %3$s در سال. هر زمان قابل لغو.</item>
+        <item quantity="other">%1$d روز رایگان، سپس %2$s برای سال اول و بعد %3$s در سال. هر زمان قابل لغو.</item>
+    </plurals>
+    <plurals name="plan_terms_yearly">
+        <item quantity="one">۱ روز رایگان، سپس %2$s در سال. هر زمان قابل لغو.</item>
+        <item quantity="other">%1$d روز رایگان، سپس %2$s در سال. هر زمان قابل لغو.</item>
+    </plurals>
+    <plurals name="plus_n_more">
+        <item quantity="one">+%1$d مورد دیگر</item>
+        <item quantity="other">+%1$d مورد دیگر</item>
+    </plurals>
+    <plurals name="provider_count">
+        <item quantity="one">%1$d ارائه‌دهنده</item>
+        <item quantity="other">%1$d ارائه‌دهنده</item>
+    </plurals>
+    <plurals name="provider_status_histogram_total">
+        <item quantity="one">%1$d بار در ساعت گذشته</item>
+        <item quantity="other">%1$d بار در ساعت گذشته</item>
+    </plurals>
+    <plurals name="provider_status_reason_line_ipv4">
+        <item quantity="one">%1$d از این بررسی‌ها فقط روی IPv6 ناموفق بود؛ پس این دستگاه فقط برای ترافیک IPv4 عرضه می‌شود.</item>
+        <item quantity="other">%1$d از این بررسی‌ها فقط روی IPv6 ناموفق بود؛ پس این دستگاه فقط برای ترافیک IPv4 عرضه می‌شود.</item>
+    </plurals>
+    <plurals name="provider_status_reason_line_tcp">
+        <item quantity="one">%1$d از این بررسی‌ها فقط روی HTTP/3 (UDP) ناموفق بود؛ پس این دستگاه فقط برای ترافیک TCP عرضه می‌شود. برخی نسخه‌های برنامه و برخی شبکه‌ها UDP را مسیریابی نمی‌کنند.</item>
+        <item quantity="other">%1$d از این بررسی‌ها فقط روی HTTP/3 (UDP) ناموفق بود؛ پس این دستگاه فقط برای ترافیک TCP عرضه می‌شود. برخی نسخه‌های برنامه و برخی شبکه‌ها UDP را مسیریابی نمی‌کنند.</item>
+    </plurals>
+    <plurals name="referral_celebration_detail">
+        <item quantity="one">یک دوست تازه با کد شما به URnetwork پیوست. هر دو شما +%2$d گیگابایت دادهٔ رایگان در روز می‌گیرید — برای همیشه.</item>
+        <item quantity="other">%1$d دوست با کد شما به URnetwork پیوستند. هر کدام +%2$d گیگابایت دادهٔ رایگان در روز برای شما دارد — برای همیشه.</item>
+    </plurals>
+    <plurals name="referral_crowned_congrats">
+        <item quantity="one">یک دوست پیوسته — شما +%2$d گیگابایت در روز می‌گیرید، برای همیشه.</item>
+        <item quantity="other">%1$d دوست پیوسته‌اند — شما +%2$d گیگابایت در روز می‌گیرید، برای همیشه.</item>
+    </plurals>
+    <plurals name="referral_toast_joined">
+        <item quantity="one">یک دوست با کد شما پیوست! +%2$d گیگابایت در روز، برای همیشه.</item>
+        <item quantity="other">%1$d دوست با کد شما پیوستند! +%2$d گیگابایت در روز برای هر کدام، برای همیشه.</item>
+    </plurals>
+    <plurals name="reset_link_rate_limited">
+        <item quantity="one">تلاش‌های زیادی انجام شد. ۱ دقیقه دیگر می‌توانید پیوند بازنشانی جدید بخواهید.</item>
+        <item quantity="other">تلاش‌های زیادی انجام شد. %1$d دقیقه دیگر می‌توانید پیوند بازنشانی جدید بخواهید.</item>
+    </plurals>
+    <plurals name="share_extenders_count">
+        <item quantity="one">%1$d اکستندر</item>
+        <item quantity="other">%1$d اکستندر</item>
+    </plurals>
+    <plurals name="sn_claim_relay_claim_now_paid">
+        <item quantity="one">«Claim now» توسط URnetwork پرداخت می‌شود، یک‌بار در روز.</item>
+        <item quantity="other">«Claim now» توسط URnetwork پرداخت می‌شود، هر %1$d روز یک‌بار.</item>
+    </plurals>
+    <plurals name="sn_claim_relay_claim_now_paid_each">
+        <item quantity="one">پرداخت توسط URnetwork، یک‌بار در روز برای هر کلید سرد.</item>
+        <item quantity="other">پرداخت توسط URnetwork، هر %1$d روز یک‌بار برای هر کلید سرد.</item>
+    </plurals>
+    <plurals name="sn_claim_relay_requested_period">
+        <item quantity="one">«Claim now» بعدی شما یک روز پس از ثبت این ادعا باز می‌شود.</item>
+        <item quantity="other">«Claim now» بعدی شما %1$d روز پس از ثبت این ادعا باز می‌شود.</item>
+    </plurals>
+    <plurals name="split_rule_count">
+        <item quantity="one">%1$d قانون تقسیم</item>
+        <item quantity="other">%1$d قانون تقسیم</item>
+    </plurals>
+    <plurals name="total_referral_count">
+        <item quantity="one">مجموع معرفی‌ها: %1$d</item>
+        <item quantity="other">مجموع معرفی‌ها: %1$d</item>
+    </plurals>
+    <plurals name="verify_code_rate_limited">
+        <item quantity="one">تلاش‌های زیادی انجام شد. ۱ دقیقه دیگر می‌توانید کد جدید بخواهید.</item>
+        <item quantity="other">تلاش‌های زیادی انجام شد. %1$d دقیقه دیگر می‌توانید کد جدید بخواهید.</item>
+    </plurals>
+    <plurals name="widget_contract_stack_accessibility">
+        <item quantity="one">%1$d قرارداد، %2$s</item>
+        <item quantity="other">%1$d قرارداد، %2$s</item>
+    </plurals>
+    <plurals name="widget_peer_count">
+        <item quantity="one">%1$d همتا</item>
+        <item quantity="other">%1$d همتا</item>
+    </plurals>
+    <plurals name="widget_provider_count">
+        <item quantity="one">%1$d ارائه‌دهنده</item>
+        <item quantity="other">%1$d ارائه‌دهنده</item>
+    </plurals>
+    <plurals name="widget_provider_count_providing">
+        <item quantity="one">%1$d ارائه‌دهنده · در حال ارائه</item>
+        <item quantity="other">%1$d ارائه‌دهنده · در حال ارائه</item>
+    </plurals>
 </resources>

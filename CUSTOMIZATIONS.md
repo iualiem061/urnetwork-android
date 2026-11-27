@@ -98,22 +98,14 @@ The changes below were applied on top of upstream `main` (2026-11-24).
     name pills, animated list placement (location rows), size-follows-
     content cards, and haptic ticks on tab taps — the "soft, clean, smooth"
     pass the owner asked for, everywhere.
-15. **Shared relay network + personal relays hub (v2026.11.27-2)** —
-    Settings shows one **Relays** row (the old VLESS row) that opens the
-    relays hub: two sides, **Public** and **Personal**. The public side is
-    a shared relay network the app carries itself: two public relay pools
-    (community aggregators that publish thousands of live `vless://`
-    servers, refreshed about every 15 minutes) are fetched, deduped,
-    parsed with the SDK's own VLESS link parser and grouped by country —
-    every location open, flags, counts, a search box, and a per-server
-    **Test** pill that measures the real TCP RTT to the server's own
-    address (green under 120 ms, amber under 250, red above; a dash when
-    it does not answer). Tapping a server activates it live through the
-    same path as the personal library. The fetched pool is cached in the
-    app's preferences (instant reopen, quiet re-fetch when older than 12
-    hours, a manual Refresh). The personal side is the user's own relays:
-    pasted links, subscription imports and the full manual form (the
-    previous VLESS editor), unchanged.
+15. **Relays hub removed (v2026.11.28-1)** — the shared relay network and the
+    relays hub shipped in v2026.11.27-2 were **removed** at the owner's
+    request; the fetch/caching/RTT machinery went with it. In its place,
+    Settings carries a **Proxy mode** row (حالت پروکسی) that opens the VLESS
+    proxy settings — the enable switch, the pasted `vless://` link, the
+    manual form, and the saved-servers library (import links or a
+    subscription, tap to activate, badge on the active one). The screen's
+    title reads **Proxy mode**; the library is "saved servers".
 16. **Page transitions (v2026.11.27-2)** — every page change now animates
     softly: forward navigation slides the page in from the trailing edge
     (the edge the reading direction travels toward — mirrored for RTL
@@ -125,6 +117,34 @@ The changes below were applied on top of upstream `main` (2026-11-24).
     label ("سبک ناوبری"): the row now shows the style's name (e.g.
     "کلاسیک") with its own note ("the look of the bottom bar"), and the
     picker sheet lost its title too, so the two words appear nowhere.
+18. **Two more navigation styles (v2026.11.28-1)** — beside Classic,
+    Morphing and Capsule, Settings → the navigation-style row now offers
+    **Neon** (نئون): a floating icon bar whose selected tab carries a soft
+    neon aura of light that breathes and glides from tab to tab with the
+    same springy glide, and **Bubble** (حبابی): a floating bar of round
+    bubbles where the chosen one inflates with a springy overshoot into a
+    pill carrying the tab's name inside, lifting a touch above its
+    siblings. Five styles in all, each with its press bounce and haptic
+    tick.
+19. **Every location lists without a search (v2026.11.28-1)** — the
+    network's provider-locations answer carries regions and cities too,
+    but the SDK's grouping showed them only while searching (the reason
+    most of the 108 locations were invisible until searched). The build's
+    workflow patches the SDK at the pinned ref so the idle list shows
+    **every country, region and city** the network carries, each row with
+    the country's **full flag** (regions included, all one treatment),
+    country rows named in the app's language («آلمان» on a Persian
+    interface), a line under the search box counting the locations
+    (۱۰۸ لوکیشن), and a **refresh-servers** button that re-asks the
+    network and spins while the answer is away. The connect card's
+    location row and the ip check's selected-location line read the same
+    localized name as the list.
+20. **Persian plurals (v2026.11.28-1)** — the fa translation shipped no
+    plurals, so every plural string fell back to English inside the
+    Persian UI ("1 provider" and friends). values-fa now carries the
+    Persian forms of every plural the base file declares (39 + the new
+    locations count), and the two English style names in the picker read
+    Persian: مورفینگ and کپسول.
 
 ## Build
 

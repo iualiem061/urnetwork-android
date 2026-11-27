@@ -86,8 +86,8 @@ import com.bringyour.network.ui.theme.AppTheme
 import kotlin.math.min
 
 /**
- * Account > Settings > VLESS: the VLESS server of this network space
- * (VlessSettingsViewModel).
+ * Account > Settings > Proxy mode: the VLESS proxy settings of this network
+ * space (VlessSettingsViewModel).
  */
 @Composable
 fun VlessSettingsScreen(
@@ -139,7 +139,7 @@ private fun VlessSettingsScaffold(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        stringResource(id = R.string.vless),
+                        stringResource(id = R.string.proxy_mode),
                         style = TopBarTitleTextStyle
                     )
                 },
@@ -170,10 +170,6 @@ private fun VlessSettingsScaffold(
  * security, then only the fields that apply to them (VlessForm), and Save.
  * Every field stays editable while VLESS is off, since off settings save as
  * typed.
- *
- * The relays hub shows the same editor as its personal side
- * (RelayHubScreen), so the user's own relays are added and edited there
- * without a second copy of the form.
  */
 @Composable
 fun VlessSettingsForm(
@@ -643,7 +639,7 @@ private fun VlessSwitchRow(
 }
 
 /**
- * The relay library card: the saved servers with the active one badged, and
+ * The saved servers card: the saved servers with the active one badged, and
  * the two ways a server joins -- the current form saved as one, or links and
  * subscriptions imported together. Rows answer a tap with the app's bounce
  * and settle in with the shared cascade; the card grows and shrinks softly
