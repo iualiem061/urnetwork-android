@@ -71,9 +71,9 @@ fun Modifier.pressScale(
  * the row eases in a touch while pressed and springs back on release.
  */
 fun Modifier.bouncyClick(
-    onClick: () -> Unit,
     haptic: Boolean = false,
     scaleDown: Float = 0.96f,
+    onClick: () -> Unit,
 ): Modifier = composed {
     val interactionSource = remember { MutableInteractionSource() }
     val haptics = LocalHapticFeedback.current

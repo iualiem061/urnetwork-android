@@ -457,13 +457,15 @@ private fun VlessSettingsForm(
 
         URButton(
             onClick = {
-                viewModel.save {
-                    Toast.makeText(
-                        context,
-                        R.string.vless_settings_saved,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                viewModel.save(
+                    onSaved = {
+                        Toast.makeText(
+                            context,
+                            R.string.vless_settings_saved,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                )
             },
             enabled = editable,
             isProcessing = viewModel.saving,
