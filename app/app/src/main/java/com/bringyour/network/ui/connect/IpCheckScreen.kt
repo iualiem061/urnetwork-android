@@ -50,6 +50,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bringyour.network.R
 import com.bringyour.network.ui.components.PulseDot
 import com.bringyour.network.ui.components.RoundedFlag
+import com.bringyour.network.ui.components.rememberRoundedCountryFlag
 import com.bringyour.network.ui.components.entrance
 import com.bringyour.network.ui.components.pressScale
 import com.bringyour.network.ui.shared.models.ConnectStatus
