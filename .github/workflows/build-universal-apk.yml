@@ -56,7 +56,7 @@ jobs:
           fi
           du -sh ./* | sort -h
 
-      - name: Patch the SDK: every location lists without a search
+      - name: Patch the SDK to list every location without a search
         run: |
           set -e
           cd "$BRINGYOUR_HOME/sdk"
