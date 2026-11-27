@@ -1314,7 +1314,6 @@
     <string name="vless_server_added_toast">سرور ذخیره شد</string>
     <string name="vless_server_removed_toast">سرور حذف شد</string>
     <string name="vless_server_activate_failed_toast">ابتدا فیلدهای مشخص‌شده را اصلاح کنید</string>
-    <string name="vless_server_activate_failed_toast">ابتدا فیلدهای مشخص‌شده را اصلاح کنید</string>
     <string name="vless_server_import_label">درون‌ریزی سرور</string>
     <string name="vless_server_import_hint">یک پیوند vless:// یا نشانی اشتراک را اینجا بگذارید</string>
     <string name="vless_server_import_added">%1$d سرور اضافه شد</string>

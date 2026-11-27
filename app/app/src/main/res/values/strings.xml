@@ -1824,7 +1824,6 @@
     <string name="vless_server_added_toast">Server saved</string>
     <string name="vless_server_removed_toast">Server removed</string>
     <string name="vless_server_activate_failed_toast">Fix the highlighted fields first</string>
-    <string name="vless_server_activate_failed_toast">Fix the highlighted fields first</string>
     <string name="vless_server_import_label">Import servers</string>
     <string name="vless_server_import_hint">Paste a vless:// link or a subscription URL</string>
     <string name="vless_server_import_added">%1$d servers were added</string>
