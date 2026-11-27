@@ -1507,8 +1507,6 @@
     <string name="usdc_solana_network_only">ส่ง USDC บนเครือข่าย Solana เท่านั้น USDC ที่ส่งบนเครือข่ายอื่นจะไม่เข้าบัญชี</string>
     <string name="use_extender_settings">ใช้การตั้งค่าตัวขยาย</string>
     <string name="use_most_stable_provider">ใช้ผู้ให้บริการที่เสถียรที่สุด</string>
-    <string name="use_wireguard_socks_https_proxy">ใช้พร็อกซี WireGuard / SOCKS / HTTPS</string>
-    <string name="use_wireguard_socks_https_proxy_note">เปิด ur.io ในเบราว์เซอร์ของคุณ SOCKS และ WireGuard ต้องใช้ Pro</string>
     <string name="used_data_key">ใช้แล้ว</string>
     <string name="user_auth_label">อีเมล หรือ เบอร์โทรศัพท์</string>
     <string name="user_auth_placeholder">กรอกเบอร์โทรศัพท์ หรืออีเมลของคุณ</string>

@@ -1507,8 +1507,6 @@
     <string name="usdc_solana_network_only">USDC posílejte pouze v síti Solana. USDC odeslané v jiné síti nedorazí.</string>
     <string name="use_extender_settings">Použít nastavení extenderu</string>
     <string name="use_most_stable_provider">Používá nejstabilnějšího poskytovatele</string>
-    <string name="use_wireguard_socks_https_proxy">Použít proxy WireGuard / SOCKS / HTTPS</string>
-    <string name="use_wireguard_socks_https_proxy_note">Otevře ur.io v prohlížeči. SOCKS a WireGuard vyžadují Pro.</string>
     <string name="used_data_key">Použité</string>
     <string name="user_auth_label">Email nebo telefon</string>
     <string name="user_auth_placeholder">Zadejte své telefonní číslo nebo e-mail</string>

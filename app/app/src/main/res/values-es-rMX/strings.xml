@@ -1507,8 +1507,6 @@
     <string name="usdc_solana_network_only">Envía USDC solo por la red Solana. Los USDC enviados por cualquier otra red no llegarán.</string>
     <string name="use_extender_settings">Usar la configuración del extensor</string>
     <string name="use_most_stable_provider">Usa el proveedor más estable</string>
-    <string name="use_wireguard_socks_https_proxy">Usar proxy WireGuard / SOCKS / HTTPS</string>
-    <string name="use_wireguard_socks_https_proxy_note">Abre ur.io en tu navegador. SOCKS y WireGuard requieren Pro.</string>
     <string name="used_data_key">Usado</string>
     <string name="user_auth_label">Correo electrónico o teléfono</string>
     <string name="user_auth_placeholder">Introduce tu número de teléfono o correo electrónico</string>
