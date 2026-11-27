@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.UUID
-import kotlin.math.min
 
 /**
  * The saved VLESS relay servers: the user's own library of `vless://` links,
@@ -197,6 +196,3 @@ fun decodeBase64Text(text: String): String? {
     return result.ifBlank { null }
 }
 
-/** A readable display address of a parsed server. */
-fun vlessServerAddress(settings: VlessSettings): String =
-    "${settings.address}:${settings.port}".trimStart(':')
