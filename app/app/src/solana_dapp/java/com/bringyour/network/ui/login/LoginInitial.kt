@@ -1,6 +1,7 @@
 package com.bringyour.network.ui.login
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.bringyour.network.ui.components.URInlineErrorText
+import com.bringyour.network.ui.components.entrance
 import com.bringyour.network.ui.components.tabletForm
 
 /**
@@ -52,19 +54,23 @@ fun LoginInitial(
                     .tabletForm()
                     .imePadding()
             ) {
-                OnboardingCarousel()
+                Box(modifier = Modifier.entrance(0)) {
+                    OnboardingCarousel()
+                }
 
                 Spacer(modifier = Modifier.height(64.dp))
 
                 // the login stack rule (LoginStack.kt): the instant account is
                 // the only sign-in this build offers
-                LoginStack(
-                    full = listOf(
-                        instantAccountLoginMethod(onClick = onInstantAccountCreate)
-                    ),
-                    tiles = emptyList(),
-                    enabled = true
-                )
+                Box(modifier = Modifier.entrance(1)) {
+                    LoginStack(
+                        full = listOf(
+                            instantAccountLoginMethod(onClick = onInstantAccountCreate)
+                        ),
+                        tiles = emptyList(),
+                        enabled = true
+                    )
+                }
 
                 loginViewModel.loginError?.let { loginError ->
                     Spacer(modifier = Modifier.height(16.dp))

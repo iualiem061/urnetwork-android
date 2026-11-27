@@ -15,11 +15,15 @@ The changes below were applied on top of upstream `main` (2026-11-24).
    and redeem-code UI, purchase dialogs and the onboarding sales funnel.
    Data still refreshes with the daily free grant.
 3. **Three tabs + navigation styles** — the bottom bar is Connect, Account
-   and **IP check** (v2026.11.26-4), with four selectable styles in
+   and **IP check** (v2026.11.26-4), with three selectable styles in
    **Settings → Navigation style** (سبک ناوبری): the classic full-width
    suite (default; bar on phones, rail on wide windows), a floating
-   **Morphing** pill bar whose selection springs between tabs, an icon-only
-   floating **Capsule**, and a vertical **Side Dock** on the right edge.
+   **Morphing** pill bar whose highlight glides between tabs with a spring
+   while the chosen icon pops, and an icon-only floating **Capsule** whose
+   circular fill springs in and whose name pill swaps with a soft slide
+   (v2026.11.27-1). The vertical **Side Dock** of v2026.11.26-4 was
+   **removed** at the owner's request — a saved Side Dock choice falls back
+   to Classic. Tab switches crossfade with a whisper of scale (all styles).
    Leaderboard, Earnings/Top 200, Referrals, Support/Feedback and Balance
    codes screens and their entries were removed.
 4. **Locations** — country rows show the **full flag** (the standard
@@ -71,7 +75,29 @@ The changes below were applied on top of upstream `main` (2026-11-24).
 12. **Settings trimmed (v2026.11.26-4)** — the **stay-in-touch** section
     (product-updates email preference, support email, Discord, DePIN Hub)
     was removed at the owner's request; the social channels stay in the
-    Account tab.
+    Account tab. The **Use WireGuard / SOCKS / HTTPS proxy** row was also
+    removed (v2026.11.27-1).
+13. **VLESS relay servers (v2026.11.27-1)** — Settings → VLESS gained a
+    **relay library**: the current server can be saved under its name, and
+    any number of servers can be imported at once from pasted `vless://`
+    links **or a subscription** — a URL whose body is the list, plain or
+    base64 (fetched in-app, capped at 200, duplicates skipped, each named
+    by its `#fragment` remark or its address). Tapping a saved server
+    activates it at once (its link fills the form and is saved to the
+    space, which applies it live), the active one carries a badge, and a
+    row's trash icon removes it. The library persists in the app's
+    preferences and survives restarts.
+14. **App-wide motion (v2026.11.27-1)** — one soft motion kit
+    (`ui/components/Motion.kt`) is shared by every screen: a press bounce
+    on every button and tappable row (URButton, settings rows, the location
+    selector and list rows, social rows, the nav bars, the IP check's
+    re-read pill, VLESS rows), a staggered fade-and-rise cascade on
+    sections and pickers (settings sections, language and navigation-style
+    lists, the VLESS card, the login screen, the IP check cards), breathing
+    status dots, crossfading values (connection state, public IP), sliding
+    name pills, animated list placement (location rows), size-follows-
+    content cards, and haptic ticks on tab taps — the "soft, clean, smooth"
+    pass the owner asked for, everywhere.
 
 ## Build
 

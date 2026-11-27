@@ -21,9 +21,10 @@ import com.bringyour.network.ui.theme.AppTheme
 @Composable
 fun URTextInputLabel(
     text: String,
-    inputIsValid: Boolean = true
+    inputIsValid: Boolean = true,
+    modifier: Modifier = Modifier,
 ) {
-     Column {
+     Column(modifier = modifier) {
          Row(
              modifier = Modifier.fillMaxWidth(),
              horizontalArrangement = Arrangement.Start

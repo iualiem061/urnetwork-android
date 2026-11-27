@@ -1,6 +1,8 @@
 package com.bringyour.network.ui.settings
 
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -20,10 +23,15 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.bringyour.network.R
+import com.bringyour.network.ui.components.bouncyClick
+import com.bringyour.network.ui.components.entrance
+import com.bringyour.network.ui.theme.AppTheme
 import com.bringyour.network.ui.theme.BlueMedium
 
 /** The tag that means "follow the device's language settings". */
@@ -120,26 +128,32 @@ fun LanguagePickerSheet(
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
             ) {
-                appLanguages.forEach { (tag, endonym) ->
+                appLanguages.forEachIndexed { index, (tag, endonym) ->
                     val label = if (tag == LANGUAGE_TAG_SYSTEM) {
                         stringResource(id = R.string.system_default_language)
                     } else {
                         endonym
                     }
+                    val isChosen = tag == selectedTag
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onSelected(tag) }
-                            .padding(vertical = 14.dp, horizontal = 4.dp),
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(if (isChosen) AppTheme.bgTinted else Color.Transparent)
+                            .bouncyClick { onSelected(tag) }
+                            .padding(vertical = 14.dp, horizontal = 12.dp)
+                            // the list is long; the cascade is capped so the
+                            // last languages do not wait behind a queue
+                            .entrance(minOf(index, 10)),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             label,
                             style = MaterialTheme.typography.bodyLarge,
-                            color = if (tag == selectedTag) BlueMedium else MaterialTheme.colorScheme.onBackground,
+                            color = if (isChosen) BlueMedium else MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.weight(1f),
                         )
-                        if (tag == selectedTag) {
+                        AnimatedVisibility(visible = isChosen) {
                             Icon(
                                 imageVector = Icons.Filled.Check,
                                 contentDescription = null,

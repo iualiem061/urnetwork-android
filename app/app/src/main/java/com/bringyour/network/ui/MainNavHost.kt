@@ -49,6 +49,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
@@ -195,7 +196,6 @@ import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.components.CustomNavItem
 import com.bringyour.network.ui.components.MorphingNavBar
 import com.bringyour.network.ui.components.CapsuleNavBar
-import com.bringyour.network.ui.components.SideDockNav
 import com.bringyour.network.ui.upgrade.UpgradeGuestStatusPending
 import com.bringyour.network.ui.upgrade.UpgradeScreen
 import com.bringyour.sdk.ReliabilityWindow
@@ -483,18 +483,13 @@ private fun MainNavHostContent(
     ) {
                 // the navigation style the user chose in Settings: classic keeps
                 // the adaptive suite (the full bar on phones, the rail on wider
-                // windows); the three floating styles replace the phone bar
+                // windows); the two floating styles replace the phone bar
                 val navStyle = currentNavStyle()
                 val customNavStyle = navStyle != NavStyle.CLASSIC &&
                         navSuiteLayoutType == NavigationSuiteType.NavigationBar
 
-                // the custom bars reserve their own room over the content: the
-                // floating bars sit above the bottom edge, the dock on the right
-                // edge (the start edge in the RTL layout)
-                val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-                val dockInset = if (customNavStyle && navStyle == NavStyle.SIDE_DOCK) 76.dp else 0.dp
+                // the floating bars reserve their own room above the bottom edge
                 val barInset = when {
-                    customNavStyle && navStyle == NavStyle.SIDE_DOCK -> 0.dp
                     customNavStyle -> 96.dp
                     navigationLayout == NavigationLayout.BottomBar -> 1.dp
                     else -> 0.dp
@@ -511,11 +506,7 @@ private fun MainNavHostContent(
                     // rail, a gap above the bar
                     val appContent: @Composable () -> Unit = {
                         Row(
-                            modifier = Modifier.padding(
-                                bottom = barInset,
-                                start = if (rtl) dockInset else 0.dp,
-                                end = if (rtl) 0.dp else dockInset,
-                            )
+                            modifier = Modifier.padding(bottom = barInset)
                         ) {
                             if (navigationLayout == NavigationLayout.Rail) {
                                 VerticalDivider(
@@ -580,16 +571,6 @@ private fun MainNavHostContent(
                                     .align(Alignment.BottomCenter)
                                     .navigationBarsPadding()
                                     .padding(vertical = 12.dp),
-                            )
-
-                            NavStyle.SIDE_DOCK -> SideDockNav(
-                                items = navBarItems,
-                                onTab = onTab,
-                                modifier = Modifier
-                                    .align(
-                                        if (rtl) Alignment.CenterStart else Alignment.CenterEnd
-                                    )
-                                    .padding(horizontal = 12.dp),
                             )
 
                             NavStyle.CLASSIC -> Unit
@@ -772,8 +753,10 @@ fun MainNavContent(
 
             navigation<Route.ConnectContainer>(
                 startDestination = Route.Connect,
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None }
+                enterTransition = NavigationAnimations.tabEnterTransition(),
+                exitTransition = NavigationAnimations.tabExitTransition(),
+                popEnterTransition = NavigationAnimations.tabPopEnterTransition(),
+                popExitTransition = NavigationAnimations.tabPopExitTransition()
             ) {
                 composable<Route.Connect> {
                     ConnectScreen(
@@ -935,7 +918,12 @@ fun MainNavContent(
 
             // the ip check tab: one top-level leaf screen, so the tab's state
             // (the last read) is kept like the other tabs' screens
-            composable<Route.IpCheck> {
+            composable<Route.IpCheck>(
+                enterTransition = NavigationAnimations.tabEnterTransition(),
+                exitTransition = NavigationAnimations.tabExitTransition(),
+                popEnterTransition = NavigationAnimations.tabPopEnterTransition(),
+                popExitTransition = NavigationAnimations.tabPopExitTransition()
+            ) {
                 IpCheckScreen(
                     connectViewModel = connectViewModel,
                 )
@@ -943,8 +931,10 @@ fun MainNavContent(
 
             navigation<Route.AccountContainer>(
                 startDestination = Route.Account,
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None }
+                enterTransition = NavigationAnimations.tabEnterTransition(),
+                exitTransition = NavigationAnimations.tabExitTransition(),
+                popEnterTransition = NavigationAnimations.tabPopEnterTransition(),
+                popExitTransition = NavigationAnimations.tabPopExitTransition()
             ) {
                 composable<Route.Account> {
                     if (accountListDetail) {
@@ -1157,4 +1147,35 @@ object NavigationAnimations {
             )
         )
     }
+
+    // Tab switches (the bottom bar): a quiet crossfade with a whisper of
+    // scale, so the three top screens read as trading places softly instead
+    // of blinking on. Both directions are the same -- no tab is "forward".
+    fun tabEnterTransition(): AnimatedContentTransitionScope<*>.() -> EnterTransition = {
+        fadeIn(
+            animationSpec = tween(
+                durationMillis = 220,
+                easing = LinearOutSlowInEasing
+            )
+        ) + scaleIn(
+            initialScale = 0.985f,
+            animationSpec = tween(
+                durationMillis = 220,
+                easing = LinearOutSlowInEasing
+            )
+        )
+    }
+
+    fun tabExitTransition(): AnimatedContentTransitionScope<*>.() -> ExitTransition = {
+        fadeOut(
+            animationSpec = tween(
+                durationMillis = 160,
+                easing = FastOutLinearInEasing
+            )
+        )
+    }
+
+    fun tabPopEnterTransition(): AnimatedContentTransitionScope<*>.() -> EnterTransition = tabEnterTransition()
+
+    fun tabPopExitTransition(): AnimatedContentTransitionScope<*>.() -> ExitTransition = tabExitTransition()
 }

@@ -24,7 +24,9 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
@@ -59,6 +61,7 @@ import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.components.UsageBar
 import com.bringyour.network.ui.components.dataInfoShowsFreeRefresh
 import com.bringyour.network.ui.components.focusRing
+import com.bringyour.network.ui.components.pressScale
 import com.bringyour.network.ui.components.rememberFreeRefreshCountdown
 import com.bringyour.network.ui.shared.models.ConnectStatus
 import com.bringyour.network.ui.shared.viewmodels.Plan
@@ -953,13 +956,19 @@ fun OpenProviderListButton(
             !selectedLocation.connectLocationId.bestAvailable
     }
 
+    // the location row answers a press with the app's soft bounce
+    val interactionSource = remember { MutableInteractionSource() }
+
     Row(
         modifier = modifier
             .padding(vertical = 4.dp)
             .fillMaxWidth()
             .focusRing(shape = RoundedCornerShape(8.dp))
             .pointerHoverIcon(PointerIcon.Hand)
-            .clickable {
+            .pressScale(interactionSource, scaleDown = 0.98f)
+            .clickable(
+                interactionSource = interactionSource,
+            ) {
                 onClick()
             },
         horizontalArrangement = Arrangement.SpaceBetween,

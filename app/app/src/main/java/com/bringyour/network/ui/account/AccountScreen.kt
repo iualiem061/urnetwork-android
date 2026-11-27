@@ -1,6 +1,8 @@
 package com.bringyour.network.ui.account
 
 import com.bringyour.network.ui.components.rememberFoldSafeSheetState
+import com.bringyour.network.ui.components.entrance
+import com.bringyour.network.ui.components.pressScale
 import com.bringyour.network.ui.components.tabletReadableColumn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,7 +42,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
@@ -349,6 +353,7 @@ fun AccountScreenContent(
             title = stringResource(id = R.string.social_telegram),
             handle = "@Aliem_061",
             onClick = { uriHandler.openUri("https://t.me/Aliem_061") },
+            modifier = Modifier.entrance(5),
         )
         HorizontalDivider()
         SocialLinkRow(
@@ -357,6 +362,7 @@ fun AccountScreenContent(
             title = stringResource(id = R.string.social_instagram),
             handle = "@Aliem061",
             onClick = { uriHandler.openUri("https://instagram.com/Aliem061") },
+            modifier = Modifier.entrance(6),
         )
         HorizontalDivider()
 
@@ -394,11 +400,17 @@ private fun SocialLinkRow(
     title: String,
     handle: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .pressScale(interactionSource, scaleDown = 0.97f)
+            .clickable(
+                interactionSource = interactionSource,
+                onClick = onClick,
+            )
             .padding(vertical = 12.dp, horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically

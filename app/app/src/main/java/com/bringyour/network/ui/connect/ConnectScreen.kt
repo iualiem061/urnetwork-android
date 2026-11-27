@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.lifecycle.compose.LifecycleStartEffect
 import com.bringyour.network.ui.components.TapSequenceGate
+import com.bringyour.network.ui.components.entrance
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
@@ -631,6 +632,7 @@ fun ConnectScreen(
                                     .fillMaxWidth()
                                     .background(AppTheme.bgTinted, RoundedCornerShape(12.dp))
                                     .padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .entrance(2)
                             ) {
                                 OpenProviderListButton(
                                     selectedLocation = connectViewModel.selectedLocation,

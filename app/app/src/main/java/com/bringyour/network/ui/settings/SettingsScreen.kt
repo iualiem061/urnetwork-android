@@ -97,6 +97,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import com.bringyour.network.ui.components.URTextInputLabel
+import com.bringyour.network.ui.components.bouncyClick
+import com.bringyour.network.ui.components.entrance
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.components.URDialog
 import com.bringyour.network.ui.components.URInlineErrorText
@@ -315,17 +317,6 @@ fun SettingsScreen(
         },
         onOpenMockLocationGuide = {
             navController.navigate(Route.MockLocationGuide)
-        },
-        showCloudProxyEntry = CloudProxy.entryVisible(accountViewModel.loginMode),
-        onCloudProxyClick = {
-            // Open the existing ur.io cloud proxies page (P150). Opened without a
-            // one-time auth code for now; see CloudProxy for the signed-in follow-up.
-            val linkHostName = (context.applicationContext as? MainApplication)
-                ?.deviceManager?.networkSpace?.linkHostName
-            val proxiesUrl = CloudProxy.proxiesUrl(linkHostName)
-            runCatching {
-                context.startActivity(Intent(Intent.ACTION_VIEW, proxiesUrl.toUri()))
-            }
         },
     )
 
@@ -577,8 +568,6 @@ private fun SettingsScreen(
     mockLocationTarget: MockLocationTarget? = null,
     onToggleMockLocation: () -> Unit = {},
     onOpenMockLocationGuide: () -> Unit = {},
-    showCloudProxyEntry: Boolean = false,
-    onCloudProxyClick: () -> Unit = {},
 ) {
 
     val context = LocalContext.current
@@ -643,7 +632,8 @@ private fun SettingsScreen(
              * Client ID
              */
             URTextInputLabel(
-                text = stringResource(id = R.string.client_id)
+                text = stringResource(id = R.string.client_id),
+                modifier = Modifier.entrance(1),
             )
             Row(
                 modifier = Modifier
@@ -652,7 +642,7 @@ private fun SettingsScreen(
                         Color(0x1AFFFFFF),
                         shape = RoundedCornerShape(12.dp)
                     )
-                    .clickable {
+                    .bouncyClick {
                         clipboardManager.setText(AnnotatedString(clientId))
                     }
                     .padding(horizontal = 12.dp, vertical = 12.dp),
@@ -679,7 +669,10 @@ private fun SettingsScreen(
             /**
              * Auth code
              */
-            URTextInputLabel(stringResource(id = R.string.account))
+            URTextInputLabel(
+                text = stringResource(id = R.string.account),
+                modifier = Modifier.entrance(2),
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -715,7 +708,10 @@ private fun SettingsScreen(
             /**
              * Seedphrase
              */
-            URTextInputLabel(text = stringResource(id = R.string.seedphrase))
+            URTextInputLabel(
+                text = stringResource(id = R.string.seedphrase),
+                modifier = Modifier.entrance(3),
+            )
 
             Row(
                 modifier = Modifier
@@ -758,7 +754,10 @@ private fun SettingsScreen(
             /**
              * Sign-In Methods
              */
-            URTextInputLabel(text = stringResource(id = R.string.sign_in_methods))
+            URTextInputLabel(
+                text = stringResource(id = R.string.sign_in_methods),
+                modifier = Modifier.entrance(4),
+            )
 
             authMethods.forEach { method ->
                 Row(
@@ -799,7 +798,10 @@ private fun SettingsScreen(
             /**
              * General
              */
-            URTextInputLabel(stringResource(id = R.string.general))
+            URTextInputLabel(
+                text = stringResource(id = R.string.general),
+                modifier = Modifier.entrance(5),
+            )
 
             /**
              * Battery optimization
@@ -843,12 +845,15 @@ private fun SettingsScreen(
             /**
              * Device name and spec
              */
-            URTextInputLabel(text = stringResource(id = R.string.device))
+            URTextInputLabel(
+                text = stringResource(id = R.string.device),
+                modifier = Modifier.entrance(6),
+            )
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onEditDeviceName() }
+                    .bouncyClick { onEditDeviceName() }
                     .padding(vertical = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -909,7 +914,7 @@ private fun SettingsScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
+                    .bouncyClick {
                         navController.navigate(Route.ManageDevices)
                     }
                     .padding(vertical = 6.dp)
@@ -930,7 +935,10 @@ private fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            URTextInputLabel(text = stringResource(id = R.string.connections))
+            URTextInputLabel(
+                text = stringResource(id = R.string.connections),
+                modifier = Modifier.entrance(7),
+            )
 
             ProvideControlModePicker(
                 provideControlMode,
@@ -1033,7 +1041,7 @@ private fun SettingsScreen(
                     Row(
                         modifier = Modifier
                             .weight(1f)
-                            .clickable {
+                            .bouncyClick {
                                 onOpenMockLocationGuide()
                             }
                             .padding(vertical = 6.dp),
@@ -1103,7 +1111,7 @@ private fun SettingsScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
+                    .bouncyClick {
                         navController.navigate(Route.BlockedRegions)
                     }
                     .padding(vertical = 6.dp)
@@ -1130,7 +1138,7 @@ private fun SettingsScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
+                    .bouncyClick {
                         navController.navigate(Route.Vless)
                     }
                     .padding(vertical = 6.dp),
@@ -1148,56 +1156,19 @@ private fun SettingsScreen(
                 )
             }
 
-            // Run URnetwork as a cloud proxy instead of the VPN (P150): opens
-            // ur.io/app/proxies, where the HTTPS proxy is always on and SOCKS and
-            // WireGuard are available on Pro. Hidden for guests (no account). The
-            // title and note are the other apps' proxies row strings, so the entry
-            // reads the same on every platform.
-            if (showCloudProxyEntry) {
-                Spacer(modifier = Modifier.height(18.dp))
-
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onCloudProxyClick() }
-                            .padding(vertical = 6.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            stringResource(id = R.string.use_wireguard_socks_https_proxy),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = AppTheme.textPrimary,
-                            modifier = Modifier.testTag("acceptance.cloud_proxy_entry")
-                        )
-
-                        // decorative: the note below says the row opens the browser
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.Outbound,
-                            contentDescription = null,
-                            tint = AppTheme.textMuted
-                        )
-                    }
-
-                    Text(
-                        stringResource(id = R.string.use_wireguard_socks_https_proxy_note),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = AppTheme.textMuted
-                    )
-                }
-            }
-
             Spacer(modifier = Modifier.height(32.dp))
 
             /**
              * Language
              */
-            URTextInputLabel(text = stringResource(id = R.string.language))
+            URTextInputLabel(
+                text = stringResource(id = R.string.language),
+                modifier = Modifier.entrance(8),
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { languageSheetPresented = true }
+                    .bouncyClick { languageSheetPresented = true }
                     .padding(vertical = 6.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -1235,11 +1206,14 @@ private fun SettingsScreen(
             /**
              * Navigation style
              */
-            URTextInputLabel(text = stringResource(id = R.string.nav_style))
+            URTextInputLabel(
+                text = stringResource(id = R.string.nav_style),
+                modifier = Modifier.entrance(9),
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { navStyleSheetPresented = true }
+                    .bouncyClick { navStyleSheetPresented = true }
                     .padding(vertical = 6.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -1274,7 +1248,10 @@ private fun SettingsScreen(
             }
 
             // allow notifications
-            URTextInputLabel(text = stringResource(id = R.string.notifications_label))
+            URTextInputLabel(
+                text = stringResource(id = R.string.notifications_label),
+                modifier = Modifier.entrance(10),
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -1307,12 +1284,15 @@ private fun SettingsScreen(
             /**
             * Version
              */
-            URTextInputLabel(stringResource(id = R.string.developer))
+            URTextInputLabel(
+                text = stringResource(id = R.string.developer),
+                modifier = Modifier.entrance(11),
+            )
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
+                    .bouncyClick {
                         navController.navigate(Route.Developer)
                     }
                     .padding(vertical = 6.dp),
@@ -1357,7 +1337,10 @@ private fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    URTextInputLabel(stringResource(id = R.string.version_info))
+                    URTextInputLabel(
+                        text = stringResource(id = R.string.version_info),
+                        modifier = Modifier.entrance(12),
+                    )
                     Text(
                         displayVersion(version),
                         style = MaterialTheme.typography.bodyMedium,
@@ -1395,7 +1378,7 @@ private fun SettingsScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
+                    .bouncyClick {
                         navController.navigate(Route.Licenses)
                     }
                     .padding(vertical = 6.dp),

@@ -2,6 +2,7 @@ package com.bringyour.network.ui.connect
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ import com.bringyour.network.ui.components.ContextMenuBox
 import com.bringyour.network.ui.components.ContextMenuItem
 import com.bringyour.network.ui.components.RoundedFlag
 import com.bringyour.network.ui.components.focusRing
+import com.bringyour.network.ui.components.pressScale
 
 import com.bringyour.network.ui.theme.BlueDark
 import com.bringyour.network.ui.theme.BlueMedium
@@ -69,13 +71,16 @@ fun ProviderRow(
     rectFlag: Boolean = false,
     // what a right click or the context menu key offers on the row
     contextMenuItems: List<ContextMenuItem> = listOf(),
+    // where the row's entrance and placement animations ride in on
+    modifier: Modifier = Modifier,
 ) {
 
     var isFocused by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     ContextMenuBox(items = contextMenuItems) {
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(64.dp)
                 .focusRing()
@@ -86,7 +91,10 @@ fun ProviderRow(
                     onFocusChanged()
                 }
                 .pointerHoverIcon(PointerIcon.Hand)
-                .clickable {
+                .pressScale(interactionSource, scaleDown = 0.98f)
+                .clickable(
+                    interactionSource = interactionSource,
+                ) {
                     onClick(1)
                 }
                 // the check mark at the end shows the selected row; screen readers hear it

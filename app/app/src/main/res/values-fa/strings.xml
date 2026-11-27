@@ -1174,8 +1174,6 @@
     <string name="usdc_solana_network_only">فقط روی شبکه Solana ارسال USDC کنید. هر USDC که روی شبکه دیگری ارسال شود به مقصد نمی‌رسد.</string>
     <string name="use_extender_settings">استفاده از تنظیمات گسترش‌دهنده</string>
     <string name="use_most_stable_provider">استفاده از پایدارترین ارائه‌دهنده</string>
-    <string name="use_wireguard_socks_https_proxy">استفاده از پروکسی WireGuard / SOCKS / HTTPS</string>
-    <string name="use_wireguard_socks_https_proxy_note">ur.io را در مرورگر شما باز می‌کند. SOCKS و WireGuard به Pro نیاز دارند.</string>
     <string name="used_data_key">مصرف‌شده</string>
     <string name="user_auth_label">ایمیل یا تلفن</string>
     <string name="user_auth_placeholder">شماره تلفن یا ایمیل خود را وارد کنید</string>
@@ -1279,7 +1277,7 @@
     <string name="your_referral_code">کد معرفی شما</string>
     <string name="your_seedphrase">عبارت بازیابی شما</string>
     <string name="language">زبان</string>
-    <string name="language_note">فارسی و همه زبان‌های برنامه</string>
+    <string name="language_note">زبان نمایش برنامه را انتخاب کنید</string>
     <string name="system_default_language">طبق تنظیمات دستگاه</string>
     <!-- ظاهر برنامه (نسخه سفارشی) -->
     <string name="appearance">ظاهر</string>
@@ -1290,12 +1288,11 @@
     <!-- شبکه‌های اجتماعی (نسخه سفارشی) -->
     <!-- سبک ناوبری و بررسی IP (نسخه سفارشی) -->
     <string name="nav_style">سبک ناوبری</string>
-    <string name="nav_style_note">شکل نوار پایین برنامه</string>
+    <string name="nav_style_note">ظاهر نوار ناوبری پایین برنامه</string>
     <string name="nav_style_picker_title">انتخاب سبک ناوبری</string>
     <string name="nav_style_classic">کلاسیک</string>
     <string name="nav_style_morphing">Morphing</string>
     <string name="nav_style_capsule">Capsule</string>
-    <string name="nav_style_side_dock">Vertical Side Dock</string>
     <string name="ip_check">بررسی IP</string>
     <string name="ip_check_connection_state">وضعیت اتصال</string>
     <string name="ip_check_public_ip">IP عمومی</string>
@@ -1307,4 +1304,23 @@
     <string name="ip_check_note">وقتی متصل هستید، این IP نقطهٔ خروج شماست.</string>
     <string name="social_telegram">تلگرام</string>
     <string name="social_instagram">اینستاگرام</string>
+    <!-- سرورهای رلهٔ ذخیره‌شدهٔ VLESS (نسخه سفارشی) -->
+    <string name="vless_servers_title">سرورهای رله</string>
+    <string name="vless_servers_empty">هنوز سروری ذخیره نشده است. یک پیوند vless:// در پایین وارد کنید تا اولین سرور اضافه شود.</string>
+    <string name="vless_server_active">فعال</string>
+    <string name="vless_server_activate_note">روی هر سرور بزنید تا رلهٔ فعال شود.</string>
+    <string name="vless_server_add_current">ذخیرهٔ سرور فعلی</string>
+    <string name="vless_server_activated_toast">سرور فعال شد</string>
+    <string name="vless_server_added_toast">سرور ذخیره شد</string>
+    <string name="vless_server_removed_toast">سرور حذف شد</string>
+    <string name="vless_server_activate_failed_toast">ابتدا فیلدهای مشخص‌شده را اصلاح کنید</string>
+    <string name="vless_server_activate_failed_toast">ابتدا فیلدهای مشخص‌شده را اصلاح کنید</string>
+    <string name="vless_server_import_label">درون‌ریزی سرور</string>
+    <string name="vless_server_import_hint">یک پیوند vless:// یا نشانی اشتراک را اینجا بگذارید</string>
+    <string name="vless_server_import_added">%1$d سرور اضافه شد</string>
+    <string name="vless_server_import_none">هیچ سرور قابل‌خواندی پیدا نشد</string>
+    <string name="vless_server_import_failed">اشتراک دریافت نشد؛ اتصال را بررسی کنید</string>
+    <string name="vless_server_add_button">افزودن</string>
+    <string name="vless_server_remove">حذف</string>
+    <string name="vless_server_save_current_failed">تنظیمات فعلی هنوز معتبر نیستند</string>
 </resources>

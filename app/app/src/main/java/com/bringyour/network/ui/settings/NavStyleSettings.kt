@@ -1,7 +1,8 @@
 package com.bringyour.network.ui.settings
 
 import android.content.Context
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -22,27 +24,30 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bringyour.network.R
+import com.bringyour.network.ui.components.bouncyClick
+import com.bringyour.network.ui.components.entrance
+import com.bringyour.network.ui.theme.AppTheme
 import com.bringyour.network.ui.theme.BlueMedium
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * The app's navigation styles, the look of the main bottom navigation. The
- * classic full-width bar is the default; the other three are floating
+ * classic full-width bar is the default; the other two are floating
  * alternatives the user picks in Settings.
  */
 enum class NavStyle {
     /** the current full-width Material bar */
     CLASSIC,
-    /** a floating pill bar whose selection springs and stretches between tabs */
+    /** a floating pill bar whose highlight glides between tabs */
     MORPHING,
     /** a floating icon-only capsule with a circular highlight */
     CAPSULE,
-    /** a vertical dock on the right edge of the screen */
-    SIDE_DOCK,
 }
 
 /**
@@ -91,7 +96,6 @@ fun navStyleDisplayName(style: NavStyle): String = stringResource(
         NavStyle.CLASSIC -> R.string.nav_style_classic
         NavStyle.MORPHING -> R.string.nav_style_morphing
         NavStyle.CAPSULE -> R.string.nav_style_capsule
-        NavStyle.SIDE_DOCK -> R.string.nav_style_side_dock
     }
 )
 
@@ -108,9 +112,10 @@ fun currentNavStyle(): NavStyle {
 }
 
 /**
- * The navigation style picker: a radio list of the four styles, each named
- * the way the settings row names it. A choice applies immediately and the
- * sheet closes.
+ * The navigation style picker: a radio list of the three styles, each named
+ * the way the settings row names it, each arriving with the soft cascade and
+ * answering a press with the app's bounce. A choice applies immediately and
+ * the sheet closes.
  */
 @Composable
 fun NavStylePickerSheet(
@@ -133,21 +138,25 @@ fun NavStylePickerSheet(
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
             ) {
-                NavStyle.entries.forEach { style ->
+                NavStyle.entries.forEachIndexed { styleIndex, style ->
+                    val isChosen = style == selected
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onSelected(style) }
-                            .padding(vertical = 14.dp, horizontal = 4.dp),
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(if (isChosen) AppTheme.bgTinted else Color.Transparent)
+                            .bouncyClick { onSelected(style) }
+                            .padding(vertical = 14.dp, horizontal = 12.dp)
+                            .entrance(styleIndex),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             navStyleDisplayName(style),
                             style = MaterialTheme.typography.bodyLarge,
-                            color = if (style == selected) BlueMedium else MaterialTheme.colorScheme.onBackground,
+                            color = if (isChosen) BlueMedium else MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.weight(1f),
                         )
-                        if (style == selected) {
+                        AnimatedVisibility(visible = isChosen) {
                             Icon(
                                 imageVector = Icons.Filled.Check,
                                 contentDescription = null,

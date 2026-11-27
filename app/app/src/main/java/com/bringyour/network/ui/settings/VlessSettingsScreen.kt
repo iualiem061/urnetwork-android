@@ -1,7 +1,13 @@
 package com.bringyour.network.ui.settings
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,13 +18,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -28,6 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -38,6 +49,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -50,6 +62,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -62,10 +76,14 @@ import com.bringyour.network.ui.components.URInlineErrorText
 import com.bringyour.network.ui.components.URSwitch
 import com.bringyour.network.ui.components.URTextInput
 import com.bringyour.network.ui.components.URTextInputLabel
+import com.bringyour.network.ui.components.entrance
+import com.bringyour.network.ui.components.pressScale
 import com.bringyour.network.ui.components.tabletReadableColumn
 
+import com.bringyour.network.ui.theme.Pink
 import com.bringyour.network.ui.theme.TopBarTitleTextStyle
 import com.bringyour.network.ui.theme.AppTheme
+import kotlin.math.min
 
 /**
  * Account > Settings > VLESS: the VLESS server of this network space
@@ -191,6 +209,56 @@ private fun VlessSettingsForm(
         )
 
         Spacer(modifier = Modifier.height(10.dp))
+
+        // the relay library: the saved servers, and the two ways one joins
+        val showToast: (Int) -> Unit = { resId ->
+            Toast.makeText(context, resId, Toast.LENGTH_SHORT).show()
+        }
+        VlessServersCard(
+            servers = viewModel.servers,
+            activeServerId = viewModel.activeServerId,
+            importing = viewModel.importing,
+            editable = editable,
+            onActivate = { server ->
+                viewModel.activate(
+                    server,
+                    onActivated = { showToast(R.string.vless_server_activated_toast) },
+                    onFailed = { showToast(R.string.vless_server_activate_failed_toast) },
+                )
+            },
+            onRemove = { server ->
+                viewModel.removeServer(server)
+                showToast(R.string.vless_server_removed_toast)
+            },
+            onSaveCurrent = {
+                viewModel.saveCurrent(
+                    onSaved = { showToast(R.string.vless_server_added_toast) },
+                    onFailed = { showToast(R.string.vless_server_save_current_failed) },
+                )
+            },
+            onImport = { text ->
+                viewModel.importFrom(text) { result ->
+                    when (result) {
+                        is VlessImportResult.Added -> {
+                            Toast.makeText(
+                                context,
+                                context.getString(
+                                    R.string.vless_server_import_added,
+                                    result.servers.size,
+                                ),
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        }
+                        VlessImportResult.NoneReadable ->
+                            showToast(R.string.vless_server_import_none)
+                        VlessImportResult.FetchFailed ->
+                            showToast(R.string.vless_server_import_failed)
+                    }
+                }
+            },
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         /**
          * The share link: a pasted link fills the whole form, and the form
@@ -565,5 +633,230 @@ private fun VlessSwitchRow(
             enabled = enabled,
             toggle = toggle,
         )
+    }
+}
+
+/**
+ * The relay library card: the saved servers with the active one badged, and
+ * the two ways a server joins -- the current form saved as one, or links and
+ * subscriptions imported together. Rows answer a tap with the app's bounce
+ * and settle in with the shared cascade; the card grows and shrinks softly
+ * as servers join and leave.
+ */
+@Composable
+private fun VlessServersCard(
+    servers: List<VlessServer>,
+    activeServerId: String?,
+    importing: Boolean,
+    editable: Boolean,
+    onActivate: (VlessServer) -> Unit,
+    onRemove: (VlessServer) -> Unit,
+    onSaveCurrent: () -> Unit,
+    onImport: (String) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(AppTheme.bgElevated, RoundedCornerShape(16.dp))
+            .padding(16.dp)
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = 0.9f,
+                    stiffness = Spring.StiffnessMediumLow,
+                ),
+            )
+            .entrance(1),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                stringResource(id = R.string.vless_servers_title),
+                style = MaterialTheme.typography.titleMedium,
+                color = AppTheme.textPrimary,
+            )
+            AnimatedVisibility(visible = servers.isNotEmpty()) {
+                Surface(
+                    shape = RoundedCornerShape(50),
+                    color = AppTheme.bgTinted,
+                ) {
+                    Text(
+                        servers.size.toString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = AppTheme.textMuted,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            stringResource(id = R.string.vless_server_activate_note),
+            style = MaterialTheme.typography.bodySmall,
+            color = AppTheme.textFaint,
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        if (servers.isEmpty()) {
+            Text(
+                stringResource(id = R.string.vless_servers_empty),
+                style = MaterialTheme.typography.bodySmall,
+                color = AppTheme.textMuted,
+                modifier = Modifier.entrance(2),
+            )
+        } else {
+            Column {
+                servers.forEachIndexed { index, server ->
+                    VlessServerRow(
+                        server = server,
+                        active = server.id == activeServerId,
+                        editable = editable,
+                        onActivate = { onActivate(server) },
+                        onRemove = { onRemove(server) },
+                        modifier = Modifier.entrance(min(index + 1, 6)),
+                    )
+                    if (index < servers.lastIndex) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        URButton(
+            onClick = onSaveCurrent,
+            style = ButtonStyle.SECONDARY,
+            enabled = editable,
+        ) { style ->
+            Text(stringResource(id = R.string.vless_server_add_current), style = style)
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        var importText by remember { mutableStateOf(TextFieldValue()) }
+        URTextInput(
+            value = importText,
+            onValueChange = {
+                importText = it
+            },
+            label = stringResource(id = R.string.vless_server_import_label),
+            placeholder = stringResource(id = R.string.vless_server_import_hint),
+            keyboardOptions = vlessKeyboardOptions(KeyboardType.Uri, ImeAction.Done),
+            onDone = {
+                onImport(importText.text)
+                importText = TextFieldValue()
+            },
+            enabled = editable && !importing,
+        )
+
+        URButton(
+            onClick = {
+                onImport(importText.text)
+                importText = TextFieldValue()
+            },
+            style = ButtonStyle.SECONDARY,
+            enabled = editable && !importing && importText.text.isNotBlank(),
+            isProcessing = importing,
+        ) { style ->
+            Text(stringResource(id = R.string.vless_server_add_button), style = style)
+        }
+    }
+}
+
+/**
+ * One saved server of the library: its name and address on the tap that
+ * activates it, the active badge riding in beside the name, and the quiet
+ * remove button at the row's end.
+ */
+@Composable
+private fun VlessServerRow(
+    server: VlessServer,
+    active: Boolean,
+    editable: Boolean,
+    onActivate: () -> Unit,
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val press = remember { MutableInteractionSource() }
+    val removePress = remember { MutableInteractionSource() }
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(if (active) AppTheme.bgTinted else Color.Transparent)
+            .pressScale(press, scaleDown = 0.97f)
+            .clickable(
+                interactionSource = press,
+                indication = null,
+                enabled = editable,
+                onClickLabel = server.name,
+            ) { onActivate() }
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    server.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (active) Pink else AppTheme.textPrimary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false),
+                )
+                AnimatedVisibility(visible = active) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Surface(
+                            shape = RoundedCornerShape(50),
+                            color = Pink.copy(alpha = 0.16f),
+                        ) {
+                            Text(
+                                stringResource(id = R.string.vless_server_active),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Pink,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                            )
+                        }
+                    }
+                }
+            }
+            Text(
+                server.address,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    textDirection = TextDirection.Ltr,
+                ),
+                color = AppTheme.textFaint,
+            )
+        }
+
+        Spacer(modifier = Modifier.width(4.dp))
+
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .pressScale(removePress, scaleDown = 0.88f)
+                .clickable(
+                    interactionSource = removePress,
+                    indication = null,
+                    enabled = editable,
+                ) { onRemove() },
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.DeleteOutline,
+                contentDescription = stringResource(id = R.string.vless_server_remove),
+                tint = AppTheme.textFaint,
+                modifier = Modifier.size(18.dp),
+            )
+        }
     }
 }

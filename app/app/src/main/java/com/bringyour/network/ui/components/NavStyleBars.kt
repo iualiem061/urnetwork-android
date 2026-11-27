@@ -1,15 +1,23 @@
 package com.bringyour.network.ui.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,10 +29,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -44,9 +55,10 @@ class CustomNavItem(
 
 /**
  * The Morphing navigation bar: a floating rounded pill over the content. The
- * selection behind a tab springs in -- the pill stretches from a point to the
- * tab's full size with a bounce, so the highlight reads as sliding between
- * tabs rather than blinking.
+ * highlight behind the tabs slides from the old tab to the new one with a
+ * springy glide, the chosen icon pops up a touch and settles, and each tap
+ * lands with a soft haptic tick, so switching tabs reads as one continuous
+ * motion instead of a blink.
  */
 @Composable
 fun MorphingNavBar(
@@ -54,6 +66,20 @@ fun MorphingNavBar(
     onTab: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val count = items.size.coerceAtLeast(1)
+    val selectedIndex = items.indexOfFirst { it.second }.let { if (it < 0) 0 else it }
+    val haptics = LocalHapticFeedback.current
+
+    // where the pill sits, as the fraction of the row the glide covers
+    val pillPosition by animateFloatAsState(
+        targetValue = selectedIndex / count.toFloat(),
+        animationSpec = spring(
+            dampingRatio = 0.75f,
+            stiffness = Spring.StiffnessMediumLow,
+        ),
+        label = "pillPosition",
+    )
+
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(28.dp),
@@ -61,54 +87,74 @@ fun MorphingNavBar(
         border = BorderStroke(1.dp, AppTheme.border),
         shadowElevation = 16.dp,
     ) {
-        Row(
-            modifier = Modifier.padding(10.dp),
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
         ) {
-            items.forEachIndexed { index, (item, selected) ->
-                val pillProgress by animateFloatAsState(
-                    targetValue = if (selected) 1f else 0f,
-                    animationSpec = spring(
-                        dampingRatio = 0.55f,
-                        stiffness = Spring.StiffnessMediumLow,
-                    ),
-                    label = "pill",
-                )
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(20.dp))
-                        .clickable { onTab(index) }
-                        .testTag(item.testTag),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    // the pill behind the item, sprung in and out
+            // the sliding highlight: one slot wide, gliding between tabs
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(1f / count)
+                    .graphicsLayer {
+                        translationX = pillPosition * size.width * count
+                    }
+                    .background(AppTheme.bgTinted, RoundedCornerShape(20.dp)),
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                items.forEachIndexed { index, (item, selected) ->
+                    val pop by animateFloatAsState(
+                        targetValue = if (selected) 1f else 0f,
+                        animationSpec = spring(
+                            dampingRatio = 0.5f,
+                            stiffness = Spring.StiffnessMedium,
+                        ),
+                        label = "pop",
+                    )
+                    val interactionSource = remember { MutableInteractionSource() }
                     Box(
                         modifier = Modifier
-                            .matchParentSize()
-                            .graphicsLayer {
-                                scaleX = pillProgress.coerceIn(0.01f, 1f)
-                                scaleY = pillProgress.coerceIn(0.01f, 1f)
-                                alpha = pillProgress
+                            .weight(1f)
+                            .clip(RoundedCornerShape(20.dp))
+                            .pressScale(interactionSource, scaleDown = 0.94f)
+                            .clickable(
+                                interactionSource = interactionSource,
+                                indication = null,
+                            ) {
+                                haptics.performHapticFeedback(HapticFeedbackType.ContextClick)
+                                onTab(index)
                             }
-                            .background(AppTheme.bgTinted, RoundedCornerShape(20.dp)),
-                    )
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(vertical = 8.dp),
+                            .testTag(item.testTag),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        Icon(
-                            painter = painterResource(
-                                id = if (selected) item.selectedIconRes else item.iconRes,
-                            ),
-                            contentDescription = item.label,
-                            tint = if (selected) Pink else AppTheme.textMuted,
-                            modifier = Modifier.size(24.dp),
-                        )
-                        Text(
-                            item.label,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = if (selected) Pink else AppTheme.textMuted,
-                        )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(vertical = 8.dp),
+                        ) {
+                            Icon(
+                                painter = painterResource(
+                                    id = if (selected) item.selectedIconRes else item.iconRes,
+                                ),
+                                contentDescription = item.label,
+                                tint = if (selected) Pink else AppTheme.textMuted,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .graphicsLayer {
+                                        val s = 1f + 0.14f * pop
+                                        scaleX = s
+                                        scaleY = s
+                                    },
+                            )
+                            Text(
+                                item.label,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = if (selected) Pink else AppTheme.textMuted,
+                                modifier = Modifier.graphicsLayer { alpha = 0.75f + 0.25f * pop },
+                            )
+                        }
                     }
                 }
             }
@@ -117,10 +163,10 @@ fun MorphingNavBar(
 }
 
 /**
- * The Capsule navigation bar: a floating stadium of icons only, the selected
- * icon highlighted by a circular fill; the active tab's name rides in a
- * small pill under the capsule, so the icon-only bar still names where you
- * are.
+ * The Capsule navigation bar: a floating stadium of icons only. The selected
+ * icon's circular fill springs in with a small overshoot, the icon itself
+ * pops and settles, and the name pill under the capsule swaps with a soft
+ * slide when the tab changes.
  */
 @Composable
 fun CapsuleNavBar(
@@ -128,6 +174,7 @@ fun CapsuleNavBar(
     onTab: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val haptics = LocalHapticFeedback.current
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -142,105 +189,95 @@ fun CapsuleNavBar(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
             ) {
                 items.forEachIndexed { index, (item, selected) ->
+                    // the circular fill behind the selected icon, sprung in
+                    val fill by animateFloatAsState(
+                        targetValue = if (selected) 1f else 0f,
+                        animationSpec = spring(
+                            dampingRatio = 0.45f,
+                            stiffness = Spring.StiffnessMediumLow,
+                        ),
+                        label = "fill",
+                    )
+                    val pop by animateFloatAsState(
+                        targetValue = if (selected) 1f else 0f,
+                        animationSpec = spring(
+                            dampingRatio = 0.5f,
+                            stiffness = Spring.StiffnessMedium,
+                        ),
+                        label = "pop",
+                    )
+                    val interactionSource = remember { MutableInteractionSource() }
                     Box(
                         modifier = Modifier
                             .size(48.dp)
                             .clip(CircleShape)
-                            .clickable { onTab(index) }
+                            .pressScale(interactionSource, scaleDown = 0.92f)
+                            .clickable(
+                                interactionSource = interactionSource,
+                                indication = null,
+                            ) {
+                                haptics.performHapticFeedback(HapticFeedbackType.ContextClick)
+                                onTab(index)
+                            }
                             .testTag(item.testTag),
                         contentAlignment = Alignment.Center,
                     ) {
-                        if (selected) {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .background(AppTheme.bgTinted, CircleShape),
-                            )
-                        }
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .graphicsLayer {
+                                    val s = fill.coerceIn(0.01f, 1f)
+                                    scaleX = s
+                                    scaleY = s
+                                    alpha = fill
+                                }
+                                .background(AppTheme.bgTinted, CircleShape),
+                        )
                         Icon(
                             painter = painterResource(
                                 id = if (selected) item.selectedIconRes else item.iconRes,
                             ),
                             contentDescription = item.label,
                             tint = if (selected) Pink else AppTheme.textMuted,
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier
+                                .size(24.dp)
+                                .graphicsLayer {
+                                    val s = 1f + 0.18f * pop
+                                    scaleX = s
+                                    scaleY = s
+                                },
                         )
                     }
                 }
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
-        // the active tab's name under the capsule
-        Surface(
-            shape = RoundedCornerShape(14.dp),
-            color = AppTheme.bgTinted,
-        ) {
-            val activeLabel = items.firstOrNull { it.second }?.first?.label ?: ""
-            Text(
-                activeLabel,
-                style = MaterialTheme.typography.labelSmall,
-                color = Pink,
-                modifier = Modifier.padding(horizontal = 14.dp, vertical = 4.dp),
-            )
-        }
-    }
-}
-
-/**
- * The Vertical Side Dock: a floating rounded dock on the right edge of the
- * screen, the tabs stacked top to bottom with their names under their icons,
- * the selected tab highlighted by a pill.
- */
-@Composable
-fun SideDockNav(
-    items: List<Pair<CustomNavItem, Boolean>>,
-    onTab: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(28.dp),
-        color = AppTheme.bgElevated,
-        border = BorderStroke(1.dp, AppTheme.border),
-        shadowElevation = 16.dp,
-    ) {
-        Column(
-            modifier = Modifier.padding(vertical = 10.dp),
-        ) {
-            items.forEachIndexed { index, (item, selected) ->
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .clickable { onTab(index) }
-                        .testTag(item.testTag),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    if (selected) {
-                        Box(
-                            modifier = Modifier
-                                .matchParentSize()
-                                .background(AppTheme.bgTinted, RoundedCornerShape(20.dp)),
-                        )
-                    }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                id = if (selected) item.selectedIconRes else item.iconRes,
-                            ),
-                            contentDescription = item.label,
-                            tint = if (selected) Pink else AppTheme.textMuted,
-                            modifier = Modifier.size(22.dp),
-                        )
-                        Text(
-                            item.label,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = if (selected) Pink else AppTheme.textMuted,
-                        )
-                    }
-                }
+        // the active tab's name under the capsule, sliding softly on a switch
+        val activeLabel = items.firstOrNull { it.second }?.first?.label ?: ""
+        AnimatedContent(
+            targetState = activeLabel,
+            transitionSpec = {
+                (slideInVertically(
+                    animationSpec = spring(dampingRatio = 0.8f, stiffness = Spring.StiffnessMediumLow),
+                    initialOffsetY = { it / 2 },
+                ) + fadeIn()) togetherWith
+                    (slideOutVertically(
+                        animationSpec = spring(dampingRatio = 0.8f, stiffness = Spring.StiffnessMediumLow),
+                        targetOffsetY = { -it / 2 },
+                    ) + fadeOut())
+            },
+            label = "activeLabel",
+        ) { label ->
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = AppTheme.bgTinted,
+            ) {
+                Text(
+                    label,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Pink,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 4.dp),
+                )
             }
         }
     }

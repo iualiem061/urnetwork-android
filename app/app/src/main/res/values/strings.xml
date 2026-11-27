@@ -1526,8 +1526,6 @@
     <string name="usdc_solana_network_only">Send USDC on the Solana network only. USDC sent on any other network will not arrive.</string>
     <string name="use_extender_settings">Use extender settings</string>
     <string name="use_most_stable_provider">Use most stable provider</string>
-    <string name="use_wireguard_socks_https_proxy">Use WireGuard / SOCKS / HTTPS proxy</string>
-    <string name="use_wireguard_socks_https_proxy_note">Opens ur.io in your browser. SOCKS and WireGuard need Pro.</string>
     <string name="used_data_key">Used</string>
     <string name="user_auth_label">Email or phone</string>
     <string name="user_auth_placeholder">Enter your phone number or email</string>
@@ -1789,7 +1787,7 @@
     </plurals>
     <!-- Language picker (custom build) -->
     <string name="language">Language</string>
-    <string name="language_note">Persian and every language the app ships</string>
+    <string name="language_note">Choose the app\'s display language</string>
     <string name="system_default_language">System default</string>
     <!-- Appearance (custom build) -->
     <string name="appearance">Appearance</string>
@@ -1800,12 +1798,11 @@
     <!-- Social channels (custom build) -->
     <!-- Navigation styles + IP check (custom build) -->
     <string name="nav_style">Navigation style</string>
-    <string name="nav_style_note">The look of the app\'s bottom bar</string>
+    <string name="nav_style_note">How the bottom navigation bar looks</string>
     <string name="nav_style_picker_title">Choose navigation style</string>
     <string name="nav_style_classic">Classic</string>
     <string name="nav_style_morphing">Morphing</string>
     <string name="nav_style_capsule">Capsule</string>
-    <string name="nav_style_side_dock">Vertical Side Dock</string>
     <string name="ip_check">IP check</string>
     <string name="ip_check_connection_state">Connection state</string>
     <string name="ip_check_public_ip">Public IP</string>
@@ -1817,4 +1814,23 @@
     <string name="ip_check_note">While connected, this is the exit node\'s IP.</string>
     <string name="social_telegram">Telegram</string>
     <string name="social_instagram">Instagram</string>
+    <!-- VLESS saved relay servers (custom build) -->
+    <string name="vless_servers_title">Relay servers</string>
+    <string name="vless_servers_empty">No saved servers yet. Paste a vless:// link below to add your first server.</string>
+    <string name="vless_server_active">Active</string>
+    <string name="vless_server_activate_note">Tap a server to make it the active relay.</string>
+    <string name="vless_server_add_current">Save current server</string>
+    <string name="vless_server_activated_toast">Server activated</string>
+    <string name="vless_server_added_toast">Server saved</string>
+    <string name="vless_server_removed_toast">Server removed</string>
+    <string name="vless_server_activate_failed_toast">Fix the highlighted fields first</string>
+    <string name="vless_server_activate_failed_toast">Fix the highlighted fields first</string>
+    <string name="vless_server_import_label">Import servers</string>
+    <string name="vless_server_import_hint">Paste a vless:// link or a subscription URL</string>
+    <string name="vless_server_import_added">%1$d servers were added</string>
+    <string name="vless_server_import_none">No readable server was found there</string>
+    <string name="vless_server_import_failed">The subscription could not be fetched; check the connection</string>
+    <string name="vless_server_add_button">Add</string>
+    <string name="vless_server_remove">Remove</string>
+    <string name="vless_server_save_current_failed">The current settings do not validate yet</string>
 </resources>

@@ -153,6 +153,7 @@ fun LocationsList(
                     ) { _, location ->
                         val selected = selectedLocation?.connectLocationId == location.connectLocationId
                         ProviderRow(
+            modifier = Modifier.animateItem(),
                             location = location.name,
                             providerCount = location.providerCount,
                             imageResourceId = rememberRoundedCountryFlag(location.countryCode),
@@ -186,6 +187,7 @@ fun LocationsList(
                     item {
                         val selected = selectedLocation?.connectLocationId?.bestAvailable == true
                         ProviderRow(
+            modifier = Modifier.animateItem(),
                             location = stringResource(id = R.string.best_available_provider),
                             imageResourceId = R.drawable.main_nav_globe,
                             onClick = {
@@ -225,6 +227,7 @@ fun LocationsList(
                     ) { _, location ->
                         val selected = selectedLocation?.connectLocationId == location.connectLocationId
                         ProviderRow(
+            modifier = Modifier.animateItem(),
                             location = location.name,
                             providerCount = location.providerCount,
                             imageResourceId = rememberRoundedCountryFlag(location.countryCode),
@@ -262,6 +265,7 @@ fun LocationsList(
                     ) { _, location ->
                         val selected = selectedLocation?.connectLocationId == location.connectLocationId
                         ProviderRow(
+            modifier = Modifier.animateItem(),
                             location = location.name,
                             providerCount = location.providerCount,
                             onClick = {
@@ -297,6 +301,7 @@ fun LocationsList(
                     ) { _, location ->
                         val selected = selectedLocation?.connectLocationId == location.connectLocationId
                         ProviderRow(
+            modifier = Modifier.animateItem(),
                             location = location.name,
                             providerCount = location.providerCount,
                             imageResourceId = rememberRoundedCountryFlag(location.countryCode),
@@ -335,6 +340,7 @@ fun LocationsList(
                     ) { _, location ->
                         val selected = selectedLocation?.connectLocationId == location.connectLocationId
                         ProviderRow(
+            modifier = Modifier.animateItem(),
                             location = location.name,
                             providerCount = location.providerCount,
                             onClick = {
