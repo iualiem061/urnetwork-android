@@ -1133,19 +1133,21 @@ private fun SettingsScreen(
             Spacer(modifier = Modifier.height(18.dp))
 
             /**
-             * VLESS: a VLESS server this network space also dials through
+             * Relays: the shared relay network the app carries and the
+             * personal relays, one general place
              */
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .bouncyClick {
-                        navController.navigate(Route.Vless)
+                        navController.navigate(Route.Relays)
                     }
                     .padding(vertical = 6.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    stringResource(id = R.string.vless),
+                    stringResource(id = R.string.relays),
                     style = MaterialTheme.typography.bodyMedium,
                 )
 
@@ -1155,6 +1157,11 @@ private fun SettingsScreen(
                     tint = AppTheme.textMuted
                 )
             }
+            Text(
+                stringResource(id = R.string.relays_note),
+                style = MaterialTheme.typography.bodySmall,
+                color = AppTheme.textMuted
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -1204,12 +1211,9 @@ private fun SettingsScreen(
             }
 
             /**
-             * Navigation style
+             * Navigation style. No label of its own: the row shows the current
+             * style's name, and its note says what it changes.
              */
-            URTextInputLabel(
-                text = stringResource(id = R.string.nav_style),
-                modifier = Modifier.entrance(9),
-            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

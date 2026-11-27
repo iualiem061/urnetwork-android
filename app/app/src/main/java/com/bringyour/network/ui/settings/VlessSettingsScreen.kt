@@ -170,9 +170,13 @@ private fun VlessSettingsScaffold(
  * security, then only the fields that apply to them (VlessForm), and Save.
  * Every field stays editable while VLESS is off, since off settings save as
  * typed.
+ *
+ * The relays hub shows the same editor as its personal side
+ * (RelayHubScreen), so the user's own relays are added and edited there
+ * without a second copy of the form.
  */
 @Composable
-private fun VlessSettingsForm(
+fun VlessSettingsForm(
     viewModel: VlessSettingsViewModel,
     modifier: Modifier = Modifier,
 ) {

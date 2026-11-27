@@ -91,7 +91,7 @@ jobs:
         run: |
           set -e
           # the version this custom build ships
-          printf 'warp.version=2026.11.27\nwarp.version_code=2026112701\n' \
+          printf 'warp.version=2026.11.27\nwarp.version_code=2026112702\n' \
             > "$BRINGYOUR_HOME/android/app/local.properties"
           cat "$BRINGYOUR_HOME/android/app/local.properties"
 

@@ -1322,4 +1322,25 @@
     <string name="vless_server_add_button">افزودن</string>
     <string name="vless_server_remove">حذف</string>
     <string name="vless_server_save_current_failed">تنظیمات فعلی هنوز معتبر نیستند</string>
+
+    <!-- the relays hub: the shared relay network and the personal relays -->
+    <string name="relays">رله‌ها</string>
+    <string name="relays_note">شبکه رله اشتراکی و رله‌های شخصی شما</string>
+    <string name="relays_public">عمومی</string>
+    <string name="relays_personal">شخصی</string>
+    <string name="relays_public_title">شبکه رله اشتراکی</string>
+    <string name="relays_public_description">سرورهای رله عمومی که خودِ برنامه از منابع خودش به‌روز نگه می‌دارد و همه لوکیشن‌ها باز است — هر سروری را انتخاب کن و متصل شو. چیزی را دستی اضافه نمی‌کنی.</string>
+    <string name="relays_servers_stats">%1$d سرور در %2$d کشور</string>
+    <string name="relays_last_update">آخرین به‌روزرسانی: %1$s</string>
+    <string name="relays_refresh">به‌روزرسانی</string>
+    <string name="relays_loading">در حال دریافت رله‌های اشتراکی…</string>
+    <string name="relays_refresh_failed">به‌روزرسانی ناموفق بود؛ اتصال اینترنت را بررسی کن و دوباره تلاش کن</string>
+    <string name="relays_empty">هنوز رله‌ای دریافت نشده؛ دکمه به‌روزرسانی را بزن</string>
+    <string name="relays_other">سایر</string>
+    <string name="relays_search_label">جستجو</string>
+    <string name="relays_search_hint">جستجوی سرور یا کشور…</string>
+    <string name="relays_test">تست</string>
+    <string name="relays_testing">…</string>
+    <string name="relays_rtt_failed">—</string>
+    <string name="relays_rtt_ms">%1$d ms</string>
 </resources>

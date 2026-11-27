@@ -126,12 +126,7 @@ fun NavStylePickerSheet(
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.background,
-        title = {
-            Text(
-                stringResource(id = R.string.nav_style_picker_title),
-                style = MaterialTheme.typography.headlineSmall,
-            )
-        },
+        // no title: the settings row it opens from carries the description
         text = {
             Column(
                 modifier = Modifier

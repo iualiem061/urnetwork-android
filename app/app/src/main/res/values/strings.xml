@@ -1832,4 +1832,25 @@
     <string name="vless_server_add_button">Add</string>
     <string name="vless_server_remove">Remove</string>
     <string name="vless_server_save_current_failed">The current settings do not validate yet</string>
+
+    <!-- the relays hub: the shared relay network and the personal relays -->
+    <string name="relays">Relays</string>
+    <string name="relays_note">The shared relay network and your personal relays</string>
+    <string name="relays_public">Public</string>
+    <string name="relays_personal">Personal</string>
+    <string name="relays_public_title">Shared relay network</string>
+    <string name="relays_public_description">Public relay servers the app keeps itself, refreshed from its own sources, with every location open -- pick a server and you are connected. Nothing to add by hand.</string>
+    <string name="relays_servers_stats">%1$d servers in %2$d countries</string>
+    <string name="relays_last_update">Last updated %1$s</string>
+    <string name="relays_refresh">Refresh</string>
+    <string name="relays_loading">Fetching the shared relays…</string>
+    <string name="relays_refresh_failed">Refresh failed. Check the internet connection and try again</string>
+    <string name="relays_empty">No shared relays yet. Tap refresh to fetch the network</string>
+    <string name="relays_other">Other</string>
+    <string name="relays_search_label">Search</string>
+    <string name="relays_search_hint">Search a server or a country…</string>
+    <string name="relays_test">Test</string>
+    <string name="relays_testing">…</string>
+    <string name="relays_rtt_failed">—</string>
+    <string name="relays_rtt_ms">%1$d ms</string>
 </resources>

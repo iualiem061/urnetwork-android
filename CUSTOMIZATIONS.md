@@ -98,6 +98,33 @@ The changes below were applied on top of upstream `main` (2026-11-24).
     name pills, animated list placement (location rows), size-follows-
     content cards, and haptic ticks on tab taps — the "soft, clean, smooth"
     pass the owner asked for, everywhere.
+15. **Shared relay network + personal relays hub (v2026.11.27-2)** —
+    Settings shows one **Relays** row (the old VLESS row) that opens the
+    relays hub: two sides, **Public** and **Personal**. The public side is
+    a shared relay network the app carries itself: two public relay pools
+    (community aggregators that publish thousands of live `vless://`
+    servers, refreshed about every 15 minutes) are fetched, deduped,
+    parsed with the SDK's own VLESS link parser and grouped by country —
+    every location open, flags, counts, a search box, and a per-server
+    **Test** pill that measures the real TCP RTT to the server's own
+    address (green under 120 ms, amber under 250, red above; a dash when
+    it does not answer). Tapping a server activates it live through the
+    same path as the personal library. The fetched pool is cached in the
+    app's preferences (instant reopen, quiet re-fetch when older than 12
+    hours, a manual Refresh). The personal side is the user's own relays:
+    pasted links, subscription imports and the full manual form (the
+    previous VLESS editor), unchanged.
+16. **Page transitions (v2026.11.27-2)** — every page change now animates
+    softly: forward navigation slides the page in from the trailing edge
+    (the edge the reading direction travels toward — mirrored for RTL
+    Persian) with a spring settle and a quiet fade while the covered page
+    slips toward the leading edge; back navigation mirrors it. The three
+    top tabs keep their quiet crossfade. The screen-switch animation the
+    owner asked for, without a hard cut anywhere.
+17. **Settings copy (v2026.11.27-2)** — the navigation-style row lost its
+    label ("سبک ناوبری"): the row now shows the style's name (e.g.
+    "کلاسیک") with its own note ("the look of the bottom bar"), and the
+    picker sheet lost its title too, so the two words appear nowhere.
 
 ## Build
 

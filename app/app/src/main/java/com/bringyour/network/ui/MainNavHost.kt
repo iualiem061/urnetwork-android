@@ -43,6 +43,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -163,6 +164,7 @@ import com.bringyour.network.ui.profile.ProfileViewModel
 import com.bringyour.network.ui.settings.SettingsScreen
 import com.bringyour.network.ui.settings.NavStyle
 import com.bringyour.network.ui.settings.currentNavStyle
+import com.bringyour.network.ui.settings.RelayHubScreen
 import com.bringyour.network.ui.settings.VlessSettingsScreen
 import com.bringyour.network.ui.shared.viewmodels.SubscriptionBalanceViewModel
 import com.bringyour.network.ui.wallet.BittensorKeyScreenRequests
@@ -745,6 +747,10 @@ fun MainNavContent(
             )
         }
 
+        // the page transitions need the reading direction to slide pages
+        // the way the language travels (forward arrives from the trailing
+        // edge), mirrored for rtl
+        val rtlLayout = LocalLayoutDirection.current == LayoutDirection.Rtl
         NavHost(
             navController = navController,
             startDestination = Route.ConnectContainer,
@@ -776,10 +782,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.BrowseLocations>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     // unfolded or widened onto the connect panes: the picker
                     // continues as their location dialog, search and scroll kept
@@ -799,10 +805,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.ContractStats>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) { backStackEntry ->
                     val route: Route.ContractStats = backStackEntry.toRoute()
                     ContractStatsScreen(
@@ -812,10 +818,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.SplitRules>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     SplitRulesScreen(
                         navController = navController,
@@ -823,10 +829,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.AppSplitRules>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     AppSplitRulesScreen(
                         navController = navController,
@@ -834,10 +840,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.DnsSettings>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     DnsSettingsScreen(
                         navController = navController,
@@ -845,10 +851,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.TransportSettings>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) { backStackEntry ->
                     val route: Route.TransportSettings = backStackEntry.toRoute()
                     TransportSettingsScreen(
@@ -858,10 +864,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.ProviderLocations>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     ProviderLocationsScreen(
                         navController = navController,
@@ -880,10 +886,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.MockLocationGuide>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     MockLocationGuideScreen(
                         navController = navController,
@@ -891,7 +897,12 @@ fun MainNavContent(
                 }
             }
 
-            composable<Route.GuestConversion> {
+            composable<Route.GuestConversion>(
+                enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
+            ) {
                 GuestConversionSheet(
                     settingsViewModel = settingsViewModel,
                     activityResultSender = activityResultSender,
@@ -908,10 +919,10 @@ fun MainNavContent(
             // the device list, top level like the upgrade: the client limit
             // notice on the connect screen opens it, and so does Settings
             composable<Route.ManageDevices>(
-                enterTransition = NavigationAnimations.enterTransition(),
-                exitTransition = NavigationAnimations.exitTransition(),
-                popEnterTransition = NavigationAnimations.popEnterTransition(),
-                popExitTransition = NavigationAnimations.popExitTransition()
+                enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
             ) {
                 ManageDevicesScreen(navController = navController)
             }
@@ -945,10 +956,10 @@ fun MainNavContent(
                     }
                 }
                 composable<Route.Profile>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) { ProfileScreen(
                     navController,
                     accountViewModel,
@@ -956,26 +967,26 @@ fun MainNavContent(
                     overlayViewModel
                 ) }
                 composable<Route.Sessions>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     SessionsScreen(navController = navController)
                 }
                 composable<Route.ApiKeys>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     ApiKeysScreen(navController = navController)
                 }
                 composable<Route.Settings>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) { SettingsScreen(
                     navController,
                     accountViewModel,
@@ -985,19 +996,31 @@ fun MainNavContent(
                 ) }
 
                 composable<Route.Vless>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     VlessSettingsScreen(navController = navController)
                 }
 
+                // the relays hub: the shared relay network beside the
+                // personal relays, a general option of the app rather than a
+                // protocol corner
+                composable<Route.Relays>(
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
+                ) {
+                    RelayHubScreen(navController = navController)
+                }
+
                 composable<Route.ProviderIdentities>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     ProviderIdentitiesScreen(
                         navController = navController,
@@ -1005,10 +1028,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.Extenders>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     ExtendersScreen(
                         navController = navController,
@@ -1016,10 +1039,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.ShareExtenders>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     ShareExtendersScreen(
                         navController = navController,
@@ -1027,10 +1050,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.ImportExtenders>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     ImportExtendersScreen(
                         navController = navController,
@@ -1038,38 +1061,38 @@ fun MainNavContent(
                 }
 
                 composable<Route.Developer>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     DeveloperScreen(navController = navController)
                 }
 
                 composable<Route.Licenses>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     LicensesScreen(navController = navController)
                 }
 
                 composable<Route.LicenseDetail>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) { backStackEntry ->
                     val route: Route.LicenseDetail = backStackEntry.toRoute()
                     LicenseDetailScreen(navController = navController, index = route.index)
                 }
 
                 composable<Route.BlockedRegions>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     BlockedRegionsScreen(
                         navController = navController,
@@ -1079,10 +1102,10 @@ fun MainNavContent(
                 }
 
                 composable<Route.Widgets>(
-                    enterTransition = NavigationAnimations.enterTransition(),
-                    exitTransition = NavigationAnimations.exitTransition(),
-                    popEnterTransition = NavigationAnimations.popEnterTransition(),
-                    popExitTransition = NavigationAnimations.popExitTransition()
+                    enterTransition = NavigationAnimations.enterTransition(rtlLayout),
+                    exitTransition = NavigationAnimations.exitTransition(rtlLayout),
+                    popEnterTransition = NavigationAnimations.popEnterTransition(rtlLayout),
+                    popExitTransition = NavigationAnimations.popExitTransition(rtlLayout)
                 ) {
                     WidgetsScreen(navController = navController)
                 }
@@ -1092,59 +1115,103 @@ fun MainNavContent(
 
 }
 
-private const val ANIMATION_DURATION = 280
-private const val HORIZONTAL_OFFSET_FACTOR = 0.07f // Subtle horizontal movement (7% of screen width)
+// The page-change rhythm: how far a page travels and how long the fades
+// breathe. The travels are fractions of the width; the enters settle on
+// springs, the leaves run on short tweens, so a page arrives softly and
+// clears quickly.
+private const val ENTER_TRAVEL_FRACTION = 0.22f
+private const val EXIT_TRAVEL_FRACTION = 0.10f
+private const val POP_TRAVEL_FRACTION = 0.14f
+private const val ENTER_FADE_MILLIS = 300
+private const val EXIT_FADE_MILLIS = 200
+private const val POP_FADE_MILLIS = 260
+
+private const val ENTER_SLIDE_STIFFNESS = 350f
+private const val ENTER_SLIDE_DAMPING = 0.9f
 
 object NavigationAnimations {
-    // Forward navigation (entering a new screen) - fade in with subtle slide from right
-    fun enterTransition(): AnimatedContentTransitionScope<*>.() -> EnterTransition = {
-        fadeIn(
+
+    /**
+     * Forward navigation (a new page opens): the page arrives from the
+     * trailing edge -- the edge the reading direction travels toward, the
+     * right in ltr, the left in rtl -- gliding in with a soft spring settle
+     * and a quiet fade.
+     */
+    fun enterTransition(rtl: Boolean): AnimatedContentTransitionScope<*>.() -> EnterTransition = {
+        val direction = if (rtl) -1 else 1
+        slideInHorizontally(
+            initialOffsetX = { fullWidth -> (fullWidth * ENTER_TRAVEL_FRACTION).toInt() * direction },
+            animationSpec = spring(
+                dampingRatio = ENTER_SLIDE_DAMPING,
+                stiffness = ENTER_SLIDE_STIFFNESS,
+            ),
+        ) + fadeIn(
             animationSpec = tween(
-                durationMillis = ANIMATION_DURATION,
-                easing = LinearOutSlowInEasing
-            )
-        ) + slideInHorizontally(
-            initialOffsetX = { fullWidth -> (fullWidth * HORIZONTAL_OFFSET_FACTOR).toInt() },
-            animationSpec = tween(
-                durationMillis = ANIMATION_DURATION,
-                easing = LinearOutSlowInEasing
-            )
+                durationMillis = ENTER_FADE_MILLIS,
+                easing = LinearOutSlowInEasing,
+            ),
         )
     }
 
-    // Forward navigation (exiting the current screen) - simple fade out
-    fun exitTransition(): AnimatedContentTransitionScope<*>.() -> ExitTransition = {
-        fadeOut(
+    /**
+     * Forward navigation (the page being covered): it slips a little toward
+     * the leading edge and dims away, so the new page reads as arriving over
+     * it rather than blinking in its place.
+     */
+    fun exitTransition(rtl: Boolean): AnimatedContentTransitionScope<*>.() -> ExitTransition = {
+        val direction = if (rtl) -1 else 1
+        slideOutHorizontally(
+            targetOffsetX = { fullWidth -> -(fullWidth * EXIT_TRAVEL_FRACTION).toInt() * direction },
             animationSpec = tween(
-                durationMillis = ANIMATION_DURATION * 3/4,  // Slightly faster to feel responsive
-                easing = FastOutLinearInEasing
-            )
+                durationMillis = EXIT_FADE_MILLIS,
+                easing = FastOutLinearInEasing,
+            ),
+        ) + fadeOut(
+            animationSpec = tween(
+                durationMillis = EXIT_FADE_MILLIS,
+                easing = FastOutLinearInEasing,
+            ),
         )
     }
 
-    // Back navigation (entering previous screen) - fade in with subtle slide from left
-    fun popEnterTransition(): AnimatedContentTransitionScope<*>.() -> EnterTransition = {
-        fadeIn(
+    /**
+     * Back navigation (the page underneath returns): it slides back in from
+     * the leading edge, the mirror of the forward arrival, a touch shorter
+     * and a touch slower to read as settling home.
+     */
+    fun popEnterTransition(rtl: Boolean): AnimatedContentTransitionScope<*>.() -> EnterTransition = {
+        val direction = if (rtl) -1 else 1
+        slideInHorizontally(
+            initialOffsetX = { fullWidth -> -(fullWidth * POP_TRAVEL_FRACTION).toInt() * direction },
+            animationSpec = spring(
+                dampingRatio = ENTER_SLIDE_DAMPING,
+                stiffness = ENTER_SLIDE_STIFFNESS,
+            ),
+        ) + fadeIn(
             animationSpec = tween(
-                durationMillis = ANIMATION_DURATION,
-                easing = LinearOutSlowInEasing
-            )
+                durationMillis = POP_FADE_MILLIS,
+                easing = LinearOutSlowInEasing,
+            ),
         )
     }
 
-    // Back navigation (exiting current screen) - fade out with subtle slide to right
-    fun popExitTransition(): AnimatedContentTransitionScope<*>.() -> ExitTransition = {
-        fadeOut(
+    /**
+     * Back navigation (the closing page leaves): it glides out toward the
+     * trailing edge, the direction it arrived from, and fades on the way.
+     */
+    fun popExitTransition(rtl: Boolean): AnimatedContentTransitionScope<*>.() -> ExitTransition = {
+        val direction = if (rtl) -1 else 1
+        slideOutHorizontally(
+            targetOffsetX = { fullWidth -> (fullWidth * ENTER_TRAVEL_FRACTION).toInt() * direction },
             animationSpec = tween(
-                durationMillis = ANIMATION_DURATION,
-                easing = FastOutLinearInEasing
-            )
-        ) + slideOutHorizontally(
-            targetOffsetX = { fullWidth -> (fullWidth * HORIZONTAL_OFFSET_FACTOR).toInt() },
+                durationMillis = POP_FADE_MILLIS,
+                easing = FastOutLinearInEasing,
+            ),
+        ) + fadeOut(
             animationSpec = tween(
-                durationMillis = ANIMATION_DURATION,
-                easing = FastOutLinearInEasing
-            )
+                durationMillis = POP_FADE_MILLIS,
+                easing = FastOutLinearInEasing,
+            ),
         )
     }
 

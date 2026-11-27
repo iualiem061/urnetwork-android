@@ -2,6 +2,7 @@ package com.bringyour.network.ui.settings
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,10 +23,11 @@ import java.util.UUID
 import javax.inject.Inject
 
 /**
- * The VLESS settings of the network space: one VLESS server the space's client
- * strategy also dials through when direct connections are blocked. Account >
- * Settings > VLESS edits them for the signed-in device's space, and the login
- * screen's network settings for the active space before there is a device.
+ * The relays of the network space: the shared relay network the app carries
+ * (the public pools of RelayNetwork.kt, fetched and cached) and the personal
+ * library of `vless://` links. Account > Settings > Relays edits both for the
+ * signed-in device's space, and the login screen's network settings for the
+ * active space before there is a device.
  *
  * The sdk stores the settings in the space's values and applies a save in
  * place: the strategy's VLESS dialer is replaced while the space, a device
@@ -86,7 +88,9 @@ class VlessSettingsViewModel @Inject constructor(
     val fingerprints = sdkStringListToList(Sdk.vlessFingerprints()).ifEmpty { VLESS_FINGERPRINTS }
 
     private val serverStore = VlessServerStore(appContext)
+    private val sharedStore = RelaySharedStore(appContext)
     private var loadJob: Job? = null
+    private var sharedJob: Job? = null
 
     init {
         servers = serverStore.load()
@@ -268,6 +272,89 @@ class VlessSettingsViewModel @Inject constructor(
         onSaved()
     }
 
+    // ---- the shared relay network (RelayNetwork.kt)
+
+    /** The shared relays of the public pools, one whole fetch. */
+    var sharedServers by mutableStateOf<List<VlessServer>>(emptyList())
+        private set
+
+    /** A shared fetch is running (a first open or a refresh). */
+    var sharedLoading by mutableStateOf(false)
+        private set
+
+    /** When the shared list was fetched, epoch millis; 0 = never fetched. */
+    var sharedFetchedAt by mutableStateOf(0L)
+        private set
+
+    /** Every source of the last refresh answered nothing; the retry note shows. */
+    var sharedFetchFailed by mutableStateOf(false)
+        private set
+
+    /** The shared server the space's settings are live from, if any. */
+    var sharedActiveId by mutableStateOf<String?>(null)
+        private set
+
+    /** One server's TCP RTT, keyed by id: `RTT_TESTING` while away, `RTT_FAILED` when unreachable. Missing = untested. */
+    val relayRtts = mutableStateMapOf<String, Long>()
+
+    private var sharedStarted = false
+
+    /**
+     * The shared network on the tab's first open: the cached pool serves
+     * instantly, and a fetch runs when the cache is empty or stale.
+     */
+    fun ensureSharedRelays() {
+        if (sharedStarted) return
+        sharedStarted = true
+        sharedServers = sharedStore.load()
+        sharedFetchedAt = sharedStore.fetchedAt()
+        if (sharedServers.isEmpty() ||
+            System.currentTimeMillis() - sharedFetchedAt > SHARED_RELAY_STALE_MS
+        ) {
+            refreshSharedRelays()
+        }
+    }
+
+    /**
+     * Re-fetches every public pool and replaces the shared list (the pool
+     * publishes fresh links; keeping the old ones beside them doubles the
+     * dupes). When nothing comes back, the cached pool stays and the
+     * failure note shows.
+     */
+    fun refreshSharedRelays() {
+        if (sharedLoading) return
+        sharedLoading = true
+        sharedFetchFailed = false
+        sharedJob?.cancel()
+        sharedJob = viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                fetchSharedRelays()
+            }
+            sharedLoading = false
+            if (result.servers.isNotEmpty()) {
+                sharedServers = result.servers
+                sharedFetchedAt = System.currentTimeMillis()
+                sharedStore.store(result.servers)
+                sharedStore.storeFetchedAt(sharedFetchedAt)
+                reconcileActiveServer()
+            } else {
+                sharedFetchFailed = true
+            }
+        }
+    }
+
+    /** Tests one relay's TCP RTT; the answer lands in [relayRtts]. */
+    fun testRelayRtt(server: VlessServer) {
+        if (relayRtts[server.id] == RTT_TESTING) return
+        relayRtts[server.id] = RTT_TESTING
+        viewModelScope.launch {
+            val rtt = withContext(Dispatchers.IO) {
+                relayRttMillis(server)
+            }
+            relayRtts[server.id] = rtt ?: RTT_FAILED
+        }
+    }
+
     /**
      * The active badge is earned again from the truth: the saved server whose
      * settings equal the space's current ones. A link saved by hand and one
@@ -278,12 +365,23 @@ class VlessSettingsViewModel @Inject constructor(
     private fun reconcileActiveServer() {
         if (validationErrorId.isNotEmpty()) {
             activeServerId = null
+            sharedActiveId = null
             return
         }
         val current = form.toSettingsValues().copy(enabled = true)
         activeServerId = servers.firstOrNull { saved ->
             val parsed = parseVlessLinkOrNull(saved.link) ?: return@firstOrNull false
             vlessSettingsValues(parsed).copy(enabled = true) == current
+        }?.id
+
+        // the shared pool: an address match is the cheap key, the settings
+        // compare only runs on it (the pool holds thousands)
+        val currentAddress = "${form.address}:${form.port}".trimStart(':')
+        sharedActiveId = sharedServers.firstOrNull { saved ->
+            saved.address == currentAddress && run {
+                val parsed = parseVlessLinkOrNull(saved.link) ?: return@run false
+                vlessSettingsValues(parsed).copy(enabled = true) == current
+            }
         }?.id
     }
 
